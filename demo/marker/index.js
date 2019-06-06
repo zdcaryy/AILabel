@@ -18,7 +18,7 @@ const marker = new gDBox.Marker('name-中国', {
     src: './marker.png',
     x: 0,
     y: 0,
-    offset: {x: -32, y: -32}
+    offset: {x: -32, y: -32},
 });
 // 注册监听事件删除标注
 marker.regEvent('click', function () {

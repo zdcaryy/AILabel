@@ -8,13 +8,13 @@
 const gFetureStyle = new gDBox.Style({strokeColor: '#0000FF'});
 
 // 容器对象声明
-let gMap = new gDBox.Map('map', {zoom: 1024, cx: 0, cy: 0, zoomMax: 650 * 10, zoomMin: 650 / 10});
+let gMap = new gDBox.Map('map', {zoom: 640, cx: 0, cy: 0, zoomMax: 650 * 10, zoomMin: 650 / 10});
 
 // 设置当前操作模式为‘drawRect’
-gMap.setMode('drawRect', gFetureStyle);
+gMap.setMode('drawPolygon', gFetureStyle);
 
 // 图片层实例\添加
-let gImageLayer = new gDBox.Layer.Image('img', 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1559731321494&di=7039e20ce4ec894314df81a8996e7ec5&imgtype=0&src=http%3A%2F%2Fpic.people.com.cn%2FNMediaFile%2F2016%2F0503%2FMAIN201605030812000466181960725.jpg', {w: 1024, h: 683}, {zIndex: 1});
+let gImageLayer = new gDBox.Layer.Image('img', 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1554984437152&di=b7492983dffacde6921f3b5ca6fccb3a&imgtype=0&src=http%3A%2F%2Fimg8.zol.com.cn%2Fbbs%2Fupload%2F23753%2F23752880.JPG', {w: 1280, h: 639}, {zIndex: 1});
 gMap.addLayer(gImageLayer);
 
 // 矢量层实例\添加
