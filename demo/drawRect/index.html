@@ -28,7 +28,39 @@
 </head>
 <body>
 	<div id="map"></div>
-	<div>鼠标按下开始绘制，弹起绘制完成</div>
-	<script src='./index.js'></script>
+    <div>鼠标按下开始绘制，弹起绘制完成</div>
+    <div>单击图形进行选择</div>
+    <script>
+        // 常用样式声明
+        const gFetureStyle = new gDBox.Style({strokeColor: '#0000FF'});
+
+        // 容器对象声明
+        let gMap = new gDBox.Map('map', {zoom: 1080, cx: 0, cy: 0, zoomMax: 650 * 10, zoomMin: 650 / 10});
+
+        // 设置当前操作模式为‘drawRect’
+        gMap.setMode('drawRect', gFetureStyle);
+
+        // 图片层实例\添加
+        let gImageLayer = new gDBox.Layer.Image('img', '../../imgs/demo.jpeg', {w: 1080, h: 720}, {zIndex: 1});
+        gMap.addLayer(gImageLayer);
+
+        // 矢量层实例\添加
+        let gFeatureLayer = new gDBox.Layer.Feature('featureLayer', {zIndex: 2, transparent: true});
+        gMap.addLayer(gFeatureLayer);
+
+        gMap.events.on('geometryDrawDone', function (type, points) {
+            // 生成元素唯一标志（时间戳）
+            const timestamp = new Date().getTime();
+            // 元素添加展示
+            let fea = new gDBox.Feature.Polygon(`feature-${timestamp}`, points, {
+                name: '中国'
+            }, gFetureStyle);
+            gFeatureLayer.addFeature(fea);
+        });
+        gMap.events.on('geometryEditDone', (type, activeFeature, points) => {
+            activeFeature.update({points});
+            activeFeature.show();
+        });
+    </script>
 </body>
 </html>

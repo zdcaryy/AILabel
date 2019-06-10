@@ -29,6 +29,13 @@
 <body>
 	<div id="map"></div>
 	<span>说明：可进行图片平移，滑轮缩放</span>
-    <script src="./index.js"></script>
+    <script>
+        // 容器对象声明
+        let gMap = new gDBox.Map('map', {zoom: 1080, cx: 0, cy: 0, zoomMax: 650 * 10, zoomMin: 650 / 10});
+
+        // 图片层实例\添加
+        let gImageLayer = new gDBox.Layer.Image('img', '../../imgs/demo.jpeg', {w: 1080, h: 720}, {zIndex: 1});
+        gMap.addLayer(gImageLayer);
+    </script>
 </body>
 </html>
