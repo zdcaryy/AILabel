@@ -1,5 +1,11 @@
 # gDBox.js
 
+# 【注意.注意.注意】：
+本库近期忙于工作，疏于维护，大家注意下....
+大家可至npm下载使用最新版：https://www.npmjs.com/package/gdbox
+准新版api文档http://www.gdbox.vip/gdbox
+
+
 ### 背景-功能
 
 > 1. 解决图片浏览（无极缩放、平移）
