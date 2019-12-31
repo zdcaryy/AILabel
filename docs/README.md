@@ -19,6 +19,12 @@
 --------
 # 示例
 
+<img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/point.gif">
+<img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/polyline.gif">
+<img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/rect.gif">
+<img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/polygon.gif">
+<img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/mask.gif">
+
 ## 示例demo
   [- 要素](http://www.gdbox.vip/gdbox/demo/feature)<br/>
   [- 注记](http://www.gdbox.vip/gdbox/demo/marker)<br/>
