@@ -32,9 +32,8 @@
   [- 图像&缩略图&比例尺](http://www.gdbox.vip/gdbox/demo/img)<br/>
 
 --------
-# 接口API
-## AILabel.Map
-### 实例化
+# AILabel.Map
+## 实例化
 ```javascript
 // js: 伪代码
 const gMap = new AILabel.Map(containerId, config);
@@ -60,7 +59,7 @@ const gMap = new AILabel.Map('map', {zoom: 640, cx: 0, cy: 0, zoomMax: 650 * 10,
 |autoPan|绘制过程中是否禁止自动平移|否|true|bool|
 |drawZoom|绘制过程中是否禁止滑轮缩放|否|true|bool|
 
-### 事件
+## 事件
 AILabel.Map支持各类事件监听。
 ```javascript
 // js: 伪代码
@@ -75,12 +74,12 @@ gMap.events.on('mouseDown', xy => {console.log('xy');});
 |eventType|如下|是|--|string|
 |callback|mouseDown：wxy => {}<br/>mouseMove：wxy => {}<br/>geometryEditing：(type, feature, newPoints) => {}<br/>geometryEditDone：(type, feature, newPoints) => {}<br/>geometryDrawDone：(type, points) => {}<br/>featureHover：feature => {}<br/>featureSelected：feature => {}<br/>featureStatusReset：() => {}<br/>boundsChanged() => {}<br/>resize() => {}|是|--|function|
 
-### 快捷键
+## 快捷键
 |快捷键|作用|其他
 |---|---|---|
 |ctrl_z|绘制过程中撤销操作|--|
 
-### addLayer
+## addLayer
 给gMap实例上添加图层。
 ```javascript
 // js: 伪代码
@@ -88,7 +87,7 @@ const gFeatureLayer = new AILabel.Layer.Feature(layerId, config); // 请参考AI
 gMap.addLayer(gFeatureLayer); // 图层添加
 ```
 
-### removeLayer
+## removeLayer
 给gMap实例上移除图层。
 ```javascript
 // js: 伪代码
@@ -97,19 +96,19 @@ gMap.addLayer(gFeatureLayer); // 图层添加
 gMap.removeLayer(gFeatureLayer); // 图层移除
 ```
 
-### getAllLayers
+## getAllLayers
 获取gMap实例上所有图层。
 ```javascript
 gMap.getAllLayers(); // 返回[](layer)
 ```
 
-### getZoom
+## getZoom
 获取gMap实例当前缩放zoom值。
 ```javascript
 gMap.getZoom();
 ```
 
-### setZoom
+## setZoom
 设置gMap实例zoom值。
 ```javascript
 gMap.setZoom(zoom);
@@ -120,7 +119,7 @@ gMap.setZoom(zoom);
 |---|---|---|---|---|
 |zoom|缩放值|是|--|number|
 
-### zoomIn
+## zoomIn
 gMap实例放大。
 ```javascript
 gMap.zoomIn(num);
@@ -131,7 +130,7 @@ gMap.zoomIn(num);
 |---|---|---|---|---|
 |num|越大代表缩放的范围越大|否|6|number|
 
-### zoomOut
+## zoomOut
 gMap实例缩小。
 ```javascript
 gMap.zoomOut(num);
@@ -142,7 +141,7 @@ gMap.zoomOut(num);
 |---|---|---|---|---|
 |num|越大代表缩放的范围越大|否|6|number|
 
-### setMode
+## setMode
 gMap实例设置当前模式，同时可设置当前style样式。
 ```javascript
 gMap.setMode(mode[, gStyle]);
@@ -154,13 +153,13 @@ gMap.setMode(mode[, gStyle]);
 |mode|'pan': 浏览模式<br/>'drawRect': 矩形绘制<br/>'drawPolygon': 多边形绘制<br/>'drawPoint':  绘制点<br/>'drawPolyline': 多段线绘制<br/>'drawMask': 涂抹绘制<br/>'clearMask': 涂抹清除<br/>'banMap': 禁止平移缩放|是|--|string|
 |gStyle|AILabel.Style|否|--|参考AILabel.Style|
 
-### getMode
+## getMode
 获取gMap实例当前模式。
 ```javascript
 gMap.getMode();
 ```
 
-### setCenter
+## setCenter
 gMap实例设置中心点坐标。
 ```javascript
 gMap.setCenter(cx, cy);
@@ -172,7 +171,7 @@ gMap.setCenter(cx, cy);
 |cx|x坐标|是|--|number|
 |cy|y坐标|是|--|number|
 
-### centerAndZoom
+## centerAndZoom
 gMap实例设置中心点坐标并且缩放至指定值。
 ```javascript
 gMap.centerAndZoom(center, zoom);
@@ -184,19 +183,19 @@ gMap.centerAndZoom(center, zoom);
 |center|中心点坐标|是|--|object|
 |zoom|缩放值|是|--|number|
 
-### getCenter
+## getCenter
 获取中心点。
 ```javascript
 gMap.getCenter();
 ```
 
-### getScreenCenter
+## getScreenCenter
 获取屏幕中心点坐标。
 ```javascript
 gMap.getScreenCenter();
 ```
 
-### resize
+## resize
 gMap实例resize【此方法不建议使用】。
 ```javascript
 gMap.resize(w, h);
@@ -208,15 +207,15 @@ gMap.resize(w, h);
 |w|宽度|是|--|number|
 |h|高度|是|--|number|
 
-### destroy
+## destroy
 gMap实例销毁。
 ```javascript
 gMap.destroy();
 ```
 
 --------
-## AILabel.Layer.Image
-### 实例化
+# AILabel.Layer.Image
+## 实例化
 图像层实例化。
 ```javascript
 const imageLayer = new AILabel.Layer.Image(layerId, src, size, config);
@@ -245,7 +244,7 @@ const imageLayer = new AILabel.Layer.Image(layerId, src, size, config);
 |columnCount|列数|是|--|number|
 |color|网格颜色-十六进制|否|#000000|string|
 
-### update
+## update
 图像层相关更新【暂时只支持辅助网格更新】。
 ```javascript
 const imageLayer = new AILabel.Layer.Image(layerId, src, size, config);
@@ -253,7 +252,7 @@ imageLayer.update({grid: Grid});
 imageLayer.update({grid: false}); // 删除网格
 ```
 
-### renew
+## renew
 刷新。
 ```javascript
 const imageLayer = new AILabel.Layer.Image(layerId, src, size, config);
@@ -261,8 +260,8 @@ imageLayer.renew();
 ```
 
 --------
-## AILabel.Layer.Feature
-### 实例化
+# AILabel.Layer.Feature
+## 实例化
 矢量数据层【矢量数据点/线/面展示层】。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -281,7 +280,7 @@ const featureLayer = new AILabel.Layer.Feature(layerId, config);
 |opacity|透明度0-1|否|1|number|
 |zIndex|同css中zIndex|否|2|number|
 
-### addFeature
+## addFeature
 添加矢量要素。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -289,7 +288,7 @@ const feature = new AILabel.Feature.Polygon(featureId, points, data, gStyle); //
 gFeatureLayer.addFeature(feature);
 ```
 
-### getFeatureById
+## getFeatureById
 通过要素id获取指定要素。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -304,7 +303,7 @@ const fea = gFeatureLayer.getFeatureById(featureId);
 |---|---|---|---|---|
 |featureId|feature对象唯一标志id|是|--|string|
 
-### removeAllFeatures
+## removeAllFeatures
 删除当前要素层上所有要素。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -314,7 +313,7 @@ gFeatureLayer.addFeature(feature);
 gFeatureLayer.removeAllFeatures();
 ```
 
-### removeFeature
+## removeFeature
 删除要素。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -324,7 +323,7 @@ gFeatureLayer.addFeature(feature);
 gFeatureLayer.removeFeature(feature);
 ```
 
-### removeFeatureById
+## removeFeatureById
 通过要素id删除指定要素。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -334,7 +333,7 @@ gFeatureLayer.addFeature(feature);
 gFeatureLayer.removeFeatureById(featureId);
 ```
 
-### removeFeaturesByIds
+## removeFeaturesByIds
 通过要素id集合删除指定要素集合。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -350,7 +349,7 @@ gFeatureLayer.removeFeaturesByIds(featureIds);
 |---|---|---|---|---|
 |featureIds|feature对象唯一标志ids|是|--|array|
 
-### removeFeaturesByProperty
+## removeFeaturesByProperty
 通过要素属性数据删除要素。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -366,7 +365,7 @@ gFeatureLayer.removeFeaturesByProperty(properties);
 |---|---|---|---|---|
 |properties|待删除要素的属性数据集合|是|--|array|
 
-### getAllFeatures
+## getAllFeatures
 返回当前要素层上所有要素。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -377,11 +376,11 @@ const allFeatures = gFeatureLayer.getAllFeatures(); // 返回所有要素数据
 ```
 
 --------
-## AILabel.Layer.Marker
-### 实例化
+# AILabel.Layer.Marker
+## 实例化
 marker标注层为系统内置图层，可通过gMap.mLayer进行获取。
 
-### addMarker
+## addMarker
 添加标注对象。
 ```javascript
 const marker = new AILabel.Marker(markerId, config); // 参考AILabel.Marker【此处不再赘述】
@@ -389,7 +388,7 @@ const marker = new AILabel.Marker(markerId, config); // 参考AILabel.Marker【�
 gMap.mLayer.addMarker(marker);
 ```
 
-### removeMarker
+## removeMarker
 删除标注。
 ```javascript
 const marker = new AILabel.Marker(markerId, config); // 参考AILabel.Marker【此处不再赘述】
@@ -398,7 +397,7 @@ gMap.mLayer.addMarker(marker);
 gMap.mLayer.removeMarker(marker);
 ```
 
-### removeMarkerById
+## removeMarkerById
 通过标注id删除指定标注。
 ```javascript
 const marker = new AILabel.Marker(markerId, config); // 参考AILabel.Marker【此处不再赘述】
@@ -407,7 +406,7 @@ gMap.mLayer.addMarker(marker);
 gMap.mLayer.removeMarkerById(markerId);
 ```
 
-### removeMarkersByIds
+## removeMarkersByIds
 通过标注id集合删除指定标注集合。
 ```javascript
 const marker = new AILabel.Marker(markerId, config); // 参考AILabel.Marker【此处不再赘述】
@@ -423,7 +422,7 @@ gMap.mLayer.removeMarkersByIds(markerIds);
 |---|---|---|---|---|
 |markerIds|marker对象唯一标志ids|是|--|array|
 
-### getAllMarkers
+## getAllMarkers
 返回当前标注层上所有标注对象。
 ```javascript
 const marker = new AILabel.Marker(markerId, config); // 参考AILabel.Marker【此处不再赘述】
@@ -433,7 +432,7 @@ gMap.mLayer.removeMarkerById(markerId);
 const allMarkers = gMap.mLayer.getAllMarkers(); // 返回所有标注数据
 ```
 
-### getMarkerById
+## getMarkerById
 通过标注id获取指定标注对象。
 ```javascript
 const marker = new AILabel.Marker(markerId, config); // 参考AILabel.Marker【此处不再赘述】
@@ -443,7 +442,7 @@ gMap.mLayer.removeMarkerById(markerId);
 const mar = gMap.mLayer.getMarkerById(markerId);
 ```
 
-### addMarkers
+## addMarkers
 添加标注对象集合。
 ```javascript
 const marker = new AILabel.Marker(markerId, config); // 参考AILabel.Marker【此处不再赘述】
@@ -452,7 +451,7 @@ const marker2 = new AILabel.Marker(markerId2, config2); // 参考AILabel.Marker�
 gMap.mLayer.addMarkers([marker, marker2]);
 ```
 
-### removeMarkers
+## removeMarkers
 移除标注对象集合。
 ```javascript
 const marker = new AILabel.Marker(markerId, config); // 参考AILabel.Marker【此处不再赘述】
@@ -462,7 +461,7 @@ gMap.mLayer.addMarkers([marker, marker2]);
 gMap.mLayer.removeMarkers([marker, marker2]);
 ```
 
-### removeAllMarkers
+## removeAllMarkers
 删除当前标注层上所有标注对象。
 ```javascript
 const marker = new AILabel.Marker(markerId, config); // 参考AILabel.Marker【此处不再赘述】
@@ -473,8 +472,8 @@ gMap.mLayer.removeAllMarkers();
 ```
 
 --------
-## AILabel.Layer.Text
-### 实例化
+# AILabel.Layer.Text
+## 实例化
 文本图层
 ```javascript
 const textLayer = new AILabel.Layer.Text(layerId, config);
@@ -492,7 +491,7 @@ const textLayer = new AILabel.Layer.Text(layerId, config);
 |---|---|---|---|---|
 |zIndex|同css中zIndex|否|2|number|
 
-### addText
+## addText
 添加文本对象。
 ```javascript
 const textLayer = new AILabel.Layer.Text(layerId, config);
@@ -501,7 +500,7 @@ const text = new AILabel.Text(textId, config, gStyle); // 参考AILabel.Text【�
 textLayer.addText(text);
 ```
 
-### removeText
+## removeText
 删除文本。
 ```javascript
 const textLayer = new AILabel.Layer.Text(layerId, config);
@@ -511,7 +510,7 @@ textLayer.addText(text);
 textLayer.removeText(text);
 ```
 
-### getTextById
+## getTextById
 通过文本id获取指定文本对象。
 ```javascript
 const textLayer = new AILabel.Layer.Text(layerId, config);
@@ -521,7 +520,7 @@ textLayer.addText(text);
 textLayer.getTextById(textId);
 ```
 
-### removeTextById
+## removeTextById
 通过文本id删除指定文本。
 ```javascript
 const textLayer = new AILabel.Layer.Text(layerId, config);
@@ -531,7 +530,7 @@ textLayer.addText(text);
 textLayer.removeTextById(textId);
 ```
 
-### removeTextsByIds
+## removeTextsByIds
 通过文本id集合删除指定文本集合。
 ```javascript
 const textLayer = new AILabel.Layer.Text(layerId, config);
@@ -541,7 +540,7 @@ textLayer.addText(text);
 textLayer.removeTextsByIds([textId]);
 ```
 
-### addTexts
+## addTexts
 添加文本对象集合。
 ```javascript
 const text = new AILabel.Text(textId, config, gStyle); // 参考AILabel.Text【此处不做赘述】
@@ -550,7 +549,7 @@ const text2 = new AILabel.Text(textId2, config, gStyle); // 参考AILabel.Text�
 textLayer.addTexts([text, text2]);
 ```
 
-### removeTexts
+## removeTexts
 删除文本对象集合。
 ```javascript
 const text = new AILabel.Text(textId, config, gStyle); // 参考AILabel.Text【此处不做赘述】
@@ -560,7 +559,7 @@ textLayer.addTexts([text, text2]);
 textLayer.removeTexts([text, text2]);
 ```
 
-### getAllTexts
+## getAllTexts
 返回当前文本层上所有文本对象。
 ```javascript
 const text = new AILabel.Text(textId, config, gStyle); // 参考AILabel.Text【此处不做赘述】
@@ -570,7 +569,7 @@ textLayer.addTexts([text, text2]);
 const allTexts = textLayer.getAllTexts(); // 返回所有文本数据
 ```
 
-### removeAllTexts
+## removeAllTexts
 删除当前文本层上所有文本对象。
 ```javascript
 const text = new AILabel.Text(textId, config, gStyle); // 参考AILabel.Text【此处不做赘述】
@@ -581,9 +580,9 @@ textLayer.removeAllTexts();
 ```
 
 --------
-## AILabel.Layer.Mask
+# AILabel.Layer.Mask
 maskLayer用来展示涂抹像素级信息。本图层不提供remove相关方法，用户可通过mode='clearMask'进行擦除，然后对应的相应事件监听可实现涂抹删除功能。
-### 实例化
+## 实例化
 ```javascript
 const gMaskLayer = new AILabel.Layer.Mask(layerId, config);
 gMap.addLayer(gMaskLayer);
@@ -602,7 +601,7 @@ gMap.addLayer(gMaskLayer);
 |opacity|透明度0-1|否|1|number|
 |zIndex|同css中zIndex|否|2|number|
 
-### addMasks
+## addMasks
 ```javascript
 const masks = [
     [[1, 1], '#FF0000'],
@@ -627,13 +626,13 @@ gMaskLayer.addMasks(masks, shouldClearBefore);
 |Mask[0]|实际坐标像素坐标，可理解为图像上的像素点坐标|是|--|array|
 |Mask[1]|像素对应的颜色值|是|--|string|
 
-### getAllMasks
+## getAllMasks
 获取当前maskLayer上所有像素点
 ```javascript
 gMaskLayer.getAllMasks();
 ```
 
-### removeMasks
+## removeMasks
 清空所有涂抹像素点。
 ```javascript
 // 直接方法待支持
@@ -642,9 +641,9 @@ gMaskLayer.addMasks([], true);
 ```
 
 --------
-## AILabel.Feature.Point
+# AILabel.Feature.Point
 要素数据：点。
-### 实例化
+## 实例化
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
 // 实例化点
@@ -667,7 +666,7 @@ gFeatureLayer.addFeature(feature);
 |---|---|---|---|---|
 |radius|实际坐标系下半径【随图形缩放会进行相应缩放】，如果不设置，则会应用传入style样式进行显示，即不会随图形缩放而缩放|否|--|number|
 
-### show
+## show
 点要素显示。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -679,7 +678,7 @@ feature.hide();
 feature.show();
 ```
 
-### hide
+## hide
 点要素隐藏。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -689,7 +688,7 @@ gFeatureLayer.addFeature(feature);
 feature.hide();
 ```
 
-### update
+## update
 点要素更新。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -712,7 +711,7 @@ feature.update(options);
 |data|待更新属性数据|是|--|object|
 |style|待更新样式数据|是|--|AILabel.Style|
 
-### isCaught
+## isCaught
 判断点是否在捕捉容限内。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -728,9 +727,9 @@ feature.isCaught(wxy); // return false;
 |wxy|{x:, y: }|是|--|object|
 
 --------
-## AILabel.Feature.Polyline
+# AILabel.Feature.Polyline
 要素数据：多段线。
-### 实例化
+## 实例化
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
 // 实例化多段线
@@ -753,7 +752,7 @@ gFeatureLayer.addFeature(feature);
 |---|---|---|---|---|
 |width|实际坐标系下宽度【随图形缩放会进行相应缩放】，如果不设置，则会应用传入style样式进行显示，即不会随图形缩放而缩放|否|--|number|
 
-### show
+## show
 多段线要素显示。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -765,7 +764,7 @@ feature.hide();
 feature.show();
 ```
 
-### hide
+## hide
 多边形要素隐藏。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -775,7 +774,7 @@ gFeatureLayer.addFeature(feature);
 feature.hide();
 ```
 
-### update
+## update
 多段线要素更新。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -798,7 +797,7 @@ feature.update(options);
 |data|待更新属性数据|是|--|object|
 |style|待更新样式数据|是|--|AILabel.Style|
 
-### active
+## active
 设置feature选中【建议用户尽量避免使用】。
 ```javascript
 const feature = new AILabel.Feature.Polyline(featureId, points, data, gStyle);
@@ -806,7 +805,7 @@ const feature = new AILabel.Feature.Polyline(featureId, points, data, gStyle);
 feature.active();
 ```
 
-### deActive
+## deActive
 取消feature选中【建议用户尽量避免使用】。
 ```javascript
 const feature = new AILabel.Feature.Polyline(featureId, points, data, gStyle);
@@ -814,7 +813,7 @@ const feature = new AILabel.Feature.Polyline(featureId, points, data, gStyle);
 feature.deActive();
 ```
 
-### getBounds
+## getBounds
 获取feature最小外接矩形。
 ```javascript
 const feature = new AILabel.Feature.Polyline(featureId, points, data, gStyle);
@@ -822,7 +821,7 @@ const feature = new AILabel.Feature.Polyline(featureId, points, data, gStyle);
 feature.getBounds();
 ```
 
-### isCaught
+## isCaught
 判断点是否捕捉到当前多段线。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -838,9 +837,9 @@ feature.isCaught(wxy); // return false;
 |wxy|{x:, y: }|是|--|object|
 
 --------
-## AILabel.Feature.Polygon
+# AILabel.Feature.Polygon
 要素数据：多边形。
-### 实例化
+## 实例化
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
 // 实例化多边形
@@ -856,7 +855,7 @@ gFeatureLayer.addFeature(feature);
 |data|要素属性数据，可通过实例.data属性获取|是|--|object|
 |gStyle|要素样式|是|--|参考AILabel.Style|
 
-### show
+## show
 多边形要素显示。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -868,7 +867,7 @@ feature.hide();
 feature.show();
 ```
 
-### hide
+## hide
 多边形要素隐藏。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -878,7 +877,7 @@ gFeatureLayer.addFeature(feature);
 feature.hide();
 ```
 
-### update
+## update
 多边形要素更新。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -901,7 +900,7 @@ feature.update(options);
 |data|待更新属性数据|是|--|object|
 |style|待更新样式数据|是|--|AILabel.Style|
 
-### active
+## active
 设置feature选中【建议用户尽量避免使用】。
 ```javascript
 const feature = new AILabel.Feature.Polygon(featureId, points, data, gStyle);
@@ -909,7 +908,7 @@ const feature = new AILabel.Feature.Polygon(featureId, points, data, gStyle);
 feature.active();
 ```
 
-### deActive
+## deActive
 取消feature选中【建议用户尽量避免使用】。
 ```javascript
 const feature = new AILabel.Feature.Polygon(featureId, points, data, gStyle);
@@ -917,7 +916,7 @@ const feature = new AILabel.Feature.Polygon(featureId, points, data, gStyle);
 feature.deActive();
 ```
 
-### getBounds
+## getBounds
 获取feature最小外接矩形。
 ```javascript
 const feature = new AILabel.Feature.Polygon(featureId, points, data, gStyle);
@@ -925,7 +924,7 @@ const feature = new AILabel.Feature.Polygon(featureId, points, data, gStyle);
 feature.getBounds();
 ```
 
-### isCaught
+## isCaught
 判断点是否在当前要素内。
 ```javascript
 const featureLayer = new AILabel.Layer.Feature(layerId, config);
@@ -941,8 +940,8 @@ feature.isCaught(wxy); // return false;
 |wxy|{x:, y: }|是|--|object|
 
 --------
-## AILabel.Marker
-### 实例化
+# AILabel.Marker
+## 实例化
 实例标注对象。
 ```javascript
 const marker = new AILabel.Marker(markerId, config);
@@ -963,7 +962,7 @@ const marker = new AILabel.Marker(markerId, config);
 |y|标注位置|否|--|number|
 |offset|标注图标展示偏移量，如{x:, y:}|否|--|object|
 
-### update
+## update
 标注对象更新。
 ```javascript
 const marker = new AILabel.Marker(markerId, config);
@@ -985,7 +984,7 @@ marker.update(options);
 |y|待更新标注位置|否|--|number|
 |offset|待更新标注图标展示偏移量，如{x:, y:}|否|--|object|
 
-### regEvent
+## regEvent
 标注对象事件注册，目前仅支持click事件。
 ```javascript
 const marker = new AILabel.Marker(markerId, config);
@@ -995,15 +994,15 @@ marker.regEvent('click', function () {
 });
 ```
 
-### showInfo
+## showInfo
 展示marker信息。
 ```javascript
 // 待实现
 ```
 
 --------
-## AILabel.Text
-### 实例化
+# AILabel.Text
+## 实例化
 实例文本对象。
 ```javascript
 const text = new AILabel.Text(textId, config, gStyle);
@@ -1028,7 +1027,7 @@ const text = new AILabel.Text(textId, config, gStyle);
 |wrap|是否自动换行|否|false|bool|
 |offset|偏移量，如{x: , y:}|否|{x: 0, y: 0}|object|
 
-### update
+## update
 更新文本对象。
 ```javascript
 const text = new AILabel.Text(textId, config, gStyle);
@@ -1052,7 +1051,7 @@ text.update(options);
 |maxWidth|最大宽度|否|默认|number|
 |offset|偏移量，如{x: , y:}|否|{x: 0, y: 0}|object|
 
-### setText
+## setText
 设置文本内容。
 ```javascript
 const text = new AILabel.Text(textId, config, gStyle);
@@ -1060,7 +1059,7 @@ const text = new AILabel.Text(textId, config, gStyle);
 text.setText('new-text');
 ```
 
-### setPosition
+## setPosition
 设置文本位置。
 ```javascript
 const text = new AILabel.Text(textId, config, gStyle);
@@ -1069,9 +1068,9 @@ text.setPosition(x, y);
 ```
 
 --------
-## AILabel.Control.EagleMap
+# AILabel.Control.EagleMap
 控件：缩略图，支持两种缩略图形式，一种是纯网格形式，另一种是图像形式；
-### 实例化
+## 实例化
 ```javascript
 const eagleControl = new AILabel.Control.EagleMap(eagleMapId, options);
 ```
@@ -1110,9 +1109,9 @@ const eagleControl = new AILabel.Control.EagleMap(eagleMapId, options);
 |color|网格颜色-十六进制|否|#000000|string|
 
 --------
-## AILabel.Control.Scale
+# AILabel.Control.Scale
 控件：比例尺，展示当前缩放比例尺【目前展示形式待丰富】。
-### 实例化
+## 实例化
 ```javascript
 const scaleControl = new AILabel.Control.Scale(scaleId, options);
 ```
@@ -1130,9 +1129,9 @@ const scaleControl = new AILabel.Control.Scale(scaleId, options);
 |postion|所处位置|否|{left: 10, top: 10}|object|
 
 --------
-## AILabel.Style
+# AILabel.Style
 设置样式对象。
-### 实例化
+## 实例化
 ```javascript
 const gTextStyle = new AILabel.Style(config);
 ```
@@ -1157,24 +1156,48 @@ const gTextStyle = new AILabel.Style(config);
 |pointRadius|点半径|否|3|number|
 
 --------
-## AILabel.Util
+# AILabel.Util
 相关工具库。
-### worldToScreen
+## worldToScreen
 实际坐标转屏幕坐标。
 ```javascript
 const sxy = AILabel.Util.worldToScreen(gMap, x, y);
 ```
 
-### screenToWorld
+## screenToWorld
 屏幕坐标转实际坐标。
 ```javascript
 const wxy = AILabel.Util.screenToWorld(gMap, x, y);
 ```
 
-### getBounds
+## getBounds
 屏幕坐标转实际坐标。
 ```javascript
 const bounds = AILabel.Util.getBounds(points); // [left_top_point, right_top_point, left_bottom_point, right_bottom_point]
 ```
 
 --------
+# FAQ
+
+* <h6>AILabel坐标系</h6>
+
+> AILabel的原点是基于用户数据的原点，即原点依赖于传入数据，x轴向右，y轴向上；
+
+* <h6>为什么后端给我返回的坐标系不能正确的显示？</h6>
+
+> 原因一：坐标系不一致造成：后端返回的数据可能是基于图像左上角为(0, 0)原点，x轴向右，y轴向下坐标系产生的，但我们的坐标系实际是x轴向右，y轴向上；
+
+> 原因二：...
+
+* <h6>实际坐标系与屏幕坐标系区别？</h6>
+
+> 实际坐标系就是实体的本身坐标系，不会随着视野范围变化而产生变化。
+> 屏幕坐标系就是用来将实际意义的坐标应用于电子地图上展示的临时坐标系。
+> 举个栗子：比如您家的房子位于(lat36, lng128)，在电子地图上展示你家的实际位置用户不会变化，但是当电子地图进行平移或者缩放时，您家房子的展示位置可能会发生变化，这里所说的展示位置就是屏幕坐标位置；
+
+* <h6>zoom值到底是啥</h6>
+
+> zoom值的意思就是缩放值，即显示容器的宽所代表的实际距离宽；比如容器宽度是1000px，而此时如果设置zoom为2000，则zoom的意思就是1000px宽的容器所指代的实际距离是2000，更进一步说就是，比如从您家到您姑姑家距离是2000米，则显示在屏幕上设置zoom=2000就是1000px宽的显示容器代表的实际距离就是2000米；
+
+* <h6>未完待续</h6>
+
