@@ -19,8 +19,8 @@
 --------
 # 示例
 
-<img width="350" style="display:inline-block;" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/point.gif">
-<img width="350" style="display:inline-block;" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/polyline.gif">
+<img width="350" style="float:left;" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/point.gif">
+<img width="350" style="float:left;" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/polyline.gif">
 <img width="350" style="display:inline-block;" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/rect.gif">
 <img width="350" style="display:inline-block;" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/polygon.gif">
 <img width="350" style="display:inline-block;" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/mask.gif">
