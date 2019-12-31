@@ -1,7 +1,5 @@
 # AILabel.js
 
-<img width="150" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/point.gif">
-
 ### 背景-功能
 
 > 1. 解决图片浏览（无极缩放、平移）
