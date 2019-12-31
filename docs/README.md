@@ -1134,7 +1134,7 @@ const scaleControl = new AILabel.Control.Scale(scaleId, options);
 设置样式对象。
 ### 实例化
 ```javascript
-const gTextStyle = new gDBox.Style(config);
+const gTextStyle = new AILabel.Style(config);
 ```
 <h4>Params</h4>
 
@@ -1162,19 +1162,19 @@ const gTextStyle = new gDBox.Style(config);
 ### worldToScreen
 实际坐标转屏幕坐标。
 ```javascript
-const sxy = gDBox.Util.worldToScreen(gMap, x, y);
+const sxy = AILabel.Util.worldToScreen(gMap, x, y);
 ```
 
 ### screenToWorld
 屏幕坐标转实际坐标。
 ```javascript
-const wxy = gDBox.Util.screenToWorld(gMap, x, y);
+const wxy = AILabel.Util.screenToWorld(gMap, x, y);
 ```
 
 ### getBounds
 屏幕坐标转实际坐标。
 ```javascript
-const bounds = gDBox.Util.getBounds(points); // [left_top_point, right_top_point, left_bottom_point, right_bottom_point]
+const bounds = AILabel.Util.getBounds(points); // [left_top_point, right_top_point, left_bottom_point, right_bottom_point]
 ```
 
 --------

@@ -8,6 +8,7 @@ npm下载地址：[https://www.npmjs.com/package/ailabel](https://www.npmjs.com/
 github地址:  [https://github.com/dingyang9642/AILabel](https://github.com/dingyang9642/gDBox)<br/>
 api文档(待补充):  [https://dingyang9642.github.io/AILabel/#/](https://dingyang9642.github.io/AILabel/#/)<br/>
 
+
 ### 背景-功能
 
 > 1. 解决图片浏览（无极缩放、平移）
