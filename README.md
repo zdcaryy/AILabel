@@ -1,6 +1,6 @@
 # AILabel.js
 
-<img style="width:150px;" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/point.gif">
+<img width="150" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/point.gif">
 
 ### 背景-功能
 
