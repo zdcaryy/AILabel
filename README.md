@@ -1,7 +1,6 @@
 # AILabel.js
 
-![aaaa](https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/point.gif =100x100)
-<img style="width:350px;" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/point.gif">
+<img style="width:150px;" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/point.gif">
 
 ### 背景-功能
 
