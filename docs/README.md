@@ -17,6 +17,10 @@
 ....
 
 --------
+# 快速入门
+[快速入门](https://dingyang9642.github.io/AILabel/#/texts/abstract)<br/>
+
+--------
 # 示例
 
 <img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/point.gif"><img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/polyline.gif"><img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/rect.gif"><img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/polygon.gif"><img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/mask.gif">
@@ -837,6 +841,102 @@ feature.isCaught(wxy); // return false;
 |wxy|{x:, y: }|是|--|object|
 
 --------
+# AILabel.Feature.Rect
+要素数据：矩形。
+## 实例化
+```javascript
+const featureLayer = new AILabel.Layer.Feature(layerId, config);
+// 实例化矩形形
+const feature = new AILabel.Feature.Rect(featureId, points, data, gStyle);
+gFeatureLayer.addFeature(feature);
+```
+<h4>Params</h4>
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|featureId|要素id|是|--|string|
+|points|要素空间数据，如[{x: y:}, {x: y:}, {x: y:}]，长度按顺序固定4个|是|--|array|
+|data|要素属性数据，可通过实例.data属性获取|是|--|object|
+|gStyle|要素样式|是|--|参考AILabel.Style|
+
+## show
+矩形要素显示。
+```javascript
+const featureLayer = new AILabel.Layer.Feature(layerId, config);
+const feature = new AILabel.Feature.Rect(featureId, points, data, gStyle);
+gFeatureLayer.addFeature(feature);
+// 隐藏
+feature.hide();
+// 展示
+feature.show();
+```
+
+## hide
+矩形要素隐藏。
+```javascript
+const featureLayer = new AILabel.Layer.Feature(layerId, config);
+const feature = new AILabel.Feature.Rect(featureId, points, data, gStyle);
+gFeatureLayer.addFeature(feature);
+// 隐藏
+feature.hide();
+```
+
+## update
+矩形要素更新。
+```javascript
+const featureLayer = new AILabel.Layer.Feature(layerId, config);
+const feature = new AILabel.Feature.Rect(featureId, points, data, gStyle);
+gFeatureLayer.addFeature(feature);
+// 更新
+feature.update(options);
+```
+<h4>Params</h4>
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|options|更新数据配置项|是|--|Option|
+
+<h4>Option</h4>
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|points|待更新空间数据，固定长度为4的{x:, y: }|是|--|Point[]|
+|data|待更新属性数据|是|--|object|
+|style|待更新样式数据|是|--|AILabel.Style|
+
+## active
+设置feature选中【建议用户尽量避免使用】。
+```javascript
+const feature = new AILabel.Feature.Rect(featureId, points, data, gStyle);
+// 设置feature选中
+feature.active();
+```
+
+## deActive
+取消feature选中【建议用户尽量避免使用】。
+```javascript
+const feature = new AILabel.Feature.Rect(featureId, points, data, gStyle);
+// 取消feature选中
+feature.deActive();
+```
+
+## isCaught
+判断点是否在当前要素内。
+```javascript
+const featureLayer = new AILabel.Layer.Feature(layerId, config);
+const feature = new AILabel.Feature.Rect(featureId, points, data, gStyle);
+gFeatureLayer.addFeature(feature);
+
+feature.isCaught(wxy); // return false;
+```
+<h4>Params</h4>
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|wxy|{x:, y: }|是|--|object|
+
+--------
+
 # AILabel.Feature.Polygon
 要素数据：多边形。
 ## 实例化
