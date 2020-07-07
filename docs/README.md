@@ -21,16 +21,21 @@
 [快速入门](https://dingyang9642.github.io/AILabel/#/texts/abstract)<br/>
 
 --------
-# 示例
+# 示例图片
 
 <img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/point.gif"><img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/polyline.gif"><img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/rect.gif"><img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/polygon.gif"><img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/mask.gif">
 
 
 ## 示例demo
+<h5>综合示例</h5>
+
+  [- 绘制编辑](http://www.gdbox.vip/gdbox/demo/drawFeature)<br/>
+
+<h5>其他示例</h5>
+
   [- 要素](http://www.gdbox.vip/gdbox/demo/feature)<br/>
   [- 注记](http://www.gdbox.vip/gdbox/demo/marker)<br/>
   [- 文本](http://www.gdbox.vip/gdbox/demo/text)<br/>
-  [- 绘制编辑](http://www.gdbox.vip/gdbox/demo/drawFeature)<br/>
   [- 矩形编辑](http://www.gdbox.vip/gdbox/demo/editRect)<br/>
   [- 要素hover](http://www.gdbox.vip/gdbox/demo/hover)<br/>
   [- 图像&缩略图&比例尺](http://www.gdbox.vip/gdbox/demo/img)<br/>
@@ -62,6 +67,7 @@ const gMap = new AILabel.Map('map', {zoom: 640, cx: 0, cy: 0, zoomMax: 650 * 10,
 |zoomMin|缩放最小级别|否|无极|number|
 |autoPan|绘制过程中是否禁止自动平移|否|true|bool|
 |drawZoom|绘制过程中是否禁止滑轮缩放|否|true|bool|
+|autoFeatureSelect|默认是否双击选中feature|否|true|bool|
 
 ## 事件
 AILabel.Map支持各类事件监听。
@@ -76,7 +82,7 @@ gMap.events.on('mouseDown', xy => {console.log('xy');});
 |参数|说明|是否必填|默认|类型|
 |---|---|---|---|---|
 |eventType|如下|是|--|string|
-|callback|mouseDown：wxy => {}<br/>mouseMove：wxy => {}<br/>geometryEditing：(type, feature, newPoints) => {}<br/>geometryEditDone：(type, feature, newPoints) => {}<br/>geometryDrawDone：(type, points) => {}<br/>featureHover：feature => {}<br/>featureSelected：feature => {}<br/>featureStatusReset：() => {}<br/>boundsChanged() => {}<br/>resize() => {}|是|--|function|
+|callback|mouseDown：wxy => {}<br/>mouseMove：wxy => {}<br/>geometryEditing：(type, feature, newPoints) => {}<br/>geometryEditDone：(type, feature, newPoints) => {}<br/>geometryDrawDone：(type, points) => {}<br/>featureHover：feature => {}<br/>featureWillSelected：feature => {}<br/>featureSelected：feature => {}<br/>featureStatusReset：() => {}<br/>boundsChanged() => {}<br/>resize() => {}|是|--|function|
 
 ## 快捷键
 |快捷键|作用|其他
@@ -197,6 +203,18 @@ gMap.getCenter();
 获取屏幕中心点坐标。
 ```javascript
 gMap.getScreenCenter();
+```
+
+## tipLayer.showTips
+编辑tip提示开关
+```javascript
+gMap.tipLayer.showTips(); // 打开tip提示
+```
+
+## tipLayer.hideTips
+编辑tip提示开关
+```javascript
+gMap.tipLayer.hideTips(); // 关闭tip提示
 ```
 
 ## resize
@@ -378,6 +396,113 @@ gFeatureLayer.addFeature(feature);
 
 const allFeatures = gFeatureLayer.getAllFeatures(); // 返回所有要素数据
 ```
+
+--------
+# AILabel.Layer.Mask
+## 实例化
+涂抹层【用于涂抹数据展示、绘制及擦除】。
+```javascript
+const gMaskLayer = new AILabel.Layer.Mask(layerId, config);
+```
+<h4>Params</h4>
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|layerId|实例图层唯一标志id|是|--|string|
+|config|其他配置项|否|--|Config|
+
+<h4>Config</h4>
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|opacity|透明度0-1|否|1|number|
+|zIndex|同css中zIndex|否|2|number|
+
+## addMaskAction
+添加涂抹Action【Action定义请往下看】。此处建议参考demo: http://www.gdbox.vip/gdbox/demo/drawFeature
+```javascript
+// MaskAction分3类【imgMask、drawAction、clearAction】
+gMaskLayer.addMaskAction(MaskAction);
+```
+
+<h4>MaskAction分类</h4>
+
+|参数|说明|类型|
+|---|---|---|
+|imgMask|图片Action，主要适应场景为后端储存的涂抹数据（比如rle数据）需要转换为png透明格式图片形式返回（原则上和标注样本图片的大小保持一致），这样前端就可以有效避免像素级数据循环处理，至于原因，你懂的，不再赘述|imgMask: 下方定义|
+|drawMask|绘制Action，适应场景为用户绘制结束后，AILabel会通过gMap.events.on('geometryDrawDone', params => {})返回此类型Action给业务方，业务方可根据具体场景决定对其是否添加附加属性，然后通过addMaskAction方法进行添加即可|drawMask: 下方定义|
+|clearMask||clearMask: 下方定义|
+
+<h4>imgMask</h4>
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|key|当前action唯一标识|是|--|string|
+|name|此参数进行action归类使用，在最终数据处理时会把同一name的action进行合并处理|是|--|string|
+|type|当时image时，此处固定为'imgMask'|是|--|string|
+|image|image对象,canvas:drawImage支持的image类型即可，此处需要注意的点：当后端返回image-url时，需要在new Image():onload之后进行addMaskAction(imgMaskAction)操作|是|--|object|
+
+<h4>drawMask</h4>
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|key|当前action唯一标识|是|--|string|
+|name|此参数进行action归类使用，在最终数据处理时会把同一name的action进行合并处理|是|--|string|
+|type|当时image时，此处固定为'drawMask'|是|--|string|
+|segments|涂抹绘制轨迹图形集|是|--|Segment[]: 定义继续往下看|
+
+<h4>clearMask</h4>
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|key|当前action唯一标识|是|--|string|
+|type|当时image时，此处固定为'clearMask'|是|--|string|
+|segments|涂抹擦除轨迹图形集|是|--|Segment[]: 定义继续往下看|
+
+<h4>Segment</h4>
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|type|当前图形类型，目前支持circle、polygon|是|--|string|
+|point|type='circle'有效，圆圈中心点{x:--,y:--}|是|--|object|
+|radius|type='circle'有效，圆圈半径|是|--|number|
+|points|type='polygon'有效，多边形顶点集合|是|--|point[]|
+|color|图形十六进制填充色，在action-type='clearMask'时无效|是|--|string|
+
+## setRoi
+设置感兴趣区域，业务方需求可能会要求对图片以外区域不展示涂抹数据，此方法就是为了解决这种问题而设置的。
+```javascript
+// 设置图片区域为感兴趣区
+gMaskLayer.setRoi([
+   {
+       x: - imgWidth / 2,
+       y: imgHeight / 2
+   }, {
+       x:  imgWidth / 2,
+       y: imgHeight / 2
+   }, {
+       x:  imgWidth / 2,
+       y: -imgHeight / 2
+   }, {
+       x: - imgWidth / 2,
+       y: -imgHeight / 2
+   }
+]);
+```
+
+## getMaskActionsWithPixels
+获取rle格式数据，AILabel会对所有的actions按照name属性进行分类，然后进行合并处理，最终按照name属性区别产生对应的rle压缩数据；
+```javascript
+// 按标签获取rle数据
+gMaskLayer.getMaskActionsWithPixels(width, height);
+```
+<h4>Params</h4>
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|width|需要获取rle区域大小宽度，一般来说，设置成imgWidth即可|是|--|number|
+|height|需要获取rle区域大小宽度，一般来说，设置成imgHeight即可|是|--|number|
+
 
 --------
 # AILabel.Layer.Marker
@@ -581,67 +706,6 @@ const text2 = new AILabel.Text(textId2, config, gStyle); // 参考AILabel.Text�
 textLayer.addTexts([text, text2]);
 // 清空text文本对象
 textLayer.removeAllTexts();
-```
-
---------
-# AILabel.Layer.Mask
-maskLayer用来展示涂抹像素级信息。本图层不提供remove相关方法，用户可通过mode='clearMask'进行擦除，然后对应的相应事件监听可实现涂抹删除功能。
-## 实例化
-```javascript
-const gMaskLayer = new AILabel.Layer.Mask(layerId, config);
-gMap.addLayer(gMaskLayer);
-```
-<h4>Params</h4>
-
-|参数|说明|是否必填|默认|类型|
-|---|---|---|---|---|
-|layerId|实例图层唯一标志id|是|--|string|
-|config|其他配置项|否|--|Config|
-
-<h4>Config</h4>
-
-|参数|说明|是否必填|默认|类型|
-|---|---|---|---|---|
-|opacity|透明度0-1|否|1|number|
-|zIndex|同css中zIndex|否|2|number|
-
-## addMasks
-```javascript
-const masks = [
-    [[1, 1], '#FF0000'],
-    [[1, 2], '#FF0000'],
-    [[1, 3], '#FF0000'],
-    [[1, 4], '#FF0000'],
-    ...
-];
-gMaskLayer.addMasks(masks, shouldClearBefore);
-```
-<h4>Params</h4>
-
-|参数|说明|是否必填|默认|类型|
-|---|---|---|---|---|
-|masks|待涂抹像素级信息|是|--|Mask[]|
-|shouldClearBefore|添加之前是否需要进行清除所有|否|false|bool|
-
-<h4>Mask</h4>
-
-|参数|说明|是否必填|默认|类型|
-|---|---|---|---|---|
-|Mask[0]|实际坐标像素坐标，可理解为图像上的像素点坐标|是|--|array|
-|Mask[1]|像素对应的颜色值|是|--|string|
-
-## getAllMasks
-获取当前maskLayer上所有像素点
-```javascript
-gMaskLayer.getAllMasks();
-```
-
-## removeMasks
-清空所有涂抹像素点。
-```javascript
-// 直接方法待支持
-// 暂时替代方案如下
-gMaskLayer.addMasks([], true);
 ```
 
 --------
@@ -1281,11 +1345,11 @@ const bounds = AILabel.Util.getBounds(points); // [left_top_point, right_top_poi
 
 * <h6>AILabel坐标系</h6>
 
-> AILabel的原点是基于用户数据的原点，即原点依赖于传入数据，x轴向右，y轴向上；
+> AILabel的原点是基于用户数据的原点，即原点依赖于传入数据，x轴向右，y轴向上（当图片存在时，图片的中心点就是实际坐标系的原点）；
 
 * <h6>为什么后端给我返回的坐标系不能正确的显示？</h6>
 
-> 原因一：坐标系不一致造成：后端返回的数据可能是基于图像左上角为(0, 0)原点，x轴向右，y轴向下坐标系产生的，但我们的坐标系实际是x轴向右，y轴向上；
+> 原因一：坐标系不一致造成：后端返回的数据可能是基于图像左上角为(0, 0)原点，x轴向右，y轴向下坐标系产生的，但我们的坐标系实际是x轴向右，y轴向上（当图片存在时，图片的中心点就是实际坐标系的原点）；
 
 > 原因二：...
 

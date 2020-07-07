@@ -20,10 +20,11 @@ api文档(待补充):  [https://dingyang9642.github.io/AILabel/#/](https://dingy
 
 ### 示例Demo
 
+  [- 绘制编辑](http://www.gdbox.vip/gdbox/demo/drawFeature)<br/>
+
   [- 要素](http://www.gdbox.vip/gdbox/demo/feature)<br/>
   [- 注记](http://www.gdbox.vip/gdbox/demo/marker)<br/>
   [- 文本](http://www.gdbox.vip/gdbox/demo/text)<br/>
-  [- 绘制编辑](http://www.gdbox.vip/gdbox/demo/drawFeature)<br/>
   [- 矩形编辑](http://www.gdbox.vip/gdbox/demo/editRect)<br/>
   [- 要素hover](http://www.gdbox.vip/gdbox/demo/hover)<br/>
   [- 图像&缩略图&比例尺](http://www.gdbox.vip/gdbox/demo/img)<br/>

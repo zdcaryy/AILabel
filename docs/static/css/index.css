@@ -42,10 +42,9 @@ body.close .header {
     border-left: 8px solid #cecece;
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
+    transform: rotate(0deg);
     transition: transform 0.3s;
-    transform: rotate(90deg);
     position: relative;
-
   }
 
   .ul-after-sanjiao::after {
@@ -66,6 +65,6 @@ body.close .header {
   }
 
   .sidebar-nav-parent-li-shouqi .ul-after-sanjiao {
-    transform: rotate(0deg);
     transition: transform 0.3s;
+    transform: rotate(90deg);
   }

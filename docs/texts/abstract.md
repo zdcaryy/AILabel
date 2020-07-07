@@ -5,7 +5,7 @@
 ### 相关资料
 
 npm下载地址：[https://www.npmjs.com/package/ailabel](https://www.npmjs.com/package/ailabel)<br/>
-github地址:  [https://github.com/dingyang9642/AILabel](https://github.com/dingyang9642/gDBox)<br/>
+github地址:  [https://github.com/dingyang9642/AILabel](https://github.com/dingyang9642/AILabel)<br/>
 api文档(待补充):  [https://dingyang9642.github.io/AILabel/#/](https://dingyang9642.github.io/AILabel/#/)<br/>
 
 
