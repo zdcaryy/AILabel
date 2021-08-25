@@ -1,165 +1,98 @@
-# AILabel.js
-背景：在前端开发过程中难免遇到针对图片的缩放平移；以及在图片上进行矢量数据、文本、标注的展示；如果你有上面的任何需求，恭喜你，找到组织了....<br/>
-在此背景下，AILabel.js出生了
+# AILabel
 
-### 相关资料
+## 定义
+AILabel类库是一款集打点、线段、多段线、矩形、多边形、圆圈、涂抹等多标注形式于一体，附加文本（Text）、标记（Marker）、缩略图（EagleMap）、Scale（比例尺）等控件以及Util等辅助工具的在线Web端标注工具库。目前已被广泛应用于多标注项目中。
 
-npm下载地址：[https://www.npmjs.com/package/ailabel](https://www.npmjs.com/package/ailabel)<br/>
-github地址:  [https://github.com/dingyang9642/AILabel](https://github.com/dingyang9642/gDBox)<br/>
-api文档(待补充):  [https://dingyang9642.github.io/AILabel/#/](https://dingyang9642.github.io/AILabel/#/)<br/>
+## 文档
 
-### 背景-功能
+API文档：http://ailabel.com.cn/public/ailabel/api/index.html<br/>
+Demo文档：http://ailabel.com.cn/public/ailabel/demo/index.html
 
-> 1. 解决图片浏览（无极缩放、平移）
-> 2. 矢量数据、文本、标注展示
-> 3. 矢量数据绘制、编辑
-> 4. 标注形式：矩形、多边形、涂抹、折线、打点、文本text、标注marker
+## 目录结构
+- libs: AILabel源码
+- demo: AILabel-demo
+- doc: AILabel-api文档
+- website: AILabel官网【待开发】
 
-### 示例图
-<img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/point.gif"><img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/polyline.gif"><img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/rect.gif"><img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/polygon.gif"><img width="350" src="https://raw.githubusercontent.com/dingyang9642/AILabel/master/docs/files/mask.gif">
+## 环境安装及运行
 
-### 示例Demo
+**libs**
+> npm i<br/>
+> npm run dev // 启动rollup<br/>
+> open demo->index.html<br/>
 
-  [- 绘制编辑](http://www.gdbox.vip/gdbox/demo/drawFeature)<br/>
+**doc**
+> npm i<br/>
+> npm run build<br/>
 
-  [- 要素](http://www.gdbox.vip/gdbox/demo/feature)<br/>
-  [- 注记](http://www.gdbox.vip/gdbox/demo/marker)<br/>
-  [- 文本](http://www.gdbox.vip/gdbox/demo/text)<br/>
-  [- 矩形编辑](http://www.gdbox.vip/gdbox/demo/editRect)<br/>
-  [- 要素hover](http://www.gdbox.vip/gdbox/demo/hover)<br/>
-  [- 图像&缩略图&比例尺](http://www.gdbox.vip/gdbox/demo/img)<br/>
+## 快速开始
 
-### get started
-
-html\css\js部分
+**第一个小栗子**
+图片层的添加
 ```javascript
-    // 样式声明
-    <style>
-        #hello-map {
-            width: 500px;         // 必须
-            height: 400px;        // 必须
-            position: relative;   // 必须
-            border: 1px solid red;
-            cursor: pointer;
+// 声明容器
+const gMap =new AILabel.Map(CONTAINER_ID, {
+    center: {x: 0, y: 0},
+    zoom: 800,
+    mode: 'PAN' // 绘制线段
+});
+
+// 显示一张图片
+const gFirstImageLayer = new AILabel.Layer.Image(
+    'first-layer-image', // id
+    {
+        src: image.src,
+        width: image.width,
+        height: image.height,
+        position: { // 图片左上角坐标
+            x: -250,
+            y: 177
         }
-    </style>
-
-    // 容器声明
-    <div id="hello-map"></div>
-
-    // js声明-容器声明（参数：zoom: 缩放比; {cx: cy:}：初始中心点位置；zoomMax、zoomMin：缩放的比例限制）
-    const gMap = new AILabel.Map('hello-map', {zoom: 1080, cx: 0, cy: 0, zoomMax: 650 * 10, zoomMin: 650 / 10, autoPan: true, drawZoom: true});
-
-    // 图片层实例\添加
-    const gImageLayer = new AILabel.Layer.Image('img', '../../imgs/demo.jpeg', {w: 1080, h: 720}, {zIndex: 1});
-    gMap.addLayer(gImageLayer);
-
-    ***至此、已完成首个简单的hello-map的使用***
+    }, // imageInfo
+    {name: '第一个图片图层'}, // props
+    {zIndex: 5} // style
+);
+gMap.addLayer(gFirstImageLayer);
 ```
 
-### 矢量数据(Feture)展示
+**图形绘制/编辑**
+多边形绘制编辑举例
 ```javascript
-    // 常用样式声明
-    const gFetureStyle = new AILabel.Style({strokeColor: '#0000FF'});
+// 添加矢量图层（用于展示矢量图形）
+const gFirstFeatureLayer = new AILabel.Layer.Feature(
+    'first-layer-feature', // id
+    {name: '第一个矢量图层'}, // props
+    {zIndex: 10} // style
+);
+gMap.addLayer(gFirstFeatureLayer);
 
-    // 矢量层实例\添加
-    let gFeatureLayer = new AILabel.Layer.Feature('featureLayer', {zIndex: 2, transparent: true});
-    gMap.addLayer(gFeatureLayer);
-
-    // 矢量要素实例\添加
-    const fea = new AILabel.Feature.Polygon('id', [
-        {x: 10, y: 10},
-        {x: 50, y: 10},
-        {x: 40, y: 50},
-        {x: 20, y: 60},
-        {x: 10, y: 10}
-    ], {name: '中国'}, gFetureStyle);
-    gFeatureLayer.addFeature(fea);
+// gMap实例添加events事件监听
+gMap.events.on('drawDone', (type: EMapMode, data) => {
+    if (type === 'POLYGON') {
+        const polygonFeature = new AILabel.Feature.Polygon(
+            `${+new Date()}`, // id
+            {points: data}, // shape
+            {name: '矢量图形'}, // props
+            drawingStyle // style
+        );
+        gFirstFeatureLayer.addFeature(polygonFeature);
+    }
+    else if (...) {
+        // 其他类型Feature绘制完成处理
+    }
+}
 ```
 
-### 文本数据(Text)展示
-```javascript
-    // 常用样式声明
-    const gTextStyle = new AILabel.Style({strokeColor: '#0000FF'});
+## TODO
+- P0: Control.Scale 开发
+- P0: Control.EagleMap 开发
+- P0: ROI 开发
+- P0: Map拓展mapOptions配置项【如最大/最小zoom设置】
+- P1: Feature.Rect 支持中心展示十字丝
+- P1: Feature.Rect 旋转
+- P2: Layer.Image 旋转
+- P3: 3D 支持
+- ...
 
-    // 文本层实例\添加
-    let gTextLayer = new AILabel.Layer.Text('textLayer', {zIndex: 2});
-    gMap.addLayer(gTextLayer);
-
-    // 文本要素实例\添加
-    const text = new AILabel.Text('id', {
-        pos: {x: 100, y: 100},
-        offset: {x: 0, y: 0},
-        width: 100,
-        text: '中国'
-    }, gTextStyle);
-    gTextLayer.addText(text);
-```
-
-### 标注数据(Marker)展示
-```javascript
-    // 不需要声明markerLayer标注图层，有且只有一个markerLayer，可通过gMap.mLayer来获取
-    // marker对象实例\添加
-    const marker = new AILabel.Marker('name-中国', {
-        src: './marker.png',
-        x: 0,
-        y: 0,
-        offset: {x: -32, y: -32}
-    });
-    // 注册监听事件删除标注
-    marker.regEvent('click', function () {
-        gMap.mLayer.removeMarker(this);
-    });
-    gMap.mLayer.addMarker(marker);
-```
-
-### 各类事件监听（mouse、hover、boundsChanged、resize等各类事件）
-```javascript
-// mouseDown：wxy => {}
-// mouseMove：wxy => {}
-// geometryEditing：(type, feature, newPoints) => {}
-// geometryEditDone：(type, feature, newPoints) => {}
-// geometryDrawDone：(type, points) => {}
-// geometryRemove: (type, feature) => {} 【目前只针对点数据】
-// featureHover：feature => {}
-// featureSelected：feature => {}
-// featureStatusReset：() => {}
-// boundsChanged() => {}
-// resize() => {}
-gMap.events.on('mouseDown', xy => {console.log('xy');});
-gMap.events.on('boundsChanged', () => {console.log('boundsChanged');});
-gMap.events.on('featureHover', feature => {console.log(feature);});
-...
-
-```
-
-### 矢量数据绘制、编辑（点、线、面、涂抹Mask）
-```
-    // 常用样式声明
-    const gFetureStyle = new AILabel.Style({strokeColor: '#0000FF'});
-
-    // 设置当前操作模式为‘drawRect’, 浏览状态对应mode为'pan'
-    gMap.setMode('drawRect', gFetureStyle);
-
-    // 矢量层实例\添加
-    let gFeatureLayer = new AILabel.Layer.Feature('featureLayer', {zIndex: 2, transparent: true});
-    gMap.addLayer(gFeatureLayer);
-
-    // 绘制完成事件监听
-    gMap.events.on('geometryDrawDone', function (type, points) {
-        // 生成元素唯一标志（时间戳）
-        const timestamp = new Date().getTime();
-        // 元素添加展示
-        let fea = new AILabel.Feature.Polygon(`feature-${timestamp}`, points, {
-            name: '中国'
-        }, gFetureStyle);
-        gFeatureLayer.addFeature(fea);
-    });
-    // 因为自带编辑功能，故需要以下代码
-    gMap.events.on('geometryEditDone', (type, activeFeature, points) => {
-        activeFeature.update({points});
-        activeFeature.show();
-    });
-```
-
-如有其他需要，加入qq群：378301400
+## 开源协议
+请遵循：Apache License 开源协议

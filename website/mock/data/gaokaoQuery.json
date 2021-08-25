@@ -1,0 +1,47 @@
+{
+    "success": true,
+    "msg": "ok",
+    "data": {
+        "data": [
+            {
+                "id": 1,
+                "year": 2020,
+                "school": "华东师范大学",
+                "major": "材料工程制造",
+                "maxScore": 660,
+                "maxScoreRank": 6000,
+                "minScore": 600,
+                "minScoreRank": 11000,
+                "avgScore": 630,
+                "province": "山东省"
+            },
+            {
+                "id": 2,
+                "year": 2019,
+                "school": "华东师范大学",
+                "major": "材料工程制造",
+                "maxScore": 660,
+                "maxScoreRank": 6000,
+                "minScore": 600,
+                "minScoreRank": 11000,
+                "avgScore": 630,
+                "province": "山东省"
+            },
+            {
+                "id": 3,
+                "year": 2018,
+                "school": "华东师范大学",
+                "major": "材料工程制造",
+                "maxScore": 660,
+                "maxScoreRank": 6000,
+                "minScore": 600,
+                "minScoreRank": 11000,
+                "avgScore": 630,
+                "province": "山东省"
+            }
+        ],
+        "current": 1,
+        "pageSize": 20,
+        "total": 200
+    }
+}

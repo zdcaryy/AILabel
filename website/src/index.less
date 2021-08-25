@@ -1,0 +1,55 @@
+@import '~antd/dist/antd.css';
+
+// Text color
+@text-color: #108CEE;
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+body * {
+    box-sizing: border-box;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+        monospace;
+}
+
+.table-action {
+    color: @text-color;
+    font-size: 12px;
+    margin-right: 8px;
+    display: inline-block;
+}
+.table-action-delete {
+    color: #f34b4b;
+}
+.table-action:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+.table-action:last-child {
+    margin-right: 0;;
+}
+
+.map-example {
+    display: flex;
+    .map-container {
+        flex: 1;
+        position: relative;
+        width: 45%;
+        height: 600px;
+        border: 1px solid #eee;
+        overflow: hidden;
+    }
+    .map-code {
+        flex: 1;
+        border: 1px solid #eee;
+        margin-left: 2%;
+    }
+}
