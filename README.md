@@ -90,7 +90,6 @@ gMap.events.on('drawDone', (type: EMapMode, data) => {
 - P0: Map 绘制过程中滑轮方法缩小
 - P0: Map 鼠标事件外放
 - P0: ROI 开发
-- P0: Map 绘制线段修改为单击结束
 - P0: Map 绘制过程中快捷键撤销
 - P0: Map 绘制过程中提示文字添加
 - P0: Map拓展mapOptions配置项【如最大/最小zoom设置】

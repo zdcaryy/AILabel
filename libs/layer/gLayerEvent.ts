@@ -263,17 +263,7 @@ export default class MaskLayer extends Layer  {
                 this.tmpPointsStore.push(this.startPoint);
             }, 300);
         }
-    }
-    handleLineMove(e: MouseEvent) {
-        const {offsetX, offsetY} = e;
-        if (this.tmpPointsStore.length === 1) {
-            const start = this.tmpPointsStore[0].global;
-            const end = this.map.transformScreenToGlobal({x: offsetX, y: offsetY});
-            this.map.overlayLayer.addLineFeature({start, end});
-        }
-    }
-    handleLineEnd(e: MouseEvent) {
-        if (this.tmpPointsStore.length === 1) {
+        else if (this.tmpPointsStore.length === 1) {
             const {global: startGlobal} = this.tmpPointsStore[0];
             const {global: endGlobal} = this.startPoint;
             // 绘制矩形完成之后触发告知用户层
@@ -285,8 +275,16 @@ export default class MaskLayer extends Layer  {
                     end: endGlobal
                 }
             );
+            this.reset();
         }
-        this.reset();
+    }
+    handleLineMove(e: MouseEvent) {
+        const {offsetX, offsetY} = e;
+        if (this.tmpPointsStore.length === 1) {
+            const start = this.tmpPointsStore[0].global;
+            const end = this.map.transformScreenToGlobal({x: offsetX, y: offsetY});
+            this.map.overlayLayer.addLineFeature({start, end});
+        }
     }
 
 
@@ -1029,10 +1027,7 @@ export default class MaskLayer extends Layer  {
         this.clearDownTimer();
         const drawing = this.dragging || this.tmpPointsStore.length;
 
-        if (mapMode === EMapMode.Line && drawing) {
-            this.handleLineEnd(e);
-        }
-        else if (mapMode === EMapMode.Polyline && drawing) {
+        if (mapMode === EMapMode.Polyline && drawing) {
             this.handlePolylineEnd(e);
         }
         else if (mapMode === EMapMode.Polygon && drawing) {
