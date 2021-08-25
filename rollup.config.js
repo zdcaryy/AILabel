@@ -16,7 +16,7 @@ const plugins = [
         exclude: 'node_modules/**',
         extensions
     }),
-    uglify()
+    // uglify()
 ];
 
 export default [

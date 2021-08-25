@@ -204,6 +204,7 @@ export default class MaskLayer extends Layer  {
                     y: this.startPoint.global.y
                 }
             );
+            this.reset(); // 重置
         }, 300);
     }
 
@@ -214,16 +215,21 @@ export default class MaskLayer extends Layer  {
         this.dragging = true; // 鼠标按下态
         document.onmousemove = e => this.handleCircleMove(e);
         document.onmouseup =  e => this.handleCircleEnd(e);
+
+        const global = this.startPoint.global;
+        this.map.overlayLayer.addText({text: '拖动改变圆大小', position: global}, {clear: true});
     }
     handleCircleMove(e: MouseEvent) {
-        const {x: centerX, y: centerY} = this.startPoint.global;
-        // const {x: globalDltX, y: globalDltY} = this.getDltXY(e, {transform: true});
+        const global = this.startPoint.global;
+        const {x: globalDltX, y: globalDltY} = this.getDltXY(e, {transform: true});
         const {x: screenDltX, y: screenDltY} = this.getDltXY(e, {transform: false});
-        // const globalDlt = Math.sqrt(globalDltX * globalDltX + globalDltY * globalDltY);
         const screenDlt = Math.sqrt(screenDltX * screenDltX + screenDltY * screenDltY);
 
-        const circleShape = {cx: centerX, cy: centerY, sr: screenDlt, stroke: true, fill: false};
+        const moveGlobal = {x: global.x + globalDltX, y: global.y - globalDltY};
+
+        const circleShape = {cx: global.x, cy: global.y, sr: screenDlt, stroke: true, fill: false};
         this.map.overlayLayer.addCircleFeature(circleShape);
+        this.map.overlayLayer.addText({text: '抬起完成绘制', position: moveGlobal}, {clear: false});
     }
     handleCircleEnd(e: MouseEvent) {
         this.dragging = false; // 鼠标抬起
@@ -261,6 +267,7 @@ export default class MaskLayer extends Layer  {
             this.clearDownTimer();
             this.downTimer = window.setTimeout(() => {
                 this.tmpPointsStore.push(this.startPoint);
+                this.map.overlayLayer.addText({text: '移动鼠标开始绘制', position: this.startPoint.global}, {clear: true});
             }, 300);
         }
         else if (this.tmpPointsStore.length === 1) {
@@ -280,10 +287,18 @@ export default class MaskLayer extends Layer  {
     }
     handleLineMove(e: MouseEvent) {
         const {offsetX, offsetY} = e;
-        if (this.tmpPointsStore.length === 1) {
+        const screen = {x: offsetX, y: offsetY};
+        const global = this.map.transformScreenToGlobal(screen);
+
+        const pointsLength = this.tmpPointsStore.length;
+        if (pointsLength === 0) {
+            this.map.overlayLayer.addText({text: '单击确定起点', position: global}, {clear: true});
+        }
+        else if (pointsLength === 1) {
             const start = this.tmpPointsStore[0].global;
             const end = this.map.transformScreenToGlobal({x: offsetX, y: offsetY});
             this.map.overlayLayer.addLineFeature({start, end});
+            this.map.overlayLayer.addText({text: '单击确定终点', position: global}, {clear: false});
         }
     }
 
@@ -966,6 +981,12 @@ export default class MaskLayer extends Layer  {
         // 实时记录mouseMoveEvent事件对象
         this.mouseMoveEvent = e;
 
+        // 相关坐标值处理
+        const {offsetX, offsetY, screenX, screenY} = e;
+        // 记录起始坐标
+        const screen = {x: offsetX, y: offsetY};
+        const global = this.map.transformScreenToGlobal(screen);
+
         // 后续对应模式处理
         const mapMode = this.map.mode;
         const dragging = this.dragging;
@@ -978,9 +999,11 @@ export default class MaskLayer extends Layer  {
         }
         else if (mapMode === EMapMode.Point && !dragging) {
             this.map.setCursor(ECursorType.Crosshair);
+            this.map.overlayLayer.addText({text: '点击绘制点', position: global});
         }
         else if (mapMode === EMapMode.Circle && !dragging) {
             this.map.setCursor(ECursorType.Crosshair);
+            this.map.overlayLayer.addText({text: '按下确定圆心', position: global});
         }
         else if (mapMode === EMapMode.Line && !dragging) {
             this.map.setCursor(ECursorType.Crosshair);

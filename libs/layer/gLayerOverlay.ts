@@ -8,6 +8,7 @@ import Rect from '../feature/gFeatureRect';
 import Polygon from '../feature/gFeaturePolygon';
 import Circle from '../feature/gFeatureCircle';
 import DrawAction from '../mask/gActionDraw';
+import Text from '../text/gText';
 
 import {IObject, IPoint} from '../gInterface';
 import {ILayerStyle} from './gInterface';
@@ -19,9 +20,10 @@ import Feature from '../feature/gFeature';
 import Action from '../mask/gAction';
 import {EFeatureType} from '../feature/gEnum';
 import Util from '../gUtil';
+import {ITextInfo} from '../text/gInterface';
 
 export default class OverlayLayer extends CanvasLayer  {
-    public featureActions: Array<Feature | Action> = [] // 当前featureLayer中所有的features
+    public featureActions: Array<Feature | Action | Text> = [] // 当前featureLayer中所有的features
 
     // 默认active的样式
     defaultActiveFeatureStyle: IFeatureStyle = {
@@ -36,7 +38,7 @@ export default class OverlayLayer extends CanvasLayer  {
     }
 
     // 添加feature至当前FeatureLayer中
-    addFeatureAction(feature: Feature | Action, option?: IObject) {
+    addFeatureActionText(feature: Feature | Action | Text, option?: IObject) {
         const {clear = false} = option || {};
         clear && this.clear();
 
@@ -54,7 +56,7 @@ export default class OverlayLayer extends CanvasLayer  {
             (style || this.map.drawingStyle), // style
             {active}
         );
-        this.addFeatureAction(feature, {clear});
+        this.addFeatureActionText(feature, {clear});
     }
 
     // 添加line
@@ -66,7 +68,7 @@ export default class OverlayLayer extends CanvasLayer  {
             {}, // props
             (style || this.map.drawingStyle) // style
         );
-        this.addFeatureAction(feature, {clear});
+        this.addFeatureActionText(feature, {clear});
     }
 
     // 添加polyline
@@ -78,7 +80,7 @@ export default class OverlayLayer extends CanvasLayer  {
             {}, // props
             (style || this.map.drawingStyle) // style
         );
-        this.addFeatureAction(feature, {clear});
+        this.addFeatureActionText(feature, {clear});
     }
 
     // 添加rect
@@ -90,7 +92,7 @@ export default class OverlayLayer extends CanvasLayer  {
             {}, // props
             (style || this.map.drawingStyle) // style
         );
-        this.addFeatureAction(feature, {clear});
+        this.addFeatureActionText(feature, {clear});
     }
 
     // 添加polygon
@@ -102,7 +104,7 @@ export default class OverlayLayer extends CanvasLayer  {
             {}, // props
             (style || this.map.drawingStyle) // style
         );
-        this.addFeatureAction(feature, {clear});
+        this.addFeatureActionText(feature, {clear});
     }
 
     // 添加circle
@@ -116,7 +118,7 @@ export default class OverlayLayer extends CanvasLayer  {
             (style || this.map.drawingStyle), // style
             {active}
         );
-        this.addFeatureAction(feature, {clear});
+        this.addFeatureActionText(feature, {clear});
     }
 
     // 添加涂抹action
@@ -128,7 +130,28 @@ export default class OverlayLayer extends CanvasLayer  {
             {}, // props
             this.map.drawingStyle // style
         );
-        this.addFeatureAction(action, {clear: true});
+        this.addFeatureActionText(action, {clear: true});
+    }
+
+    // 添加文本
+    addText(textInfo: ITextInfo, option?: IObject) {
+        const {clear = true} = option || {};
+
+        const text = new Text(
+            `${+new Date()}`, // id
+            {...textInfo, offset: {x: 5, y: -5}}, // shape
+            {}, // props
+            {
+                fillStyle: '#FFFFFF',
+                strokeStyle: '#D2691E',
+                background: true,
+                globalAlpha: 1,
+                fontColor: '#333',
+                font: 'normal 10px Arial',
+                textBaseline: 'top'
+            } // style
+        );
+        this.addFeatureActionText(text, {clear});
     }
 
     // 绘制当前activeFeature

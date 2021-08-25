@@ -194,8 +194,8 @@ export default class Graphic {
             isMiddle && (rectLTY = rectLTY - height / 2); // 不同更换Y坐标
 
             const rectShape = {
-                x: position.x,
-                y: rectLTY,
+                x: position.x + offset.x,
+                y: rectLTY - offset.y,
                 width,
                 height
             };
