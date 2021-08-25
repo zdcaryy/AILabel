@@ -87,7 +87,10 @@ gMap.events.on('drawDone', (type: EMapMode, data) => {
 ## TODO
 - P0: Control.Scale 开发
 - P0: Control.EagleMap 开发
+- P0: Map 绘制过程中滑轮方法缩小
+- P0: Map 鼠标事件外放
 - P0: ROI 开发
+- P0: 绘制线段修改为单击结束
 - P0: Map拓展mapOptions配置项【如最大/最小zoom设置】
 - P1: Feature.Rect 支持中心展示十字丝
 - P1: Feature.Rect 旋转
