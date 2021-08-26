@@ -215,7 +215,7 @@
 
         const gFirstFeatureCircle = new AILabel.Feature.Circle(
             'first-feature-circle', // id
-            {cx: 0, cy: 0, sr: 100, stroke: true, fill: false}, // shape
+            {cx: 0, cy: 0, r: 100, stroke: true, fill: false}, // shape
             {name: '第一个矢量图层'}, // props
             {fillStyle: '#F4A460', strokeStyle: '#D2691E', globalAlpha: 1} // style
         );
@@ -304,7 +304,7 @@
             console.log('marker click');
             gMap.markerLayer.removeMarkerById(marker.id);
         });
-        gMap.markerLayer.addMarker(gFirstMarker);
+        // gMap.markerLayer.addMarker(gFirstMarker);
 
         console.log('--AILabel--', AILabel);
 

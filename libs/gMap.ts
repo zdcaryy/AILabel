@@ -61,6 +61,8 @@ export default class Map {
     public eventLayer: EventLayer
     // 当前map上的overlayLayer: 临时绘制矢量元素
     public overlayLayer: OverlayLayer
+    // 当前map上的tipLayer: 文字提示等
+    public tipLayer: OverlayLayer
     // 当前map上的markerLayer: 注记层，内部使用
     public markerLayer: MarkerLayer
 
@@ -94,6 +96,8 @@ export default class Map {
         this.createSubDoms();
         // 添加overlayLayer至当前map，最终会被添加至platform层
         this.addOverlayLayer();
+        // 添加tipLayer至当前map，最终会被添加至platform层
+        this.addTipLayer();
         // 添加eventLayer至当前map，最终会被添加至platform层
         this.addEventLayer();
         // 添加markerLayer至当前map，最终会被添加至platform层
@@ -413,6 +417,16 @@ export default class Map {
         // 首先将layer-dom-append到容器中
         this.platformDom.appendChild(this.overlayLayer.dom);
         this.overlayLayer.onAdd(this);
+    }
+
+    // 添加tipLayer至当前map
+    addTipLayer() {
+        // 实例化tipLayer
+        this.tipLayer = new OverlayLayer(`tip-${_uniqueId()}`, {}, {zIndex: 2});
+
+        // 首先将layer-dom-append到容器中
+        this.platformDom.appendChild(this.tipLayer.dom);
+        this.tipLayer.onAdd(this);
     }
 
     // 添加markerLayer至当前map

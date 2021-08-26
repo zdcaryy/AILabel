@@ -92,7 +92,7 @@ export default class Marker {
             this.image.style.userSelect = 'none';
             this.image.src = this.markerInfo.src;
             this.image.onload = () => {
-                this.layer.dom.appendChild(this.image);
+                this.layer?.dom?.appendChild(this.image);
                 this.attachEvents();
             }
             this.image.onerror = () => {

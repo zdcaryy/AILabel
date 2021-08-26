@@ -50,7 +50,9 @@ export default class ImageLayer extends CanvasLayer  {
         if (this.imageInfo.src) {
             this.image = new Image();
             this.image.src = this.imageInfo.src;
-            this.image.onload = () => this.refresh();
+            this.image.onload = () => {
+                this.map && this.refresh();
+            }
         }
     }
 

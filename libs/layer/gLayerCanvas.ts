@@ -50,6 +50,6 @@ export default class CanvasLayer extends Layer  {
 
     // 清空canvas画布
     clear() {
-        this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.canvasContext?.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 }

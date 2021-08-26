@@ -5411,7 +5411,9 @@
     }, {
       key: "clear",
       value: function clear() {
-        this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        var _this$canvasContext;
+
+        (_this$canvasContext = this.canvasContext) === null || _this$canvasContext === void 0 ? void 0 : _this$canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
       }
     }]);
 
@@ -5998,17 +6000,9 @@
       _this.onMouseDown = _this.onMouseDown.bind(_assertThisInitialized(_this));
       _this.onMouseMove = _this.onMouseMove.bind(_assertThisInitialized(_this));
       _this.onMouseUp = _this.onMouseUp.bind(_assertThisInitialized(_this));
+      _this.onMouseOut = _this.onMouseOut.bind(_assertThisInitialized(_this));
       _this.onMouseDblClick = _this.onMouseDblClick.bind(_assertThisInitialized(_this));
       _this.onMouseWheel = _this.onMouseWheel.bind(_assertThisInitialized(_this));
-      _this.handleMapPanMove = _this.handleMapPanMove.bind(_assertThisInitialized(_this));
-      _this.handleMapPanEnd = _this.handleMapPanEnd.bind(_assertThisInitialized(_this));
-      _this.handleRectMove = _this.handleRectMove.bind(_assertThisInitialized(_this));
-      _this.handleRectEnd = _this.handleRectEnd.bind(_assertThisInitialized(_this));
-      _this.handlePolygonMove = _this.handlePolygonMove.bind(_assertThisInitialized(_this));
-      _this.handleMaskMove = _this.handleMaskMove.bind(_assertThisInitialized(_this));
-      _this.handleMaskEnd = _this.handleMaskEnd.bind(_assertThisInitialized(_this));
-      _this.handleActiveFeatureMove = _this.handleActiveFeatureMove.bind(_assertThisInitialized(_this));
-      _this.handleActiveFeatureEnd = _this.handleActiveFeatureEnd.bind(_assertThisInitialized(_this));
       return _this;
     }
 
@@ -6048,6 +6042,7 @@
         this.eventDom.addEventListener("mouseup", this.onMouseUp);
         this.eventDom.addEventListener('dblclick', this.onMouseDblClick);
         this.eventDom.addEventListener("mousewheel", this.onMouseWheel);
+        this.eventDom.addEventListener("mouseout", this.onMouseOut);
       } // removeEventListener: 事件解除
 
     }, {
@@ -6057,6 +6052,7 @@
         this.eventDom.removeEventListener("mousemove", this.onMouseMove);
         this.eventDom.removeEventListener("mouseup", this.onMouseUp);
         this.eventDom.removeEventListener("mousewheel", this.onMouseWheel);
+        this.eventDom.addEventListener("mouseout", this.onMouseOut);
       }
       /*************************************************/
 
@@ -6068,11 +6064,19 @@
     }, {
       key: "handleMapPanStart",
       value: function handleMapPanStart(e) {
+        var _this2 = this;
+
         this.dragging = true; // 鼠标按下态
 
         this.map.setCursor(ECursorType.Grabbing);
-        document.onmousemove = this.handleMapPanMove;
-        document.onmouseup = this.handleMapPanEnd;
+
+        document.onmousemove = function (e) {
+          return _this2.handleMapPanMove(e);
+        };
+
+        document.onmouseup = function (e) {
+          return _this2.handleMapPanEnd(e);
+        };
       } // map平移中
 
     }, {
@@ -6153,13 +6157,13 @@
     }, {
       key: "handleMarkerStart",
       value: function handleMarkerStart(e) {
-        var _this2 = this;
+        var _this3 = this;
 
         this.clearDownTimer();
         this.downTimer = window.setTimeout(function () {
-          _this2.map.eventsObServer.emit(EEventType.DrawDone, _this2.map.mode, {
-            x: _this2.startPoint.global.x,
-            y: _this2.startPoint.global.y
+          _this3.map.eventsObServer.emit(EEventType.DrawDone, _this3.map.mode, {
+            x: _this3.startPoint.global.x,
+            y: _this3.startPoint.global.y
           });
         }, 300);
       }
@@ -6172,16 +6176,16 @@
     }, {
       key: "handlePointStart",
       value: function handlePointStart(e) {
-        var _this3 = this;
+        var _this4 = this;
 
         this.clearDownTimer();
         this.downTimer = window.setTimeout(function () {
-          _this3.map.eventsObServer.emit(EEventType.DrawDone, _this3.map.mode, {
-            x: _this3.startPoint.global.x,
-            y: _this3.startPoint.global.y
+          _this4.map.eventsObServer.emit(EEventType.DrawDone, _this4.map.mode, {
+            x: _this4.startPoint.global.x,
+            y: _this4.startPoint.global.y
           });
 
-          _this3.reset(); // 重置
+          _this4.reset(); // 重置
 
         }, 300);
       }
@@ -6194,24 +6198,22 @@
     }, {
       key: "handleCircleStart",
       value: function handleCircleStart(e) {
-        var _this4 = this;
+        var _this5 = this;
 
         this.dragging = true; // 鼠标按下态
 
         document.onmousemove = function (e) {
-          return _this4.handleCircleMove(e);
+          return _this5.handleCircleMove(e);
         };
 
         document.onmouseup = function (e) {
-          return _this4.handleCircleEnd(e);
+          return _this5.handleCircleEnd(e);
         };
 
         var global = this.startPoint.global;
-        this.map.overlayLayer.addText({
-          text: '拖动改变圆大小',
+        this.map.tipLayer.addText({
+          text: '移动开始绘制',
           position: global
-        }, {
-          clear: true
         });
       }
     }, {
@@ -6244,11 +6246,9 @@
           fill: false
         };
         this.map.overlayLayer.addCircleFeature(circleShape);
-        this.map.overlayLayer.addText({
+        this.map.tipLayer.addText({
           text: '抬起完成绘制',
           position: moveGlobal
-        }, {
-          clear: false
         });
       }
     }, {
@@ -6279,7 +6279,7 @@
         this.reset(); // 重置临时数据
         // rect矩形有效性判读是否合适
 
-        if (Math.abs(globalDlt) <= 0 || Math.abs(screenDlt) <= 0) {
+        if (Math.abs(screenDlt) <= 2) {
           console.warn('the circle is too small...');
           return;
         } // 组织矩形数据shape格式
@@ -6307,19 +6307,17 @@
     }, {
       key: "handleLineStart",
       value: function handleLineStart(e) {
-        var _this5 = this;
+        var _this6 = this;
 
         // 说明绘制线段第一个点
         if (this.tmpPointsStore.length === 0) {
           this.clearDownTimer();
           this.downTimer = window.setTimeout(function () {
-            _this5.tmpPointsStore.push(_this5.startPoint);
+            _this6.tmpPointsStore.push(_this6.startPoint);
 
-            _this5.map.overlayLayer.addText({
+            _this6.map.tipLayer.addText({
               text: '移动鼠标开始绘制',
-              position: _this5.startPoint.global
-            }, {
-              clear: true
+              position: _this6.startPoint.global
             });
           }, 300);
         } else if (this.tmpPointsStore.length === 1) {
@@ -6346,11 +6344,9 @@
         var pointsLength = this.tmpPointsStore.length;
 
         if (pointsLength === 0) {
-          this.map.overlayLayer.addText({
+          this.map.tipLayer.addText({
             text: '单击确定起点',
             position: global
-          }, {
-            clear: true
           });
         } else if (pointsLength === 1) {
           var start = this.tmpPointsStore[0].global;
@@ -6362,11 +6358,9 @@
             start: start,
             end: end
           });
-          this.map.overlayLayer.addText({
+          this.map.tipLayer.addText({
             text: '单击确定终点',
             position: global
-          }, {
-            clear: false
           });
         }
       }
@@ -6379,12 +6373,17 @@
     }, {
       key: "handlePolylineStart",
       value: function handlePolylineStart(e) {
-        var _this6 = this;
+        var _this7 = this;
 
         if (this.tmpPointsStore.length === 0) {
           this.clearDownTimer();
           this.downTimer = window.setTimeout(function () {
-            _this6.tmpPointsStore.push(_this6.startPoint);
+            _this7.tmpPointsStore.push(_this7.startPoint);
+
+            _this7.map.tipLayer.addText({
+              text: '移动开始绘制',
+              position: _this7.startPoint.global
+            });
           }, 300);
         } else {
           this.tmpPointsStore.push(this.startPoint);
@@ -6407,9 +6406,19 @@
 
         drawingGlobalPoints.push(moveGlobalPoint);
 
-        if (drawingGlobalPoints.length > 1) {
+        if (drawingGlobalPoints.length === 1) {
+          // 说明刚开始绘制
+          this.map.tipLayer.addText({
+            text: '单击确定起点',
+            position: moveGlobalPoint
+          });
+        } else if (drawingGlobalPoints.length > 1) {
           this.map.overlayLayer.addPolylineFeature({
             points: drawingGlobalPoints
+          });
+          this.map.tipLayer.addText({
+            text: '单击绘制/双击结束',
+            position: moveGlobalPoint
           });
         }
       }
@@ -6436,10 +6445,23 @@
     }, {
       key: "handleRectStart",
       value: function handleRectStart(e) {
+        var _this8 = this;
+
         this.dragging = true; // 鼠标按下态
 
-        document.onmousemove = this.handleRectMove;
-        document.onmouseup = this.handleRectEnd;
+        document.onmousemove = function (e) {
+          return _this8.handleRectMove(e);
+        };
+
+        document.onmouseup = function (e) {
+          return _this8.handleRectEnd(e);
+        };
+
+        var global = this.startPoint.global;
+        this.map.tipLayer.addText({
+          text: '移动开始绘制',
+          position: global
+        });
       }
     }, {
       key: "handleRectMove",
@@ -6456,6 +6478,10 @@
 
         var ltx = Math.min(x, x + width);
         var lty = Math.max(y, y - height);
+        var moveGlobal = {
+          x: x + width,
+          y: y - height
+        };
         var rectShape = {
           x: ltx,
           y: lty,
@@ -6463,6 +6489,10 @@
           height: Math.abs(height)
         };
         this.map.overlayLayer.addRectFeature(rectShape);
+        this.map.tipLayer.addText({
+          text: '抬起完成绘制',
+          position: moveGlobal
+        });
       }
     }, {
       key: "handleRectEnd",
@@ -6517,12 +6547,17 @@
     }, {
       key: "handlePolygonStart",
       value: function handlePolygonStart(e) {
-        var _this7 = this;
+        var _this9 = this;
 
         if (this.tmpPointsStore.length === 0) {
           this.clearDownTimer();
           this.downTimer = window.setTimeout(function () {
-            _this7.tmpPointsStore.push(_this7.startPoint);
+            _this9.tmpPointsStore.push(_this9.startPoint);
+
+            _this9.map.tipLayer.addText({
+              text: '移动开始绘制',
+              position: _this9.startPoint.global
+            });
           }, 300);
         } else {
           this.tmpPointsStore.push(this.startPoint);
@@ -6544,10 +6579,22 @@
         });
 
         drawingGlobalPoints.push(moveGlobalPoint);
+        var drawingPointsCount = drawingGlobalPoints.length;
 
-        if (drawingGlobalPoints.length > 1) {
+        if (drawingPointsCount === 1) {
+          // 说明刚开始绘制
+          this.map.tipLayer.addText({
+            text: '单击确定起点',
+            position: moveGlobalPoint
+          });
+        } else if (drawingPointsCount > 1) {
           this.map.overlayLayer.addPolygonFeature({
             points: drawingGlobalPoints
+          });
+          var tipText = drawingPointsCount === 2 ? '单击绘制' : '单击绘制/双击结束';
+          this.map.tipLayer.addText({
+            text: tipText,
+            position: moveGlobalPoint
           });
         }
       }
@@ -6577,10 +6624,18 @@
     }, {
       key: "handleMaskStart",
       value: function handleMaskStart(e) {
+        var _this10 = this;
+
         this.dragging = true; // 鼠标按下态
 
-        document.onmousemove = this.handleMaskMove;
-        document.onmouseup = this.handleMaskEnd;
+        document.onmousemove = function (e) {
+          return _this10.handleMaskMove(e);
+        };
+
+        document.onmouseup = function (e) {
+          return _this10.handleMaskEnd(e);
+        };
+
         this.tmpPointsStore.push(this.startPoint);
 
         var points = map_1(this.tmpPointsStore, function (_ref6) {
@@ -6776,7 +6831,7 @@
     }, {
       key: "handleActiveFeatureCapture",
       value: function handleActiveFeatureCapture(e) {
-        var _this8 = this;
+        var _this11 = this;
 
         var offsetX = e.offsetX,
             offsetY = e.offsetY;
@@ -6801,6 +6856,10 @@
               if (activeFeature.captureWithPoint(currentGlobalPoint)) {
                 this.hoverFeature = activeFeature;
                 this.map.setCursor(ECursorType.Pointer);
+                this.map.tipLayer.addText({
+                  text: '按下移动图形/右键删除',
+                  position: currentGlobalPoint
+                });
               }
 
               break;
@@ -6815,15 +6874,20 @@
 
               forEach_1(points, function (point, index) {
                 // 首先判断当前点
-                var sPoint = _this8.map.transformGlobalToScreen(point);
+                var sPoint = _this11.map.transformGlobalToScreen(point);
 
                 var distance = Util.MathUtil.distance(sPoint, currentPoint);
 
                 if (distance <= 5) {
-                  _this8.hoverFeatureIndex = index;
+                  _this11.hoverFeatureIndex = index;
                   var cursor = index === 1 || index === 3 ? ECursorType.NESW_Resize : ECursorType.NWSE_Resize;
 
-                  _this8.map.setCursor(cursor);
+                  _this11.map.setCursor(cursor);
+
+                  _this11.map.tipLayer.addText({
+                    text: '按下拖动',
+                    position: currentGlobalPoint
+                  });
 
                   return false;
                 }
@@ -6833,6 +6897,10 @@
               if (!isNumber_1(this.hoverFeatureIndex) && activeFeature.captureWithPoint(currentGlobalPoint)) {
                 this.hoverFeature = activeFeature;
                 this.map.setCursor(ECursorType.Move);
+                this.map.tipLayer.addText({
+                  text: '按下移动图形',
+                  position: currentGlobalPoint
+                });
               }
 
               break;
@@ -6852,19 +6920,28 @@
                   _ref12$points = _ref12.points,
                   multiPoints = _ref12$points === void 0 ? [] : _ref12$points;
 
-              var _points = isLine ? [lineStartPoint, lineEndPoint] : multiPoints; // 首先进行捕捉点判断
+              var _points = isLine ? [lineStartPoint, lineEndPoint] : multiPoints;
 
+              var pointsLength = _points.length; // 首先进行捕捉点判断
 
               forEach_1(_points, function (point, index) {
                 // 首先判断当前点
-                var sPoint = _this8.map.transformGlobalToScreen(point);
+                var sPoint = _this11.map.transformGlobalToScreen(point);
 
                 var distance = Util.MathUtil.distance(sPoint, currentPoint);
 
                 if (distance <= 5) {
-                  _this8.hoverFeatureIndex = index;
+                  _this11.hoverFeatureIndex = index;
 
-                  _this8.map.setCursor(ECursorType.Pointer);
+                  _this11.map.setCursor(ECursorType.Pointer);
+
+                  var minPointsCount = isLine || isPolyline ? 2 : 3;
+                  var deleteTip = pointsLength > minPointsCount ? '/右键删除' : '';
+
+                  _this11.map.tipLayer.addText({
+                    text: "\u6309\u4E0B\u62D6\u52A8".concat(deleteTip),
+                    position: currentGlobalPoint
+                  });
 
                   return false;
                 } // 如果是线段，不需要判断中间节点，直接判断下一节点
@@ -6883,14 +6960,19 @@
                 var nextPoint = _points[index + 1] || _points[0];
                 var middlePoint = Util.MathUtil.getMiddlePoint(point, nextPoint);
 
-                var sMiddlePoint = _this8.map.transformGlobalToScreen(middlePoint);
+                var sMiddlePoint = _this11.map.transformGlobalToScreen(middlePoint);
 
                 var distance2 = Util.MathUtil.distance(sMiddlePoint, currentPoint);
 
                 if (distance2 <= 5) {
-                  _this8.hoverFeatureIndex = index + 0.5;
+                  _this11.hoverFeatureIndex = index + 0.5;
 
-                  _this8.map.setCursor(ECursorType.Pointer);
+                  _this11.map.setCursor(ECursorType.Pointer);
+
+                  _this11.map.tipLayer.addText({
+                    text: '按下拖动添加新节点',
+                    position: currentGlobalPoint
+                  });
 
                   return false;
                 }
@@ -6900,6 +6982,10 @@
               if (!isNumber_1(this.hoverFeatureIndex) && activeFeature.captureWithPoint(currentGlobalPoint)) {
                 this.hoverFeature = activeFeature;
                 this.map.setCursor(ECursorType.Move);
+                this.map.tipLayer.addText({
+                  text: '按下移动图形',
+                  position: currentGlobalPoint
+                });
               }
 
               break;
@@ -6915,14 +7001,23 @@
     }, {
       key: "handleActiveFeatureStart",
       value: function handleActiveFeatureStart(e) {
-        // 鼠标相关变量
+        var _this12 = this;
+
+        // 鼠标按下时清空tipLayer
+        this.map.tipLayer.clear(); // 鼠标相关变量
+
         var btnIndex = Util.EventUtil.getButtonIndex(e); // 鼠标左键按下
 
         if (btnIndex === 0) {
           this.dragging = true; // 鼠标按下态
 
-          document.onmousemove = this.handleActiveFeatureMove;
-          document.onmouseup = this.handleActiveFeatureEnd;
+          document.onmousemove = function (e) {
+            return _this12.handleActiveFeatureMove(e);
+          };
+
+          document.onmouseup = function (e) {
+            return _this12.handleActiveFeatureEnd(e);
+          };
         } // 鼠标右键按下
         else if (btnIndex === 2) {
             this.handleActiveFeatureElse(e);
@@ -6931,7 +7026,7 @@
     }, {
       key: "handleActiveFeatureMove",
       value: function handleActiveFeatureMove(e) {
-        var _this9 = this;
+        var _this13 = this;
 
         var _this$getDltXY10 = this.getDltXY(e, {
           transform: true
@@ -7107,13 +7202,13 @@
                         y = _ref19.y;
 
                     // 说明是真实节点
-                    if (index === intIndex && intIndex === _this9.hoverFeatureIndex) {
+                    if (index === intIndex && intIndex === _this13.hoverFeatureIndex) {
                       newPoints.push({
                         x: x + globalDltX,
                         y: y - globalDltY
                       });
                     } // 说明是中间节点
-                    else if (index === intIndex && intIndex !== _this9.hoverFeatureIndex) {
+                    else if (index === intIndex && intIndex !== _this13.hoverFeatureIndex) {
                         // 其次判断当前点与下一点之间的中心点
                         var nextPoint = points[index + 1] || points[0];
                         var middlePoint = Util.MathUtil.getMiddlePoint({
@@ -7360,13 +7455,13 @@
           this.map.setCursor(ECursorType.Crosshair);
         } else if (mapMode === EMapMode.Point && !dragging) {
           this.map.setCursor(ECursorType.Crosshair);
-          this.map.overlayLayer.addText({
+          this.map.tipLayer.addText({
             text: '点击绘制点',
             position: global
           });
         } else if (mapMode === EMapMode.Circle && !dragging) {
           this.map.setCursor(ECursorType.Crosshair);
-          this.map.overlayLayer.addText({
+          this.map.tipLayer.addText({
             text: '按下确定圆心',
             position: global
           });
@@ -7378,6 +7473,10 @@
           this.handlePolylineMove(e);
         } else if (mapMode === EMapMode.Rect && !dragging) {
           this.map.setCursor(ECursorType.Crosshair);
+          this.map.tipLayer.addText({
+            text: '按下确定起点',
+            position: global
+          });
         } else if (mapMode === EMapMode.Polygon && !dragging) {
           this.map.setCursor(ECursorType.Crosshair);
           this.handlePolygonMove(e);
@@ -7428,6 +7527,14 @@
               break;
             }
         }
+      } // onMouseOut: 鼠标移出
+
+    }, {
+      key: "onMouseOut",
+      value: function onMouseOut(e) {
+        e.preventDefault(); // 清空文字提示层
+
+        this.map.tipLayer.clear();
       } // 重置drawing过程中产生的临时数据&清空临时绘制层
 
     }, {
@@ -7436,7 +7543,9 @@
         // 绘制完成之后进行this.tmpPointsStore清空处理
         this.tmpPointsStore = []; // 清空overlayLayer
 
-        this.map.overlayLayer.clear();
+        this.map.overlayLayer.clear(); // 清空tipLayer
+
+        this.map.tipLayer.clear();
       } // @override
 
     }, {
@@ -8840,7 +8949,9 @@
 
       this.createSubDoms(); // 添加overlayLayer至当前map，最终会被添加至platform层
 
-      this.addOverlayLayer(); // 添加eventLayer至当前map，最终会被添加至platform层
+      this.addOverlayLayer(); // 添加tipLayer至当前map，最终会被添加至platform层
+
+      this.addTipLayer(); // 添加eventLayer至当前map，最终会被添加至platform层
 
       this.addEventLayer(); // 添加markerLayer至当前map，最终会被添加至platform层
 
@@ -9253,6 +9364,18 @@
 
         this.platformDom.appendChild(this.overlayLayer.dom);
         this.overlayLayer.onAdd(this);
+      } // 添加tipLayer至当前map
+
+    }, {
+      key: "addTipLayer",
+      value: function addTipLayer() {
+        // 实例化tipLayer
+        this.tipLayer = new OverlayLayer("tip-".concat(uniqueId_1()), {}, {
+          zIndex: 2
+        }); // 首先将layer-dom-append到容器中
+
+        this.platformDom.appendChild(this.tipLayer.dom);
+        this.tipLayer.onAdd(this);
       } // 添加markerLayer至当前map
 
     }, {
@@ -9371,7 +9494,7 @@
           this.image.src = this.imageInfo.src;
 
           this.image.onload = function () {
-            return _this2.refresh();
+            _this2.map && _this2.refresh();
           };
         }
       } // @override
@@ -11195,7 +11318,9 @@
           this.image.src = this.markerInfo.src;
 
           this.image.onload = function () {
-            _this2.layer.dom.appendChild(_this2.image);
+            var _this2$layer, _this2$layer$dom;
+
+            (_this2$layer = _this2.layer) === null || _this2$layer === void 0 ? void 0 : (_this2$layer$dom = _this2$layer.dom) === null || _this2$layer$dom === void 0 ? void 0 : _this2$layer$dom.appendChild(_this2.image);
 
             _this2.attachEvents();
           };

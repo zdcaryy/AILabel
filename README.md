@@ -7,7 +7,8 @@ AILabel类库是一款集打点、线段、多段线、矩形、多边形、圆�
 
 源代码：https://github.com/dingyang9642/AILabel<br/>
 API文档：http://ailabel.com.cn/public/ailabel/api/index.html<br/>
-Demo文档：http://ailabel.com.cn/public/ailabel/demo/index.html
+Demo文档：http://ailabel.com.cn/public/ailabel/demo/index.html<br/>
+npm地址：https://www.npmjs.com/package/ailabel
 
 ## 目录结构
 - libs: AILabel源码
@@ -91,7 +92,6 @@ gMap.events.on('drawDone', (type: EMapMode, data) => {
 - P0: Map 鼠标事件外放
 - P0: ROI 开发
 - P0: Map 绘制过程中快捷键撤销
-- P0: Map 绘制过程中提示文字添加
 - P0: Map拓展mapOptions配置项【如最大/最小zoom设置】
 - P1: Feature.Rect 支持中心展示十字丝
 - P1: Feature.Rect 旋转
