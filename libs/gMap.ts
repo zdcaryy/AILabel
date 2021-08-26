@@ -10,8 +10,8 @@ import _isNumber from 'lodash/isNumber';
 import _cloneDeep from 'lodash/cloneDeep';
 import _filter from 'lodash/filter';
 
-import {EMapMode, ECursorType, EEventType, EUrlCursorType} from './gEnum';
-import {IMapOptions, ISize, IPoint, ICenterAndZoom, ITransPointOption, IObject} from './gInterface';
+import {EMapMode, ECursorType, EEventType, EUrlCursorType, EXAxisDirection, EYAxisDirection} from './gEnum';
+import {IMapOptions, ISize, IPoint, ICenterAndZoom, ITransPointOption, IObject, IAxisOption} from './gInterface';
 import Layer from './layer/gLayer';
 import EventLayer from './layer/gLayerEvent';
 import OverlayLayer from './layer/gLayerOverlay';
@@ -51,9 +51,16 @@ export default class Map {
         mode: EMapMode.Pan, // 默认当前map模式
         size: null, // 可自定义容器宽/高，默认取dom: clientWidth/clientHeight
         zoomWhenDrawing: false, // 绘制过程中是否允许缩放，默认不会缩放
-        panWhenDrawing: false // 绘制过程中是否允许自动平移，默认不会自动平移
+        panWhenDrawing: false, // 绘制过程中是否允许自动平移，默认不会自动平移
+        xAxis: {direction: EXAxisDirection.Right}, // x坐标轴方向设置
+        yAxis: {direction: EYAxisDirection.Bottom} // y坐标轴方向设置
     }
     private mapOptions: IMapOptions
+
+    // x坐标轴方向设置
+    public xAxis: IAxisOption
+    // y坐标轴方向设置
+    public yAxis: IAxisOption
 
     // 绘制过程中是否允许缩放，默认不会缩放
     public zoomWhenDrawing: boolean
@@ -99,6 +106,8 @@ export default class Map {
         this.mode = this.mapOptions.mode; // 更新初始map操作模式
         this.zoomWhenDrawing = this.mapOptions.zoomWhenDrawing; // 更新是否绘制过程中允许缩放
         this.panWhenDrawing = this.mapOptions.panWhenDrawing; // 更新是否绘制过程中允许平移
+        this.xAxis = this.mapOptions.xAxis; // x轴设置
+        this.yAxis = this.mapOptions.yAxis; // y轴设置
 
         // 设置容器样式
         this.setDomStyle();
@@ -336,9 +345,14 @@ export default class Map {
         const dltScreenX = screenX - screenBasePointX;
         const dltScreenY = screenY - screenBasePointY;
 
+        const isXAxisRight = this.xAxis.direction === EXAxisDirection.Right;
+        const isYAxisTop = this.yAxis.direction === EYAxisDirection.Top;
+        const globalX = isXAxisRight ? (basePointX + dltScreenX / scale) : (basePointX - dltScreenX / scale);
+        const globalY = isYAxisTop ? (basePointY - dltScreenY / scale) : (basePointY + dltScreenY / scale);
+
         return {
-            x: basePointX + dltScreenX / scale,
-            y: basePointY - dltScreenY / scale
+            x: globalX,
+            y: globalY
         };
     }
 
@@ -357,9 +371,14 @@ export default class Map {
         const dltGlobalX = globalX - basePointX;
         const dltGlobalY = globalY - basePointY;
 
+        const isXAxisRight = this.xAxis.direction === EXAxisDirection.Right;
+        const isYAxisTop = this.yAxis.direction === EYAxisDirection.Top;
+        const screenX = isXAxisRight ? (screenBasePointX + dltGlobalX * scale) : (screenBasePointX - dltGlobalX * scale);
+        const screenY = isYAxisTop ? (screenBasePointY - dltGlobalY * scale) : (screenBasePointY + dltGlobalY * scale);
+
         return {
-            x: screenBasePointX + dltGlobalX * scale,
-            y: screenBasePointY - dltGlobalY * scale
+            x: screenX,
+            y: screenY
         };
     }
 

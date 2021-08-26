@@ -5215,6 +5215,18 @@
 
   var filter_1 = filter;
 
+  var EXAxisDirection;
+
+  (function (EXAxisDirection) {
+    EXAxisDirection["Left"] = "left";
+    EXAxisDirection["Right"] = "right";
+  })(EXAxisDirection || (EXAxisDirection = {}));
+  var EYAxisDirection;
+
+  (function (EYAxisDirection) {
+    EYAxisDirection["Top"] = "top";
+    EYAxisDirection["Bottom"] = "bottom";
+  })(EYAxisDirection || (EYAxisDirection = {}));
   var ECanvasTextBaseLine;
 
   (function (ECanvasTextBaseLine) {
@@ -6416,32 +6428,21 @@
       return Math.sqrt(dltX * dltX + dltY * dltY);
     },
     // 计算两端之间的距离
-    pointInPolygon: function pointInPolygon(point, polygon) {
+    pointInPolygon: function pointInPolygon(point, points) {
       var x = point.x,
           y = point.y;
 
-      for (var c = false, i = -1, l = polygon.length, j = l - 1; ++i < l; j = i) {
-        var _polygon$i = polygon[i],
-            xi = _polygon$i.x,
-            yi = _polygon$i.y;
-        var _polygon$j = polygon[j],
-            xj = _polygon$j.x,
-            yj = _polygon$j.y;
+      for (var c = false, i = -1, l = points.length, j = l - 1; ++i < l; j = i) {
+        var _points$i = points[i],
+            xi = _points$i.x,
+            yi = _points$i.y;
+        var _points$j = points[j],
+            xj = _points$j.x,
+            yj = _points$j.y;
         (yi <= y && y < yj || yj <= y && y < yi) && x < (xj - xi) * (y - yi) / (yj - yi) + xi && (c = !c);
       }
 
       return c;
-    },
-    pointInRect: function pointInRect(point, rect) {
-      var x = point.x,
-          y = point.y;
-      var startX = rect.x,
-          startY = rect.y,
-          width = rect.width,
-          height = rect.height;
-      var endX = startX + width;
-      var endY = startY - height;
-      return x >= startX && x <= endX && y >= endY && y <= startY;
     },
     pointInPoint: function pointInPoint(point, point2) {
       var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -7090,11 +7091,13 @@
             width = _this$getDltXY7.x,
             height = _this$getDltXY7.y;
 
-        var ltx = Math.min(x, x + width);
-        var lty = Math.max(y, y - height);
+        var isXAxisRight = this.map.xAxis.direction === EXAxisDirection.Right;
+        var isYAxisTop = this.map.yAxis.direction === EYAxisDirection.Top;
+        var ltx = isXAxisRight ? Math.min(x, x + width) : Math.max(x, x - width);
+        var lty = isYAxisTop ? Math.max(y, y - height) : Math.min(y, y + height);
         var moveGlobal = {
-          x: x + width,
-          y: y - height
+          x: isXAxisRight ? x + width : x - width,
+          y: isYAxisTop ? y - height : y + height
         };
         var rectShape = {
           x: ltx,
@@ -7649,19 +7652,24 @@
         var _this$getDltXY10 = this.getDltXY(e, {
           transform: true
         }),
-            globalDltX = _this$getDltXY10.x,
-            globalDltY = _this$getDltXY10.y;
+            preGlobalDltX = _this$getDltXY10.x,
+            preGlobalDltY = _this$getDltXY10.y;
 
         var _this$getDltXY11 = this.getDltXY(e, {
           transform: false
         }),
-            screenDltX = _this$getDltXY11.x;
+            preScreenDltX = _this$getDltXY11.x;
             _this$getDltXY11.y;
 
         var activeFeature = this.map.activeFeature;
         var type = activeFeature.type,
             shape = activeFeature.shape,
             style = activeFeature.style;
+        var isXAxisRight = this.map.xAxis.direction === EXAxisDirection.Right;
+        var isYAxisTop = this.map.yAxis.direction === EYAxisDirection.Top;
+        var globalDltX = isXAxisRight ? preGlobalDltX : -preGlobalDltX;
+        var globalDltY = isYAxisTop ? preGlobalDltY : -preGlobalDltY;
+        var screenDltX = isXAxisRight ? preScreenDltX : -preScreenDltX;
 
         switch (type) {
           case EFeatureType.Point:
@@ -8211,6 +8219,8 @@
 
           var center = _this14.map.getCenter();
 
+          var isXAxisRight = _this14.map.xAxis.direction === EXAxisDirection.Right;
+          var isYAxisTop = _this14.map.yAxis.direction === EYAxisDirection.Top;
           var newCenter = center;
 
           switch (directionIndex) {
@@ -8219,7 +8229,7 @@
                 // 上
                 newCenter = {
                   x: center.x,
-                  y: center.y + panGlobalDistance
+                  y: isYAxisTop ? center.y + panGlobalDistance : center.y - panGlobalDistance
                 };
                 break;
               }
@@ -8228,7 +8238,7 @@
               {
                 // 右
                 newCenter = {
-                  x: center.x + panGlobalDistance,
+                  x: isXAxisRight ? center.x + panGlobalDistance : center.x - panGlobalDistance,
                   y: center.y
                 };
                 break;
@@ -8239,7 +8249,7 @@
                 // 下
                 newCenter = {
                   x: center.x,
-                  y: center.y - panGlobalDistance
+                  y: isYAxisTop ? center.y - panGlobalDistance : center.y + panGlobalDistance
                 };
                 break;
               }
@@ -8248,7 +8258,7 @@
               {
                 // 左
                 newCenter = {
-                  x: center.x - panGlobalDistance,
+                  x: isXAxisRight ? center.x - panGlobalDistance : center.x + panGlobalDistance,
                   y: center.y
                 };
                 break;
@@ -8732,19 +8742,24 @@
     _createClass(RectFeature, [{
       key: "captureWithPoint",
       value: function captureWithPoint(point) {
-        return Util.MathUtil.pointInRect(point, this.shape);
+        var rectPoints = this.getPoints();
+        return Util.MathUtil.pointInPolygon(point, rectPoints);
       } // 获取rect矩形的四个点
 
     }, {
       key: "getPoints",
       value: function getPoints() {
+        var _this$layer, _this$layer$map, _this$layer2, _this$layer2$map;
+
+        var isXAxisLeft = ((_this$layer = this.layer) === null || _this$layer === void 0 ? void 0 : (_this$layer$map = _this$layer.map) === null || _this$layer$map === void 0 ? void 0 : _this$layer$map.xAxis.direction) === EXAxisDirection.Left;
+        var isYAxisBottom = ((_this$layer2 = this.layer) === null || _this$layer2 === void 0 ? void 0 : (_this$layer2$map = _this$layer2.map) === null || _this$layer2$map === void 0 ? void 0 : _this$layer2$map.yAxis.direction) === EYAxisDirection.Bottom;
         var _ref = this.shape,
             startX = _ref.x,
             startY = _ref.y,
             width = _ref.width,
             height = _ref.height;
-        var endX = startX + width;
-        var endY = startY - height; // 矩形点
+        var endX = !isXAxisLeft ? startX + width : startX - width;
+        var endY = !isYAxisBottom ? startY - height : startY + height; // 矩形点
 
         return [{
           x: startX,
@@ -8934,8 +8949,12 @@
     }, {
       key: "getEdgePoints",
       value: function getEdgePoints() {
+        var _this$layer2, _this$layer2$map, _this$layer3, _this$layer3$map;
+
         var isGlobalSubtype = this.getSubType() === EFeatureCircleSubtype.Global;
         var isScreenSubtype = this.getSubType() === EFeatureCircleSubtype.Screen;
+        var isXAxisLeft = ((_this$layer2 = this.layer) === null || _this$layer2 === void 0 ? void 0 : (_this$layer2$map = _this$layer2.map) === null || _this$layer2$map === void 0 ? void 0 : _this$layer2$map.xAxis.direction) === EXAxisDirection.Left;
+        var isYAxisBottom = ((_this$layer3 = this.layer) === null || _this$layer3 === void 0 ? void 0 : (_this$layer3$map = _this$layer3.map) === null || _this$layer3$map === void 0 ? void 0 : _this$layer3$map.yAxis.direction) === EYAxisDirection.Bottom;
         var _ref3 = this.shape,
             cx = _ref3.cx,
             cy = _ref3.cy,
@@ -8943,29 +8962,31 @@
             sr = _ref3.sr;
         var radius = isGlobalSubtype ? r : isScreenSubtype ? sr : 0;
         var halfRadius = Math.sqrt(radius * radius / 2);
+        var xHalfRadius = !isXAxisLeft ? halfRadius : -halfRadius;
+        var yHalfRadius = !isYAxisBottom ? halfRadius : -halfRadius;
 
         if (isGlobalSubtype) {
           return [{
-            x: cx - halfRadius,
-            y: cy + halfRadius
+            x: cx - xHalfRadius,
+            y: cy + yHalfRadius
           }, // 左上
           {
-            x: cx + halfRadius,
-            y: cy + halfRadius
+            x: cx + xHalfRadius,
+            y: cy + yHalfRadius
           }, // 右上
           {
-            x: cx + halfRadius,
-            y: cy - halfRadius
+            x: cx + xHalfRadius,
+            y: cy - yHalfRadius
           }, // 右下
           {
-            x: cx - halfRadius,
-            y: cy - halfRadius
+            x: cx - xHalfRadius,
+            y: cy - yHalfRadius
           } // 左下
           ];
         } else if (isScreenSubtype) {
-          var _this$layer2, _this$layer2$map;
+          var _this$layer4, _this$layer4$map;
 
-          var scale = (_this$layer2 = this.layer) === null || _this$layer2 === void 0 ? void 0 : (_this$layer2$map = _this$layer2.map) === null || _this$layer2$map === void 0 ? void 0 : _this$layer2$map.getScale();
+          var scale = (_this$layer4 = this.layer) === null || _this$layer4 === void 0 ? void 0 : (_this$layer4$map = _this$layer4.map) === null || _this$layer4$map === void 0 ? void 0 : _this$layer4$map.getScale();
 
           if (!scale) {
             console.error('circle getEdgePoints error: no added to layer or map');
@@ -8973,21 +8994,23 @@
           }
 
           var globalRadius = halfRadius / scale;
+          var xGlobalRadius = !isXAxisLeft ? globalRadius : -globalRadius;
+          var yHGlobalRadius = !isYAxisBottom ? globalRadius : -globalRadius;
           return [{
-            x: cx - globalRadius,
-            y: cy + globalRadius
+            x: cx - xGlobalRadius,
+            y: cy + yHGlobalRadius
           }, // 左上
           {
-            x: cx + globalRadius,
-            y: cy + globalRadius
+            x: cx + xGlobalRadius,
+            y: cy + yHGlobalRadius
           }, // 右上
           {
-            x: cx + globalRadius,
-            y: cy - globalRadius
+            x: cx + xGlobalRadius,
+            y: cy - yHGlobalRadius
           }, // 右下
           {
-            x: cx - globalRadius,
-            y: cy - globalRadius
+            x: cx - xGlobalRadius,
+            y: cy - yHGlobalRadius
           } // 左下
           ];
         } else {
@@ -9713,6 +9736,10 @@
       this.zoomWhenDrawing = this.mapOptions.zoomWhenDrawing; // 更新是否绘制过程中允许缩放
 
       this.panWhenDrawing = this.mapOptions.panWhenDrawing; // 更新是否绘制过程中允许平移
+
+      this.xAxis = this.mapOptions.xAxis; // x轴设置
+
+      this.yAxis = this.mapOptions.yAxis; // y轴设置
       // 设置容器样式
 
       this.setDomStyle(); // 分别创建platformContainer/layerContainer/controlCOntainer
@@ -10024,9 +10051,13 @@
 
         var dltScreenX = screenX - screenBasePointX;
         var dltScreenY = screenY - screenBasePointY;
+        var isXAxisRight = this.xAxis.direction === EXAxisDirection.Right;
+        var isYAxisTop = this.yAxis.direction === EYAxisDirection.Top;
+        var globalX = isXAxisRight ? basePointX + dltScreenX / scale : basePointX - dltScreenX / scale;
+        var globalY = isYAxisTop ? basePointY - dltScreenY / scale : basePointY + dltScreenY / scale;
         return {
-          x: basePointX + dltScreenX / scale,
-          y: basePointY - dltScreenY / scale
+          x: globalX,
+          y: globalY
         };
       } // 全局【实际】坐标转换屏幕坐标，默认基于中心点基准point进行计算
 
@@ -10056,9 +10087,13 @@
 
         var dltGlobalX = globalX - basePointX;
         var dltGlobalY = globalY - basePointY;
+        var isXAxisRight = this.xAxis.direction === EXAxisDirection.Right;
+        var isYAxisTop = this.yAxis.direction === EYAxisDirection.Top;
+        var screenX = isXAxisRight ? screenBasePointX + dltGlobalX * scale : screenBasePointX - dltGlobalX * scale;
+        var screenY = isYAxisTop ? screenBasePointY - dltGlobalY * scale : screenBasePointY + dltGlobalY * scale;
         return {
-          x: screenBasePointX + dltGlobalX * scale,
-          y: screenBasePointY - dltGlobalY * scale
+          x: screenX,
+          y: screenY
         };
       } // 创建map容器下相关的container
 
@@ -10257,7 +10292,15 @@
     // 可自定义容器宽/高，默认取dom: clientWidth/clientHeight
     zoomWhenDrawing: false,
     // 绘制过程中是否允许缩放，默认不会缩放
-    panWhenDrawing: false // 绘制过程中是否允许自动平移，默认不会自动平移
+    panWhenDrawing: false,
+    // 绘制过程中是否允许自动平移，默认不会自动平移
+    xAxis: {
+      direction: EXAxisDirection.Right
+    },
+    // x坐标轴方向设置
+    yAxis: {
+      direction: EYAxisDirection.Bottom
+    } // y坐标轴方向设置
 
   });
 

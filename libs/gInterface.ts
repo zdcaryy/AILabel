@@ -1,6 +1,6 @@
 /***/
 
-import {EMapMode} from "./gEnum";
+import {EMapMode, EXAxisDirection, EYAxisDirection} from "./gEnum";
 
 // 基本json对象定义
 export interface IObject {
@@ -38,11 +38,18 @@ export interface ICenterAndZoom {
 };
 
 // mapOptions: 实例map容器配置项
+
+export interface IAxisOption {
+    direction: EXAxisDirection | EYAxisDirection
+};
+
 export interface IMapOptions {
     center?: IPoint,
     zoom?: number,
     size?: ISize,
     mode?: EMapMode,
     zoomWhenDrawing?: boolean,
-    panWhenDrawing?: boolean
+    panWhenDrawing?: boolean,
+    xAxis?: IAxisOption
+    yAxis?: IAxisOption
 };

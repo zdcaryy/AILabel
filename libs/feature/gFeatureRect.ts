@@ -1,4 +1,4 @@
-import {IObject, IPoint} from '../gInterface';
+import {IAxisOption, IObject, IPoint} from '../gInterface';
 import FeatureLayer from '../layer/gLayerFeature';
 import {IFeatureStyle, IRectShape} from './gInterface';
 import {EFeatureType} from './gEnum';
@@ -6,6 +6,7 @@ import Feature from './gFeature';
 import Graphic from '../gGraphic';
 import CanvasLayer from '../layer/gLayerCanvas';
 import Util from '../gUtil';
+import { EXAxisDirection, EYAxisDirection } from '../gEnum';
 
 export default class RectFeature extends Feature {
     // function: constructor
@@ -18,14 +19,18 @@ export default class RectFeature extends Feature {
     // @override
     // 判断是否捕捉到当前对象，各子类自行实现
     captureWithPoint(point: IPoint): boolean {
-        return Util.MathUtil.pointInRect(point, this.shape as IRectShape);
+        const rectPoints = this.getPoints();
+        return Util.MathUtil.pointInPolygon(point, rectPoints);
     }
 
     // 获取rect矩形的四个点
     getPoints(): IPoint[] {
+        const isXAxisLeft = this.layer?.map?.xAxis.direction === EXAxisDirection.Left;
+        const isYAxisBottom = this.layer?.map?.yAxis.direction === EYAxisDirection.Bottom;
+
         const {x: startX, y: startY, width, height} = this.shape as IRectShape;
-        const endX = startX + width;
-        const endY = startY - height;
+        const endX = !isXAxisLeft ? (startX + width) : (startX - width);
+        const endY = !isYAxisBottom ? (startY - height) : (startY + height);
         // 矩形点
         return [
             {x: startX, y: startY},

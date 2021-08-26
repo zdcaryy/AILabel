@@ -23,23 +23,16 @@ export default class Util {
             return Math.sqrt(dltX * dltX + dltY * dltY);
         },
         // 计算两端之间的距离
-        pointInPolygon(point: IPoint, polygon: IPoint[]) {
+        pointInPolygon(point: IPoint, points: IPoint[]) {
             const {x, y} = point;
-            for (var c = false, i = -1, l = polygon.length, j = l - 1; ++i < l; j = i) {
-                const {x: xi, y: yi} = polygon[i];
-                const {x: xj, y: yj} = polygon[j];
+            for (var c = false, i = -1, l = points.length, j = l - 1; ++i < l; j = i) {
+                const {x: xi, y: yi} = points[i];
+                const {x: xj, y: yj} = points[j];
                 ((yi <= y && y < yj) || (yj <= y && y < yi))
                 && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)
                 && (c = !c);
             }
             return c;
-        },
-        pointInRect(point: IPoint, rect: IRectShape) {
-            const {x, y} = point;
-            const {x: startX, y: startY, width, height} = rect;
-            const endX = startX + width;
-            const endY = startY - height;
-            return x >= startX && x <= endX && y >= endY && y <= startY;
         },
         pointInPoint(point: IPoint, point2: IRectShape, option: IObject = {}) {
             const {tolerance} = option;

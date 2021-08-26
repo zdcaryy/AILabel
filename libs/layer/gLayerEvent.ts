@@ -17,7 +17,7 @@ import {IBasePoint, IObject, IPoint} from '../gInterface';
 import {ILayerStyle} from './gInterface';
 import Layer from './gLayer';
 import {ELayerType} from './gEnum';
-import {ECursorType, EEventType, EMapMode} from '../gEnum';
+import {ECursorType, EEventType, EMapMode, EXAxisDirection, EYAxisDirection} from '../gEnum';
 import {EFeatureCircleSubtype, EFeatureType} from '../feature/gEnum';
 import Util from '../gUtil';
 import {ICircleShape, IFeatureShape, ILineShape, IPointShape, IPolygonShape, IPolylineShape, IRectShape} from '../feature/gInterface';
@@ -363,10 +363,17 @@ export default class MaskLayer extends Layer  {
     handleRectMove(e: MouseEvent) {
         const {x, y} = this.startPoint.global;
         const {x: width, y: height} = this.getDltXY(e, {transform: true});
-        const ltx = Math.min(x, x + width);
-        const lty = Math.max(y, y - height);
 
-        const moveGlobal = {x: x + width, y: y - height};
+        const isXAxisRight = this.map.xAxis.direction === EXAxisDirection.Right;
+        const isYAxisTop = this.map.yAxis.direction === EYAxisDirection.Top;
+
+        const ltx = isXAxisRight ? Math.min(x, x + width) : Math.max(x, x - width);
+        const lty = isYAxisTop ? Math.max(y, y - height) : Math.min(y, y + height);
+
+        const moveGlobal = {
+            x:  isXAxisRight ? (x + width) : (x - width),
+            y: isYAxisTop ? (y - height) : (y + height)
+        };
 
         const rectShape = {x: ltx, y: lty, width: Math.abs(width), height: Math.abs(height)};
         this.map.overlayLayer.addRectFeature(rectShape);
@@ -384,8 +391,10 @@ export default class MaskLayer extends Layer  {
         const height = Math.abs(screenDltY) / scale;
         const pointRBX = startScreeX + screenDltX;
         const pointRBY = startScreeY + screenDltY;
+
         const pointLTX = Math.min(pointRBX, startScreeX);
         const pointLTY = Math.min(pointRBY, startScreeY);
+
         const globalLTPoint = this.map.transformScreenToGlobal({x: pointLTX, y: pointLTY});
 
         this.reset(); // 重置临时数据
@@ -711,10 +720,16 @@ export default class MaskLayer extends Layer  {
         }
     }
     handleActiveFeatureMove(e: MouseEvent) {
-        const {x: globalDltX, y: globalDltY} = this.getDltXY(e, {transform: true});
-        const {x: screenDltX, y: screenDltY} = this.getDltXY(e, {transform: false});
+        const {x: preGlobalDltX, y: preGlobalDltY} = this.getDltXY(e, {transform: true});
+        const {x: preScreenDltX, y: preScreenDltY} = this.getDltXY(e, {transform: false});
         const activeFeature = this.map.activeFeature;
         const {type, shape, style} = activeFeature;
+
+        const isXAxisRight = this.map.xAxis.direction === EXAxisDirection.Right;
+        const isYAxisTop = this.map.yAxis.direction === EYAxisDirection.Top;
+        const globalDltX = isXAxisRight ? preGlobalDltX : -preGlobalDltX;
+        const globalDltY = isYAxisTop ? preGlobalDltY : -preGlobalDltY;
+        const screenDltX = isXAxisRight ? preScreenDltX : -preScreenDltX;
 
         switch (type) {
             case EFeatureType.Point: {
@@ -1174,22 +1189,37 @@ export default class MaskLayer extends Layer  {
             const panGlobalDistance = panScreenDistance / scale;
             const center = this.map.getCenter();
 
+            const isXAxisRight = this.map.xAxis.direction === EXAxisDirection.Right;
+            const isYAxisTop = this.map.yAxis.direction === EYAxisDirection.Top;
+
             let newCenter:IPoint = center;
             switch (directionIndex) {
                 case 0: { // 上
-                    newCenter = {x: center.x, y: center.y + panGlobalDistance};
+                    newCenter = {
+                        x: center.x,
+                        y: isYAxisTop ? (center.y + panGlobalDistance) : (center.y - panGlobalDistance)
+                    };
                     break;
                 }
                 case 1: { // 右
-                    newCenter = {x: center.x + panGlobalDistance, y: center.y};
+                    newCenter = {
+                        x: isXAxisRight ? (center.x + panGlobalDistance) : (center.x - panGlobalDistance),
+                        y: center.y
+                    };
                     break;
                 }
                 case 2: { // 下
-                    newCenter = {x: center.x, y: center.y - panGlobalDistance};
+                    newCenter = {
+                        x: center.x,
+                        y: isYAxisTop ? (center.y - panGlobalDistance) : (center.y + panGlobalDistance)
+                    };
                     break;
                 }
                 case 3: { // 左
-                    newCenter = {x: center.x - panGlobalDistance, y: center.y};
+                    newCenter = {
+                        x: isXAxisRight ? (center.x - panGlobalDistance) : (center.x + panGlobalDistance),
+                        y: center.y
+                    };
                     break;
                 }
             }

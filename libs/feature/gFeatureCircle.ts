@@ -8,6 +8,7 @@ import Feature from './gFeature';
 import Graphic from '../gGraphic';
 import CanvasLayer from '../layer/gLayerCanvas';
 import Util from '../gUtil';
+import { EXAxisDirection, EYAxisDirection } from '../gEnum';
 
 export default class CircleFeature extends Feature {
     static defaultOption: IObject = {
@@ -63,16 +64,34 @@ export default class CircleFeature extends Feature {
         const isGlobalSubtype = this.getSubType() === EFeatureCircleSubtype.Global;
         const isScreenSubtype = this.getSubType() === EFeatureCircleSubtype.Screen;
 
+        const isXAxisLeft = this.layer?.map?.xAxis.direction === EXAxisDirection.Left;
+        const isYAxisBottom = this.layer?.map?.yAxis.direction === EYAxisDirection.Bottom;
+
         const {cx, cy, r, sr} = this.shape as ICircleShape;
         const radius = isGlobalSubtype ? r : (isScreenSubtype ? sr : 0);
         const halfRadius = Math.sqrt(radius * radius / 2);
 
+        const xHalfRadius = !isXAxisLeft ? halfRadius : -halfRadius;
+        const yHalfRadius = !isYAxisBottom ? halfRadius : -halfRadius;
+
         if (isGlobalSubtype) {
             return [
-                {x: cx - halfRadius, y: cy + halfRadius}, // 左上
-                {x: cx + halfRadius, y: cy + halfRadius}, // 右上
-                {x: cx + halfRadius, y: cy - halfRadius}, // 右下
-                {x: cx - halfRadius, y: cy - halfRadius} // 左下
+                {
+                    x: cx - xHalfRadius,
+                    y: cy + yHalfRadius
+                }, // 左上
+                {
+                    x: cx + xHalfRadius,
+                    y: cy + yHalfRadius
+                }, // 右上
+                {
+                    x: cx + xHalfRadius,
+                    y: cy - yHalfRadius
+                }, // 右下
+                {
+                    x: cx - xHalfRadius,
+                    y: cy - yHalfRadius
+                } // 左下
             ];
         }
         else if (isScreenSubtype) {
@@ -82,11 +101,25 @@ export default class CircleFeature extends Feature {
                 return [];
             }
             const globalRadius = halfRadius / scale;
+            const xGlobalRadius = !isXAxisLeft ? globalRadius : -globalRadius;
+            const yHGlobalRadius = !isYAxisBottom ? globalRadius : -globalRadius;
             return [
-                {x: cx - globalRadius, y: cy + globalRadius}, // 左上
-                {x: cx + globalRadius, y: cy + globalRadius}, // 右上
-                {x: cx + globalRadius, y: cy - globalRadius}, // 右下
-                {x: cx - globalRadius, y: cy - globalRadius} // 左下
+                {
+                    x: cx - xGlobalRadius,
+                    y: cy + yHGlobalRadius
+                }, // 左上
+                {
+                    x: cx + xGlobalRadius,
+                    y: cy + yHGlobalRadius
+                }, // 右上
+                {
+                    x: cx + xGlobalRadius,
+                    y: cy - yHGlobalRadius
+                }, // 右下
+                {
+                    x: cx - xGlobalRadius,
+                    y: cy - yHGlobalRadius
+                } // 左下
             ];
         }
         else {

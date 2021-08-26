@@ -1,3 +1,14 @@
+export enum EXAxisDirection {
+    Left = 'left',
+    Right = 'right',
+};
+
+export enum EYAxisDirection {
+    Top = 'top',
+    Bottom = 'bottom'
+};
+
+
 export enum ECanvasTextBaseLine {
     Bottom = 'bottom',
     Top = 'top',
