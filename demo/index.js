@@ -12341,7 +12341,8 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.0'
+    version: '5.0.3' // 和npm-version保持一致
+
   };
 
   return AILabel;
