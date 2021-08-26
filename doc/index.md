@@ -44,6 +44,8 @@ const gMap = new AILabel.Map('map', {
 |center|初始中心点坐标|否|--|IPoint|
 |size|容器大小设置|否|null（会获取dom：clientWidth[Height]）|ISize|
 |mode|当前操作模式|否|'PAN'|EMapMode枚举-见下文|
+|zoomWhenDrawing|绘制时可滑轮缩放|否|false|boolean|
+|panWhenDrawing|绘制时可到边界外自动平移|否|false|boolean|
 
 **IPoint**
 
@@ -76,6 +78,7 @@ gMap.setMode(mode: EMapMode);
 |参数|说明|类型|
 |---|---|---|---|---|
 |PAN|平移|string|
+|BAN|禁用视野缩放平移|string|
 |POINT|绘制点|string|
 |CIRCLE|绘制圆|string|
 |LINE|绘制线|string|
@@ -119,6 +122,42 @@ const containerSize = gMap.getSize();
 |---|---|---|---|---|
 |width|宽|number|
 |height|高|number|
+
+## enableZoomWhenDrawing
+开启绘制时可鼠标滑轮缩放
+```javascript
+// define
+enableZoomWhenDrawing()
+// demo
+gMap.enableZoomWhenDrawing();
+```
+
+## disableZoomWhenDrawing
+禁用绘制时可鼠标滑轮缩放
+```javascript
+// define
+disableZoomWhenDrawing()
+// demo
+gMap.disableZoomWhenDrawing();
+```
+
+## enablePanWhenDrawing
+开启绘制时鼠标达到边界外自动平移
+```javascript
+// define
+enablePanWhenDrawing()
+// demo
+gMap.enablePanWhenDrawing();
+```
+
+## disablePanWhenDrawing
+禁用绘制时鼠标达到边界外自动平移
+```javascript
+// define
+disablePanWhenDrawing()
+// demo
+gMap.disablePanWhenDrawing();
+```
 
 ## getScale
 获取当前缩放比例 (containerWidth / zoom)

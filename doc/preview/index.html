@@ -164,6 +164,20 @@ const gMap = new AILabel.Map(&#39;map&#39;, {
 <td>&#39;PAN&#39;</td>
 <td>EMapMode枚举-见下文</td>
 </tr>
+<tr>
+<td>zoomWhenDrawing</td>
+<td>绘制时可滑轮缩放</td>
+<td>否</td>
+<td>false</td>
+<td>boolean</td>
+</tr>
+<tr>
+<td>panWhenDrawing</td>
+<td>绘制时可到边界外自动平移</td>
+<td>否</td>
+<td>false</td>
+<td>boolean</td>
+</tr>
 </tbody>
 </table>
 <p><strong>IPoint</strong></p>
@@ -260,6 +274,11 @@ const gMap = new AILabel.Map(&#39;map&#39;, {
 <tr>
 <td>PAN</td>
 <td>平移</td>
+<td>string</td>
+</tr>
+<tr>
+<td>BAN</td>
+<td>禁用视野缩放平移</td>
 <td>string</td>
 </tr>
 <tr>
@@ -385,6 +404,34 @@ const containerSize = gMap.getSize();
 </tr>
 </tbody>
 </table>
+<h2 id="enablezoomwhendrawing">enableZoomWhenDrawing</h2>
+<p>开启绘制时可鼠标滑轮缩放</p>
+<pre><code class="lang-javascript">// define
+enableZoomWhenDrawing()
+// demo
+gMap.enableZoomWhenDrawing();
+</code></pre>
+<h2 id="disablezoomwhendrawing">disableZoomWhenDrawing</h2>
+<p>禁用绘制时可鼠标滑轮缩放</p>
+<pre><code class="lang-javascript">// define
+disableZoomWhenDrawing()
+// demo
+gMap.disableZoomWhenDrawing();
+</code></pre>
+<h2 id="enablepanwhendrawing">enablePanWhenDrawing</h2>
+<p>开启绘制时鼠标达到边界外自动平移</p>
+<pre><code class="lang-javascript">// define
+enablePanWhenDrawing()
+// demo
+gMap.enablePanWhenDrawing();
+</code></pre>
+<h2 id="disablepanwhendrawing">disablePanWhenDrawing</h2>
+<p>禁用绘制时鼠标达到边界外自动平移</p>
+<pre><code class="lang-javascript">// define
+disablePanWhenDrawing()
+// demo
+gMap.disablePanWhenDrawing();
+</code></pre>
 <h2 id="getscale">getScale</h2>
 <p>获取当前缩放比例 (containerWidth / zoom)</p>
 <pre><code class="lang-javascript">// define
