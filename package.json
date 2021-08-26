@@ -7,6 +7,7 @@
   "browser_website": "website/src/dist/index.js",
   "dependencies": {
     "events": "^3.3.0",
+    "hotkeys-js": "^3.8.7",
     "lodash": "^4.17.21"
   },
   "devDependencies": {

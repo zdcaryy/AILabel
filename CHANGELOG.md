@@ -7,5 +7,7 @@
 1、绘制线段完成修改为单击结束
 2、绘制过程中增加tip提示文字
 3、绘制编辑过程中可自由缩放
-4、mapOption增加zoomWhenDrawing绘制过程中是否可以自由缩放
+4、mapOption增加zoomWhenDrawing绘制过程中是否可以自由缩放/平移
 5、增加mapMode='BAN' // 禁用浏览
+6、ctrl+z撤销节点
+7、绘制圆bug修复

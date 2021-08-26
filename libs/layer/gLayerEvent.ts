@@ -44,6 +44,9 @@ export default class MaskLayer extends Layer  {
     // 多边形绘制时临时保存points：IBasePoint[]
     public tmpPointsStore: IBasePoint[] = []
 
+    // 绘制过程中视野自动平移
+    public panWhenDrawingTimer: number | null | undefined
+
     // 绘制点的timer延迟，避免和dblClick事件冲突
     public downTimer: number | null | undefined
 
@@ -63,7 +66,7 @@ export default class MaskLayer extends Layer  {
         this.onMouseMove = this.onMouseMove.bind(this);
         this.onMouseUp = this.onMouseUp.bind(this);
         this.onMouseOut = this.onMouseOut.bind(this);
-        this.onMouseEnter = this.onMouseEnter.bind(this);
+        this.onMouseOver = this.onMouseOver.bind(this);
         this.onMouseDblClick = this.onMouseDblClick.bind(this);
         this.onMouseWheel = this.onMouseWheel.bind(this);
     }
@@ -102,7 +105,7 @@ export default class MaskLayer extends Layer  {
         this.eventDom.addEventListener('dblclick', this.onMouseDblClick);
         this.eventDom.addEventListener("mousewheel", this.onMouseWheel);
         this.eventDom.addEventListener("mouseout", this.onMouseOut);
-        this.eventDom.addEventListener("mouseenter", this.onMouseEnter);
+        this.eventDom.addEventListener("mouseover", this.onMouseOver);
     }
 
     // removeEventListener: 事件解除
@@ -112,7 +115,7 @@ export default class MaskLayer extends Layer  {
         this.eventDom.removeEventListener("mouseup", this.onMouseUp);
         this.eventDom.removeEventListener("mousewheel", this.onMouseWheel);
         this.eventDom.removeEventListener("mouseout", this.onMouseOut);
-        this.eventDom.removeEventListener("mouseenter", this.onMouseEnter);
+        this.eventDom.removeEventListener("mouseover", this.onMouseOver);
     }
 
     /*************************************************/
@@ -265,7 +268,7 @@ export default class MaskLayer extends Layer  {
             this.clearDownTimer();
             this.downTimer = window.setTimeout(() => {
                 this.tmpPointsStore.push(this.startPoint);
-                this.map.tipLayer.addText({text: '移动鼠标开始绘制', position: this.startPoint.global});
+                this.map.tipLayer.addText({text: '移动开始绘制', position: this.startPoint.global});
             }, 300);
         }
         else if (this.tmpPointsStore.length === 1) {
@@ -314,6 +317,7 @@ export default class MaskLayer extends Layer  {
         }
         else {
             this.tmpPointsStore.push(this.startPoint);
+            this.map.tipLayer.addText({text: 'ctrl+z撤销', position: this.startPoint.global});
         }
     }
     handlePolylineMove(e: MouseEvent) {
@@ -414,6 +418,7 @@ export default class MaskLayer extends Layer  {
         }
         else {
             this.tmpPointsStore.push(this.startPoint);
+            this.map.tipLayer.addText({text: 'ctrl+z撤销', position: this.startPoint.global});
         }
     }
     handlePolygonMove(e: MouseEvent) {
@@ -551,9 +556,6 @@ export default class MaskLayer extends Layer  {
         const screenCenter = this.map.getScreenCenter();
         const newCenter = this.map.transformScreenToGlobal(screenCenter, {basePoint, zoom: newZoom});
         this.map.centerAndZoom({center: newCenter, zoom: newZoom});
-
-        // 刷新overlayLayer: 目的是绘制图形过程中刷新临时绘制要素信息
-        this.map.overlayLayer.refresh();
     }
 
     /*****************************************************/
@@ -741,15 +743,10 @@ export default class MaskLayer extends Layer  {
 
                     const circleSubtype = (activeFeature as CircleFeature).getSubType();
                     const isGlobalType = circleSubtype === EFeatureCircleSubtype.Global;
-                    const globalDlt = Math.sqrt(globalDltX * globalDltX + globalDltY * globalDltY);
-                    const screenDlt = Math.sqrt(screenDltX * screenDltX + screenDltY * screenDltY);
 
-                    // isLeft screenDltX <= 0 ? + : -
-                    // isRight screenDltX >=0 ? + : -
-                    const isLager = (isLeft && screenDltX <= 0) || (isRight && screenDltX >=0);
                     const newRadius = isGlobalType
-                        ? (isLager ? (r + globalDlt) : r - globalDlt)
-                        : (isLager ? (sr + screenDlt) : sr - screenDlt);
+                        ? (isRight ? (r + globalDltX) : (r - globalDltX))
+                        : (isRight ? (sr + screenDltX) : (sr - screenDltX));
 
                     // 如果半径小于0不做任何处理å
                     if (newRadius <= 0) {
@@ -1031,6 +1028,11 @@ export default class MaskLayer extends Layer  {
         const mapMode = this.map.mode;
         const dragging = this.dragging;
 
+        if (!this.map.activeFeature) {
+            // 首先清空临时层
+            this.map.overlayLayer.removeAllFeatureActionText();
+        }
+
         if (mapMode === EMapMode.Ban) {
             // 禁用任何逻辑判断
             return;
@@ -1149,20 +1151,81 @@ export default class MaskLayer extends Layer  {
         }
     }
 
+    // 清除计时器timer
+    clearPanWhenDrawingTimer() {
+        if (this.panWhenDrawingTimer) {
+            window.clearInterval(this.panWhenDrawingTimer);
+            this.panWhenDrawingTimer = null;
+        }
+    }
+    // 绘制过程中启用平移视野
+    handlePanWhenDrawing(e: MouseEvent) {
+        const directionIndex = Util.EventUtil.getMouseDirection(this.map.dom, e);
+        this.clearPanWhenDrawingTimer();
+        const panScreenDistance = 10; // 每次平移10个像素
+
+        // 如果map设置不允许自动平移 || 没有进行任何绘制点时
+        if (!this.map.panWhenDrawing || !this.tmpPointsStore.length) {
+            return;
+        }
+
+        this.panWhenDrawingTimer = window.setInterval(() => {
+            const scale = this.map.getScale();
+            const panGlobalDistance = panScreenDistance / scale;
+            const center = this.map.getCenter();
+
+            let newCenter:IPoint = center;
+            switch (directionIndex) {
+                case 0: { // 上
+                    newCenter = {x: center.x, y: center.y + panGlobalDistance};
+                    break;
+                }
+                case 1: { // 右
+                    newCenter = {x: center.x + panGlobalDistance, y: center.y};
+                    break;
+                }
+                case 2: { // 下
+                    newCenter = {x: center.x, y: center.y - panGlobalDistance};
+                    break;
+                }
+                case 3: { // 左
+                    newCenter = {x: center.x - panGlobalDistance, y: center.y};
+                    break;
+                }
+            }
+            this.map.setCenter(newCenter);
+        }, 100);
+    }
+
     // onMouseOut: 鼠标移出
     public onMouseOut(e: MouseEvent) {
         e.preventDefault();
         // 清空文字提示层
         this.map.tipLayer.removeAllFeatureActionText();
+
+        // 如果在绘制过程中，此时需要判断是否需要自动平移视野
+        this.handlePanWhenDrawing(e);
     }
 
-    // onMouseEnter: 鼠标移入
-    public onMouseEnter(e: MouseEvent) {
+    // onMouseOver: 鼠标移入
+    public onMouseOver(e: MouseEvent) {
         e.preventDefault();
         // 清空文字提示层
         this.map.tipLayer.removeAllFeatureActionText();
+        // 清除绘制过程中timer
+        this.clearPanWhenDrawingTimer();
     }
 
+    // 撤销临时绘制点集
+    revokeTmpPointsStore() {
+        if (!this.tmpPointsStore.length) {
+            return;
+        }
+        this.tmpPointsStore.pop();
+
+        const mouseMoveEvent = this.mouseMoveEvent;
+        mouseMoveEvent && this.onMouseMove(mouseMoveEvent);
+    }
 
     // 重置drawing过程中产生的临时数据&清空临时绘制层
     reset() {

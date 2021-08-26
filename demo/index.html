@@ -42,7 +42,8 @@
             center: {x: 0, y: 0},
             zoom: 800,
             mode: 'PAN', // 绘制线段
-            zoomWhenDrawing: false
+            zoomWhenDrawing: true,
+            panWhenDrawing: true
         });
 
         gMap.events.on('drawDone', (type, data, data1) => {
@@ -216,7 +217,7 @@
 
         const gFirstFeatureCircle = new AILabel.Feature.Circle(
             'first-feature-circle', // id
-            {cx: 0, cy: 0, r: 100, stroke: true, fill: false}, // shape
+            {cx: 0, cy: 0, sr: 100, stroke: true, fill: false}, // shape
             {name: '第一个矢量图层'}, // props
             {fillStyle: '#F4A460', strokeStyle: '#D2691E', globalAlpha: 1} // style
         );

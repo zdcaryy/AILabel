@@ -122,6 +122,34 @@ export default class Util {
                 }
             }
             return event.button;
+        },
+        getMouseDirection(dom: HTMLElement, event: any): number {
+            const x1 = dom.offsetLeft;
+            const y1 = -dom.offsetTop; // 注意坐标，所有的y坐标都是负数
+            const x2 = x1 + dom.offsetWidth;
+            const y2 = y1 - dom.offsetHeight; // 同样y坐标为负数
+            const x0 = (x1 + x2) / 2;
+            const y0 = (y1 + y2) / 2;
+            const k = (y2 - y1) / (x2 - x1); // 斜率k
+            // 计算
+            const e = event || window.event;
+            const x = e.clientX; // 鼠标刚移出div内，记录下当前的x坐标
+            const y = -e.clientY; // 鼠标刚移出div内，记录下当前的y坐标
+            const K = (y - y0) / (x - x0); // K是鼠标移入点和中心点的斜率
+            // 当K大于k并且小于-k时，则肯定是左右移入，当移入点的x坐标大于中心点 ，则为右移入，小于则是左移入
+            if (k < K && K < -k) {
+                if (x > x0) {
+                    return 1; // 右
+                } else {
+                    return 3; // 左
+                }
+            }
+            // 注意此处y是负数，判断上下的方法同上
+            if (y > y0) {
+                return 0; // 上
+            } else {
+                return 2; // 下
+            }
         }
     }
 }

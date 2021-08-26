@@ -1,5 +1,6 @@
 //
 import events from 'events/events';
+import hotkeys from 'hotkeys-js';
 
 import _assign from 'lodash/assign';
 import _uniqueId from 'lodash/uniqueId';
@@ -15,7 +16,7 @@ import Layer from './layer/gLayer';
 import EventLayer from './layer/gLayerEvent';
 import OverlayLayer from './layer/gLayerOverlay';
 import MarkerLayer from './layer/gLayerMarker';
-import { IFeatureStyle, IRectShape } from './feature/gInterface';
+import {IFeatureStyle, IRectShape} from './feature/gInterface';
 import Feature from './feature/gFeature';
 
 export default class Map {
@@ -49,12 +50,15 @@ export default class Map {
         zoom: 1000, // 缩放值
         mode: EMapMode.Pan, // 默认当前map模式
         size: null, // 可自定义容器宽/高，默认取dom: clientWidth/clientHeight
-        zoomWhenDrawing: false // 绘制过程中是否允许缩放，默认不会缩放
+        zoomWhenDrawing: false, // 绘制过程中是否允许缩放，默认不会缩放
+        panWhenDrawing: false // 绘制过程中是否允许自动平移，默认不会自动平移
     }
     private mapOptions: IMapOptions
 
     // 绘制过程中是否允许缩放，默认不会缩放
     public zoomWhenDrawing: boolean
+    // 绘制过程中是否允许自动平移，默认不会自动平移
+    public panWhenDrawing: boolean
 
     public zoom: number // 当前缩放值
     public center: IPoint // 左上角代表的实际坐标值
@@ -94,6 +98,7 @@ export default class Map {
         this.center = this.mapOptions.center; // 更新初始origin
         this.mode = this.mapOptions.mode; // 更新初始map操作模式
         this.zoomWhenDrawing = this.mapOptions.zoomWhenDrawing; // 更新是否绘制过程中允许缩放
+        this.panWhenDrawing = this.mapOptions.panWhenDrawing; // 更新是否绘制过程中允许平移
 
         // 设置容器样式
         this.setDomStyle();
@@ -109,6 +114,8 @@ export default class Map {
         this.addMarkerLayer();
         // 事件监听实例添加
         this.eventsObServer = new events.EventEmitter();
+        // 注册快捷键（注意多实例时可能存在冲突问题，后面的实例会覆盖前面的）
+        this.registerHotkey();
     }
 
     // 设置dom容器的style样式
@@ -197,6 +204,13 @@ export default class Map {
     disableZoomWhenDrawing() {
         this.zoomWhenDrawing = false;
     }
+    // 绘制过程中是否允许自由平移
+    enablePanWhenDrawing() {
+        this.panWhenDrawing = true;
+    }
+    disablePanWhenDrawing() {
+        this.panWhenDrawing = false;
+    }
 
     // 定位且zoom到指定zoom值
     centerAndZoom(options: ICenterAndZoom): Map {
@@ -273,6 +287,9 @@ export default class Map {
         this.boundsChangedTimer = window.setTimeout(() => {
             this.eventsObServer.emit(EEventType.BoundsChanged);
         }, 666);
+
+        // 刷新overlayLayer: 目的是绘制图形过程中刷新临时绘制要素信息
+        this.overlayLayer.refresh();
     }
 
     // 刷新当前视图
@@ -295,6 +312,11 @@ export default class Map {
     // 获取当前active的feature
     getActiveFeature(): Feature | null {
         return this.activeFeature;
+    }
+
+    // 撤销临时绘制点【如线段/多段线/多边形等】
+    removeDrawingPoints() {
+        this.eventLayer.revokeTmpPointsStore();
     }
 
 
@@ -449,6 +471,14 @@ export default class Map {
         // 首先将layer-dom-append到容器中
         this.layerDom2.appendChild(this.markerLayer.dom);
         this.markerLayer.onAdd(this);
+    }
+
+    // 注册快捷键
+    registerHotkey() {
+        // 注册ctrl+z删除
+        hotkeys('ctrl+z', (event, handler) => {
+            this.removeDrawingPoints();
+        });
     }
 
     // setCursor
