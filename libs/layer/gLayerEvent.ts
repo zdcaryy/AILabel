@@ -552,6 +552,7 @@ export default class MaskLayer extends Layer  {
         const newCenter = this.map.transformScreenToGlobal(screenCenter, {basePoint, zoom: newZoom});
         this.map.centerAndZoom({center: newCenter, zoom: newZoom});
 
+        // 刷新overlayLayer: 目的是绘制图形过程中刷新临时绘制要素信息
         this.map.overlayLayer.refresh();
     }
 
