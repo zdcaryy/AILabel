@@ -6001,6 +6001,7 @@
       _this.onMouseMove = _this.onMouseMove.bind(_assertThisInitialized(_this));
       _this.onMouseUp = _this.onMouseUp.bind(_assertThisInitialized(_this));
       _this.onMouseOut = _this.onMouseOut.bind(_assertThisInitialized(_this));
+      _this.onMouseEnter = _this.onMouseEnter.bind(_assertThisInitialized(_this));
       _this.onMouseDblClick = _this.onMouseDblClick.bind(_assertThisInitialized(_this));
       _this.onMouseWheel = _this.onMouseWheel.bind(_assertThisInitialized(_this));
       return _this;
@@ -6043,6 +6044,7 @@
         this.eventDom.addEventListener('dblclick', this.onMouseDblClick);
         this.eventDom.addEventListener("mousewheel", this.onMouseWheel);
         this.eventDom.addEventListener("mouseout", this.onMouseOut);
+        this.eventDom.addEventListener("mouseenter", this.onMouseEnter);
       } // removeEventListener: 事件解除
 
     }, {
@@ -6052,7 +6054,8 @@
         this.eventDom.removeEventListener("mousemove", this.onMouseMove);
         this.eventDom.removeEventListener("mouseup", this.onMouseUp);
         this.eventDom.removeEventListener("mousewheel", this.onMouseWheel);
-        this.eventDom.addEventListener("mouseout", this.onMouseOut);
+        this.eventDom.removeEventListener("mouseout", this.onMouseOut);
+        this.eventDom.removeEventListener("mouseenter", this.onMouseEnter);
       }
       /*************************************************/
 
@@ -7482,6 +7485,14 @@
           this.handlePolygonMove(e);
         } else if ((mapMode === EMapMode.DrawMask || mapMode === EMapMode.ClearMask) && !dragging) {
           this.map.setCursor(ECursorType.Crosshair);
+        } // 首先判断是否是取消选中
+
+
+        if (this.map.activeFeature && !dragging) {
+          this.map.tipLayer.addText({
+            text: '单击取消选中',
+            position: global
+          });
         } // 编辑态，平移捕捉
 
 
@@ -7532,6 +7543,14 @@
     }, {
       key: "onMouseOut",
       value: function onMouseOut(e) {
+        e.preventDefault(); // 清空文字提示层
+
+        this.map.tipLayer.clear();
+      } // onMouseEnter: 鼠标移入
+
+    }, {
+      key: "onMouseEnter",
+      value: function onMouseEnter(e) {
         e.preventDefault(); // 清空文字提示层
 
         this.map.tipLayer.clear();

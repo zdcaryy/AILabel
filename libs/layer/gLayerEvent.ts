@@ -63,6 +63,7 @@ export default class MaskLayer extends Layer  {
         this.onMouseMove = this.onMouseMove.bind(this);
         this.onMouseUp = this.onMouseUp.bind(this);
         this.onMouseOut = this.onMouseOut.bind(this);
+        this.onMouseEnter = this.onMouseEnter.bind(this);
         this.onMouseDblClick = this.onMouseDblClick.bind(this);
         this.onMouseWheel = this.onMouseWheel.bind(this);
     }
@@ -101,6 +102,7 @@ export default class MaskLayer extends Layer  {
         this.eventDom.addEventListener('dblclick', this.onMouseDblClick);
         this.eventDom.addEventListener("mousewheel", this.onMouseWheel);
         this.eventDom.addEventListener("mouseout", this.onMouseOut);
+        this.eventDom.addEventListener("mouseenter", this.onMouseEnter);
     }
 
     // removeEventListener: 事件解除
@@ -109,7 +111,8 @@ export default class MaskLayer extends Layer  {
         this.eventDom.removeEventListener("mousemove", this.onMouseMove);
         this.eventDom.removeEventListener("mouseup", this.onMouseUp);
         this.eventDom.removeEventListener("mousewheel", this.onMouseWheel);
-        this.eventDom.addEventListener("mouseout", this.onMouseOut);
+        this.eventDom.removeEventListener("mouseout", this.onMouseOut);
+        this.eventDom.removeEventListener("mouseenter", this.onMouseEnter);
     }
 
     /*************************************************/
@@ -1055,6 +1058,11 @@ export default class MaskLayer extends Layer  {
             this.map.setCursor(ECursorType.Crosshair);
         }
 
+        // 首先判断是否是取消选中
+        if (this.map.activeFeature && !dragging) {
+            this.map.tipLayer.addText({text: '单击取消选中', position: global});
+        }
+
         // 编辑态，平移捕捉
         if (_includes([
             EMapMode.Point,
@@ -1122,6 +1130,12 @@ export default class MaskLayer extends Layer  {
         this.map.tipLayer.clear();
     }
 
+    // onMouseEnter: 鼠标移入
+    public onMouseEnter(e: MouseEvent) {
+        e.preventDefault();
+        // 清空文字提示层
+        this.map.tipLayer.clear();
+    }
 
 
     // 重置drawing过程中产生的临时数据&清空临时绘制层
