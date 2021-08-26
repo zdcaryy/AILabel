@@ -30,7 +30,9 @@ npm地址：https://www.npmjs.com/package/ailabel
 ## 快速开始
 
 **第一个小栗子**
+
 图片层的添加
+
 ```javascript
 // 声明容器
 const gMap =new AILabel.Map(CONTAINER_ID, {
@@ -58,7 +60,9 @@ gMap.addLayer(gFirstImageLayer);
 ```
 
 **图形绘制/编辑**
+
 多边形绘制编辑举例
+
 ```javascript
 // 添加矢量图层（用于展示矢量图形）
 const gFirstFeatureLayer = new AILabel.Layer.Feature(
