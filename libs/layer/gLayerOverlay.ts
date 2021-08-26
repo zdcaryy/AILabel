@@ -23,7 +23,7 @@ import Util from '../gUtil';
 import {ITextInfo} from '../text/gInterface';
 
 export default class OverlayLayer extends CanvasLayer  {
-    public featureActions: Array<Feature | Action | Text> = [] // 当前featureLayer中所有的features
+    public featureActionTexts: Array<Feature | Action | Text> = [] // 当前featureLayer中所有的features
 
     // 默认active的样式
     defaultActiveFeatureStyle: IFeatureStyle = {
@@ -40,10 +40,10 @@ export default class OverlayLayer extends CanvasLayer  {
     // 添加feature至当前FeatureLayer中
     addFeatureActionText(feature: Feature | Action | Text, option?: IObject) {
         const {clear = false} = option || {};
-        clear && this.clear();
+        clear && this.removeAllFeatureActionText();
 
         feature.onAdd(this);
-        this.featureActions.push(feature);
+        this.featureActionTexts.push(feature);
     }
 
     // 添加point
@@ -156,6 +156,11 @@ export default class OverlayLayer extends CanvasLayer  {
 
     // 绘制当前activeFeature
     addActiveFeature(feature) {
+        if (!feature) {
+            this.removeAllFeatureActionText();
+            return;
+        }
+
         // 高亮的样式
         const style = this.defaultActiveFeatureStyle;
         // 做一下深度克隆，避免原有feature被污染[暂时不做克隆，效率太低]
@@ -222,9 +227,15 @@ export default class OverlayLayer extends CanvasLayer  {
         });
     }
 
+    // 清空所有子对象
+    removeAllFeatureActionText() {
+        this.featureActionTexts = [];
+        this.clear();
+    }
+
     // @override
     refresh() {
         super.refresh();
-        _forEach(this.featureActions, (featureAction: Feature | Action) => featureAction.refresh());
+        _forEach(this.featureActionTexts, (featureActionText: Feature | Action | Text) => featureActionText.refresh());
     }
 }

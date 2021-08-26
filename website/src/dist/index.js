@@ -4656,6 +4656,7 @@
 
   (function (EMapMode) {
     EMapMode["Pan"] = "PAN";
+    EMapMode["Ban"] = "BAN";
     EMapMode["MARKER"] = "MARKER";
     EMapMode["Point"] = "POINT";
     EMapMode["Circle"] = "CIRCLE";
@@ -5402,10 +5403,10 @@
     }, {
       key: "refresh",
       value: function refresh() {
-        _get(_getPrototypeOf(CanvasLayer.prototype), "refresh", this).call(this); // 进行canvas画布清除
-
-
+        // 进行canvas画布清除
         this.clear();
+
+        _get(_getPrototypeOf(CanvasLayer.prototype), "refresh", this).call(this);
       } // 清空canvas画布
 
     }, {
@@ -6795,6 +6796,7 @@
           center: newCenter,
           zoom: newZoom
         });
+        this.map.overlayLayer.refresh();
       }
       /*****************************************************/
 
@@ -7007,7 +7009,7 @@
         var _this12 = this;
 
         // 鼠标按下时清空tipLayer
-        this.map.tipLayer.clear(); // 鼠标相关变量
+        this.map.tipLayer.removeAllFeatureActionText(); // 鼠标相关变量
 
         var btnIndex = Util.EventUtil.getButtonIndex(e); // 鼠标左键按下
 
@@ -7288,7 +7290,7 @@
 
         document.onmousemove = null;
         document.onmouseup = null;
-        this.map.overlayLayer.clear();
+        this.map.overlayLayer.removeAllFeatureActionText();
         var activeFeature = this.map.activeFeature; // 首先需要恢复选中要素的选中态
 
         activeFeature && this.map.overlayLayer.addActiveFeature(activeFeature); // 如果存在更新数据
@@ -7405,7 +7407,10 @@
           return;
         }
 
-        if (mapMode === EMapMode.Pan && drawing) {
+        if (mapMode === EMapMode.Ban) {
+          // 禁用任何逻辑判断
+          return;
+        } else if (mapMode === EMapMode.Pan && drawing) {
           this.handleMapPanStart(e);
         } else if (mapMode === EMapMode.MARKER && drawing) {
           this.handleMarkerStart(e);
@@ -7452,7 +7457,10 @@
         var mapMode = this.map.mode;
         var dragging = this.dragging;
 
-        if (mapMode === EMapMode.Pan && !dragging) {
+        if (mapMode === EMapMode.Ban) {
+          // 禁用任何逻辑判断
+          return;
+        } else if (mapMode === EMapMode.Pan && !dragging) {
           this.map.setCursor(ECursorType.Grab);
         } else if (mapMode === EMapMode.MARKER && !dragging) {
           this.map.setCursor(ECursorType.Crosshair);
@@ -7514,7 +7522,10 @@
         this.clearDownTimer();
         var drawing = this.dragging || this.tmpPointsStore.length;
 
-        if (mapMode === EMapMode.Polyline && drawing) {
+        if (mapMode === EMapMode.Ban) {
+          // 禁用任何逻辑判断
+          return;
+        } else if (mapMode === EMapMode.Polyline && drawing) {
           this.handlePolylineEnd(e);
         } else if (mapMode === EMapMode.Polygon && drawing) {
           this.handlePolygonEnd(e);
@@ -7529,12 +7540,29 @@
     }, {
       key: "onMouseWheel",
       value: function onMouseWheel(e) {
-        e.preventDefault(); // 后续对应模式处理
+        var mapMode = this.map.mode;
+        mapMode !== EMapMode.Ban && e.preventDefault(); // 后续对应模式处理
 
-        switch (this.map.mode) {
+        switch (mapMode) {
+          case EMapMode.Ban:
+            {
+              // 啥都不做
+              break;
+            }
+
           case EMapMode.Pan:
             {
               this.handleMapZoom(e);
+              break;
+            }
+
+          default:
+            {
+              // 需要判断在绘制过程中是否允许缩放
+              if (this.map.zoomWhenDrawing) {
+                this.handleMapZoom(e);
+              }
+
               break;
             }
         }
@@ -7545,7 +7573,7 @@
       value: function onMouseOut(e) {
         e.preventDefault(); // 清空文字提示层
 
-        this.map.tipLayer.clear();
+        this.map.tipLayer.removeAllFeatureActionText();
       } // onMouseEnter: 鼠标移入
 
     }, {
@@ -7553,7 +7581,7 @@
       value: function onMouseEnter(e) {
         e.preventDefault(); // 清空文字提示层
 
-        this.map.tipLayer.clear();
+        this.map.tipLayer.removeAllFeatureActionText();
       } // 重置drawing过程中产生的临时数据&清空临时绘制层
 
     }, {
@@ -7562,9 +7590,9 @@
         // 绘制完成之后进行this.tmpPointsStore清空处理
         this.tmpPointsStore = []; // 清空overlayLayer
 
-        this.map.overlayLayer.clear(); // 清空tipLayer
+        this.map.overlayLayer.removeAllFeatureActionText(); // 清空tipLayer
 
-        this.map.tipLayer.clear();
+        this.map.tipLayer.removeAllFeatureActionText();
       } // @override
 
     }, {
@@ -8513,7 +8541,7 @@
 
       _this = _super.call(this, id, ELayerType.Overlay, props, style);
 
-      _defineProperty$1(_assertThisInitialized(_this), "featureActions", []);
+      _defineProperty$1(_assertThisInitialized(_this), "featureActionTexts", []);
 
       _defineProperty$1(_assertThisInitialized(_this), "defaultActiveFeatureStyle", {
         strokeStyle: '#FF0000',
@@ -8532,9 +8560,9 @@
             _ref$clear = _ref.clear,
             clear = _ref$clear === void 0 ? false : _ref$clear;
 
-        clear && this.clear();
+        clear && this.removeAllFeatureActionText();
         feature.onAdd(this);
-        this.featureActions.push(feature);
+        this.featureActionTexts.push(feature);
       } // 添加point
 
     }, {
@@ -8691,7 +8719,12 @@
     }, {
       key: "addActiveFeature",
       value: function addActiveFeature(feature) {
-        // 高亮的样式
+        if (!feature) {
+          this.removeAllFeatureActionText();
+          return;
+        } // 高亮的样式
+
+
         var style = this.defaultActiveFeatureStyle; // 做一下深度克隆，避免原有feature被污染[暂时不做克隆，效率太低]
         // const activeFeature = _cloneDeep(feature);
 
@@ -8821,6 +8854,13 @@
             });
           }
         });
+      } // 清空所有子对象
+
+    }, {
+      key: "removeAllFeatureActionText",
+      value: function removeAllFeatureActionText() {
+        this.featureActionTexts = [];
+        this.clear();
       } // @override
 
     }, {
@@ -8828,8 +8868,8 @@
       value: function refresh() {
         _get(_getPrototypeOf(OverlayLayer.prototype), "refresh", this).call(this);
 
-        forEach_1(this.featureActions, function (featureAction) {
-          return featureAction.refresh();
+        forEach_1(this.featureActionTexts, function (featureActionText) {
+          return featureActionText.refresh();
         });
       }
     }]);
@@ -8962,6 +9002,8 @@
       this.center = this.mapOptions.center; // 更新初始origin
 
       this.mode = this.mapOptions.mode; // 更新初始map操作模式
+
+      this.zoomWhenDrawing = this.mapOptions.zoomWhenDrawing; // 更新是否绘制过程中允许缩放
       // 设置容器样式
 
       this.setDomStyle(); // 分别创建platformContainer/layerContainer/controlCOntainer
@@ -9088,6 +9130,17 @@
           width: rtx - ltx,
           height: lty - rty
         };
+      } // 绘制过程中是否允许自由缩放
+
+    }, {
+      key: "enableZoomWhenDrawing",
+      value: function enableZoomWhenDrawing() {
+        this.zoomWhenDrawing = true;
+      }
+    }, {
+      key: "disableZoomWhenDrawing",
+      value: function disableZoomWhenDrawing() {
+        this.zoomWhenDrawing = false;
       } // 定位且zoom到指定zoom值
 
     }, {
@@ -9203,8 +9256,7 @@
       value: function setActiveFeature(feature) {
         this.activeFeature = feature; // 如果不存在feature，则清空overLayer, 否则添加activeFeature
 
-        feature && this.overlayLayer.addActiveFeature(feature);
-        !feature && this.overlayLayer.clear(); // 主动触发一次mouseMove事件
+        this.overlayLayer.addActiveFeature(feature); // 主动触发一次mouseMove事件
 
         var mouseMoveEvent = this.eventLayer.mouseMoveEvent;
         mouseMoveEvent && this.eventLayer.onMouseMove(mouseMoveEvent);
@@ -9460,7 +9512,9 @@
     // 缩放值
     mode: EMapMode.Pan,
     // 默认当前map模式
-    size: null // 可自定义容器宽/高，默认取dom: clientWidth/clientHeight
+    size: null,
+    // 可自定义容器宽/高，默认取dom: clientWidth/clientHeight
+    zoomWhenDrawing: false // 绘制过程中是否允许缩放，默认不会缩放
 
   });
 

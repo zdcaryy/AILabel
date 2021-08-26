@@ -551,6 +551,8 @@ export default class MaskLayer extends Layer  {
         const screenCenter = this.map.getScreenCenter();
         const newCenter = this.map.transformScreenToGlobal(screenCenter, {basePoint, zoom: newZoom});
         this.map.centerAndZoom({center: newCenter, zoom: newZoom});
+
+        this.map.overlayLayer.refresh();
     }
 
     /*****************************************************/
@@ -690,7 +692,7 @@ export default class MaskLayer extends Layer  {
     /*****************************************************/
     handleActiveFeatureStart(e: MouseEvent) {
         // 鼠标按下时清空tipLayer
-        this.map.tipLayer.clear();
+        this.map.tipLayer.removeAllFeatureActionText();
         // 鼠标相关变量
         const btnIndex = Util.EventUtil.getButtonIndex(e);
 
@@ -874,7 +876,7 @@ export default class MaskLayer extends Layer  {
         document.onmousemove = null;
         document.onmouseup = null;
 
-        this.map.overlayLayer.clear();
+        this.map.overlayLayer.removeAllFeatureActionText();
         const activeFeature = this.map.activeFeature;
         // 首先需要恢复选中要素的选中态
         activeFeature && this.map.overlayLayer.addActiveFeature(activeFeature);
@@ -974,7 +976,11 @@ export default class MaskLayer extends Layer  {
             return;
         }
 
-        if (mapMode === EMapMode.Pan && drawing) {
+        if (mapMode === EMapMode.Ban) {
+            // 禁用任何逻辑判断
+            return;
+        }
+        else if (mapMode === EMapMode.Pan && drawing) {
             this.handleMapPanStart(e);
         }
         else if (mapMode === EMapMode.MARKER && drawing) {
@@ -1024,7 +1030,11 @@ export default class MaskLayer extends Layer  {
         const mapMode = this.map.mode;
         const dragging = this.dragging;
 
-        if (mapMode === EMapMode.Pan && !dragging) {
+        if (mapMode === EMapMode.Ban) {
+            // 禁用任何逻辑判断
+            return;
+        }
+        else if (mapMode === EMapMode.Pan && !dragging) {
             this.map.setCursor(ECursorType.Grab);
         }
         else if (mapMode === EMapMode.MARKER && !dragging) {
@@ -1089,7 +1099,11 @@ export default class MaskLayer extends Layer  {
         this.clearDownTimer();
         const drawing = this.dragging || this.tmpPointsStore.length;
 
-        if (mapMode === EMapMode.Polyline && drawing) {
+        if (mapMode === EMapMode.Ban) {
+            // 禁用任何逻辑判断
+            return;
+        }
+        else if (mapMode === EMapMode.Polyline && drawing) {
             this.handlePolylineEnd(e);
         }
         else if (mapMode === EMapMode.Polygon && drawing) {
@@ -1111,15 +1125,26 @@ export default class MaskLayer extends Layer  {
 
     // onMouseWheel: 鼠标滑动
     public onMouseWheel(e: WheelEvent) {
-        e.preventDefault();
+        const mapMode = this.map.mode;
+        mapMode !== EMapMode.Ban && e.preventDefault();
+
         // 后续对应模式处理
-        switch (this.map.mode) {
-            case EMapMode.Pan: {
-                    this.handleMapZoom(e);
+        switch (mapMode) {
+            case EMapMode.Ban: {
+                // 啥都不做
                 break;
             }
-            default:
+            case EMapMode.Pan: {
+                this.handleMapZoom(e);
                 break;
+            }
+            default: {
+                // 需要判断在绘制过程中是否允许缩放
+                if (this.map.zoomWhenDrawing) {
+                    this.handleMapZoom(e);
+                }
+                break;
+            }
         }
     }
 
@@ -1127,14 +1152,14 @@ export default class MaskLayer extends Layer  {
     public onMouseOut(e: MouseEvent) {
         e.preventDefault();
         // 清空文字提示层
-        this.map.tipLayer.clear();
+        this.map.tipLayer.removeAllFeatureActionText();
     }
 
     // onMouseEnter: 鼠标移入
     public onMouseEnter(e: MouseEvent) {
         e.preventDefault();
         // 清空文字提示层
-        this.map.tipLayer.clear();
+        this.map.tipLayer.removeAllFeatureActionText();
     }
 
 
@@ -1143,9 +1168,9 @@ export default class MaskLayer extends Layer  {
         // 绘制完成之后进行this.tmpPointsStore清空处理
         this.tmpPointsStore = [];
         // 清空overlayLayer
-        this.map.overlayLayer.clear();
+        this.map.overlayLayer.removeAllFeatureActionText();
         // 清空tipLayer
-        this.map.tipLayer.clear();
+        this.map.tipLayer.removeAllFeatureActionText();
     }
 
     // @override

@@ -43,9 +43,9 @@ export default class CanvasLayer extends Layer  {
 
     // @override
     refresh() {
-        super.refresh();
         // 进行canvas画布清除
         this.clear();
+        super.refresh();
     }
 
     // 清空canvas画布

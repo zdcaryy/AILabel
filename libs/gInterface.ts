@@ -42,5 +42,6 @@ export interface IMapOptions {
     center?: IPoint,
     zoom?: number,
     size?: ISize,
-    mode?: EMapMode
+    mode?: EMapMode,
+    zoomWhenDrawing?: boolean
 };

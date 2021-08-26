@@ -41,7 +41,8 @@
         const gMap = new AILabel.Map('map', {
             center: {x: 0, y: 0},
             zoom: 800,
-            mode: 'PAN' // 绘制线段
+            mode: 'PAN', // 绘制线段
+            zoomWhenDrawing: false
         });
 
         gMap.events.on('drawDone', (type, data, data1) => {

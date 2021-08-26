@@ -48,9 +48,13 @@ export default class Map {
         center: {x: 0, y: 0}, // 中心点坐标
         zoom: 1000, // 缩放值
         mode: EMapMode.Pan, // 默认当前map模式
-        size: null // 可自定义容器宽/高，默认取dom: clientWidth/clientHeight
+        size: null, // 可自定义容器宽/高，默认取dom: clientWidth/clientHeight
+        zoomWhenDrawing: false // 绘制过程中是否允许缩放，默认不会缩放
     }
     private mapOptions: IMapOptions
+
+    // 绘制过程中是否允许缩放，默认不会缩放
+    public zoomWhenDrawing: boolean
 
     public zoom: number // 当前缩放值
     public center: IPoint // 左上角代表的实际坐标值
@@ -89,6 +93,7 @@ export default class Map {
         this.zoom = this.mapOptions.zoom; // 更新初始zoom
         this.center = this.mapOptions.center; // 更新初始origin
         this.mode = this.mapOptions.mode; // 更新初始map操作模式
+        this.zoomWhenDrawing = this.mapOptions.zoomWhenDrawing; // 更新是否绘制过程中允许缩放
 
         // 设置容器样式
         this.setDomStyle();
@@ -185,6 +190,14 @@ export default class Map {
         };
     }
 
+    // 绘制过程中是否允许自由缩放
+    enableZoomWhenDrawing() {
+        this.zoomWhenDrawing = true;
+    }
+    disableZoomWhenDrawing() {
+        this.zoomWhenDrawing = false;
+    }
+
     // 定位且zoom到指定zoom值
     centerAndZoom(options: ICenterAndZoom): Map {
         const {center, zoom} = options;
@@ -274,8 +287,7 @@ export default class Map {
     setActiveFeature(feature: Feature | null) {
         this.activeFeature = feature;
         // 如果不存在feature，则清空overLayer, 否则添加activeFeature
-        feature && this.overlayLayer.addActiveFeature(feature);
-        !feature && this.overlayLayer.clear();
+        this.overlayLayer.addActiveFeature(feature);
         // 主动触发一次mouseMove事件
         const mouseMoveEvent = this.eventLayer.mouseMoveEvent;
         mouseMoveEvent && this.eventLayer.onMouseMove(mouseMoveEvent);

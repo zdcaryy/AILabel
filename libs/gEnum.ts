@@ -7,6 +7,7 @@ export enum ECanvasTextBaseLine {
 // Map:Mode类型
 export enum EMapMode {
     Pan = "PAN", // 浏览
+    Ban = "BAN", // 禁止浏览缩放
     MARKER = "MARKER", // 绘制注记
     Point = "POINT", // 绘制点
     Circle = "CIRCLE", // 绘制圆
