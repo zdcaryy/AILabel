@@ -39,7 +39,7 @@
         const dpr = window.devicePixelRatio;
 
         const gMap = new AILabel.Map('map', {
-            center: {x: 0, y: 0},
+            center: {x: 250, y: 177}, // 为了让图片居中
             zoom: 800,
             mode: 'PAN', // 绘制线段
             zoomWhenDrawing: true,
@@ -186,8 +186,8 @@
                 width: 500,
                 height: 354,
                 position: { // 左上角相对中心点偏移量
-                    x: -250,
-                    y: 177
+                    x: 0,
+                    y: 0
                 }
             }, // imageInfo
         );
@@ -209,7 +209,7 @@
 
         const gFirstFeaturePoint = new AILabel.Feature.Point(
             'first-feature-point', // id
-            {x: -100, y: -100, sr: 3}, // shape
+            {x: 250, y: 177, sr: 3}, // shape
             {name: '第一个矢量图层'}, // props
             {fillStyle: '#f00', lineCap: 'round'} // style
         );
@@ -217,34 +217,34 @@
 
         const gFirstFeatureCircle = new AILabel.Feature.Circle(
             'first-feature-circle', // id
-            {cx: 0, cy: 0, sr: 100, stroke: true, fill: false}, // shape
+            {cx: 100, cy: 100, sr: 20, stroke: true, fill: false}, // shape
             {name: '第一个矢量图层'}, // props
-            {fillStyle: '#F4A460', strokeStyle: '#D2691E', globalAlpha: 1} // style
+            {fillStyle: '#F4A460', strokeStyle: '#D2691E', lineWidth: 2} // style
         );
         gFirstFeatureLayer.addFeature(gFirstFeatureCircle);
 
         const gFirstFeatureLine = new AILabel.Feature.Line(
             'first-feature-line', // id
-            {start: {x: 10, y: 10}, end: {x: 100, y: -100}, width: 10}, // shape
+            {start: {x: 100, y: 150}, end: {x: 200, y: 250}, width: 10}, // shape
             {name: '第一个矢量图层'}, // props
             {strokeStyle: '#FF4500', lineCap: 'round'} // style
         );
         gFirstFeatureLayer.addFeature(gFirstFeatureLine);
         const gFirstFeatureRect = new AILabel.Feature.Rect(
             'first-feature-rect', // id
-            {x: -50, y: 50, width: 100, height: 100}, // shape
+            {x: 200, y: 50, width: 100, height: 100}, // shape
             {name: '第一个矢量图层'}, // props
-            {strokeStyle: '#808080', lineWidth: 1} // style
+            {strokeStyle: '#808080', lineWidth: 2} // style
         );
         gFirstFeatureLayer.addFeature(gFirstFeatureRect);
         const gFirstFeaturePolygon = new AILabel.Feature.Polygon(
             'first-feature-polygon', // id
             {points: [
-                {x: 0, y: 0}, {x: 100, y: 100},
-                {x: 100, y: 200}
+                {x: 367, y: 161}, {x: 371, y: 220}, {x: 412, y: 241},
+                {x: 474, y: 210}, {x: 467, y: 151}, {x: 426, y: 124}
             ]}, // shape
             {name: '第一个多边形'}, // props
-            {strokeStyle: '#FFD500', lineWidth: 1} // style
+            {strokeStyle: '#0000FF', lineWidth: 2} // style
         );
         gFirstFeatureLayer.addFeature(gFirstFeaturePolygon);
 
@@ -256,8 +256,8 @@
                 width: 500,
                 height: 354,
                 position: { // 左上角相对中心点偏移量
-                    x: -250,
-                    y: 177
+                    x: 0,
+                    y: 0
                 }
             }, // imageInfo
             {name: '第一个图片图层'}, // props
@@ -270,8 +270,8 @@
             {
                 src: './marker.png',
                 position: { // 左上角相对中心点偏移量
-                    x: 0,
-                    y: 0
+                    x: 250,
+                    y: 177
                 },
                 offset: {
                     x: -16,
@@ -306,7 +306,7 @@
             console.log('marker click');
             gMap.markerLayer.removeMarkerById(marker.id);
         });
-        // gMap.markerLayer.addMarker(gFirstMarker);
+        gMap.markerLayer.addMarker(gFirstMarker);
 
         console.log('--AILabel--', AILabel);
 
