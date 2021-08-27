@@ -44,6 +44,7 @@ const gMap = new AILabel.Map('map', {
 |center|初始中心点坐标|否|--|IPoint|
 |size|容器大小设置|否|null（会获取dom：clientWidth[Height]）|ISize|
 |mode|当前操作模式|否|'PAN'|EMapMode枚举-见下文|
+|refreshDelayWhenZooming|持续缩放是否延时刷新features（如滑轮缩放时），性能优化|否|true|boolean|
 |zoomWhenDrawing|绘制时可滑轮缩放|否|false|boolean|
 |panWhenDrawing|绘制时可到边界外自动平移|否|false|boolean|
 
@@ -102,8 +103,8 @@ canvas样式：比如lineWidth/strokeStyle/fillStyle等
 |参数|说明|是否必填|默认|类型|
 |---|---|---|---|---|
 |lineWidth|线宽|否|1|number|
-|strokeStyle|边框颜色|否|--|'#FF0000'|
-|fillStyle等|填充色|否|--|'#FF0000'|
+|strokeStyle|边框颜色|否|'#FF0000'|boolean|
+|fillStyle等|填充色|否|'#FF0000'|boolean|
 |自定义：stroke|是否闭合|否|true|boolean|
 |自定义：fill|是否填充|否|false|boolean|
 |其他配置|--|否|--|--|
