@@ -12,6 +12,9 @@ import {ELayerType} from './gEnum';
 export default class TextLayer extends CanvasLayer  {
     public texts: Text[] = [] // 当前textLayer中所有的texts
 
+    // refresh方法时调用refresh是否延迟
+    public refreshDelayTimer: number | null | undefined
+
     // function: constructor
     constructor(id: string, props: IObject = {}, style: ILayerStyle = {}) {
         super(id, ELayerType.Text, props, style);
@@ -54,8 +57,22 @@ export default class TextLayer extends CanvasLayer  {
     }
 
     // @override
-    refresh() {
+    refresh(refreshDelay: boolean = false) {
+        // 首先清除refreshTimer
+        if (this.refreshDelayTimer) {
+            window.clearTimeout(this.refreshDelayTimer);
+            this.refreshDelayTimer = null;
+        }
         super.refresh();
+
+        // 延迟执行刷新
+        if (refreshDelay) {
+            this.refreshDelayTimer = window.setTimeout(() => {
+                _forEach(this.texts, (text: Text) => text.refresh());
+            }, 100);
+            return;
+        }
+        // 立即刷新
         _forEach(this.texts, (text: Text) => text.refresh());
     }
 }

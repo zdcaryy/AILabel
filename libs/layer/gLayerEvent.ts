@@ -491,6 +491,18 @@ export default class MaskLayer extends Layer  {
         const {x: dltX, y: dltY} = this.getDltXY(e);
         const middleScreenPoint = {x: startScreeX + dltX, y: startScreeY + dltY};
         const middleGlobalPoint = this.map.transformScreenToGlobal(middleScreenPoint);
+
+        // 数据筛选过滤无效路径节点
+        const lastPoint = _last(this.tmpPointsStore);
+        if (lastPoint) {
+            const lastScreenPoint = lastPoint.screen;
+            const distance = Util.MathUtil.distance(lastScreenPoint, middleScreenPoint);
+            if (distance <= 3) {
+                return;
+            }
+        }
+
+        // 对有效路径节点添加
         this.tmpPointsStore.push({screen: middleScreenPoint, global: middleGlobalPoint});
         const points = _map(this.tmpPointsStore, ({global}) => global);
 
@@ -564,8 +576,31 @@ export default class MaskLayer extends Layer  {
             : this.map.zoom * 105.263 / 100; // 为了返回上一次的zoom
         const screenCenter = this.map.getScreenCenter();
         const newCenter = this.map.transformScreenToGlobal(screenCenter, {basePoint, zoom: newZoom});
-        this.map.centerAndZoom({center: newCenter, zoom: newZoom});
+        this.map.centerAndZoom({center: newCenter, zoom: newZoom}, {refreshDelay: true});
     }
+
+
+    // // 尝试改变dom容器的scale(但是会对一些sr的圆造成放大缩小展示问题)
+    // mouseWheelTimer: number | null | undefined
+    // zoomScale: number = 1
+    // public handleMapZoom_abort(e: WheelEvent) {
+    //     if (this.mouseWheelTimer) {
+    //         window.clearTimeout(this.mouseWheelTimer);
+    //         this.mouseWheelTimer = null;
+    //     }
+
+    //     this.zoomScale = e.deltaY >= 0
+    //         ? this.zoomScale * 95 / 100 // zoomIn
+    //         : this.zoomScale * 105.263 / 100; // 为了返回上一次的zoom
+    //     this.map.onZoom(this.zoomScale);
+
+    //     this.mouseWheelTimer = window.setTimeout(() => {
+    //         const newZoom = this.map.zoom / this.zoomScale;
+    //         this.zoomScale = 1;
+    //         this.map.reset();
+    //         this.map.zoomTo(newZoom);
+    //     }, 300);
+    // }
 
     /*****************************************************/
     /************** map 双击编辑 ***********************/
@@ -1050,7 +1085,7 @@ export default class MaskLayer extends Layer  {
         const mapMode = this.map.mode;
         const dragging = this.dragging;
 
-        if (!this.map.activeFeature) {
+        if (!this.map.activeFeature && !dragging) {
             // 首先清空临时层
             this.map.overlayLayer.removeAllFeatureActionText();
         }

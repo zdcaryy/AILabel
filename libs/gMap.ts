@@ -50,6 +50,7 @@ export default class Map {
         zoom: 1000, // 缩放值
         mode: EMapMode.Pan, // 默认当前map模式
         size: null, // 可自定义容器宽/高，默认取dom: clientWidth/clientHeight
+        refreshDelayWhenZooming: true, // 当持续缩放时，是否延时feature刷新，默认delay，性能更优
         zoomWhenDrawing: false, // 绘制过程中是否允许缩放，默认不会缩放
         panWhenDrawing: false, // 绘制过程中是否允许自动平移，默认不会自动平移
         xAxis: {direction: EXAxisDirection.Right}, // x坐标轴方向设置
@@ -62,6 +63,8 @@ export default class Map {
     // y坐标轴方向设置
     public yAxis: IAxisOption
 
+    // 当持续缩放时，是否延时feature刷新，默认delay，性能更优
+    public refreshDelayWhenZooming: boolean
     // 绘制过程中是否允许缩放，默认不会缩放
     public zoomWhenDrawing: boolean
     // 绘制过程中是否允许自动平移，默认不会自动平移
@@ -104,6 +107,7 @@ export default class Map {
         this.zoom = this.mapOptions.zoom; // 更新初始zoom
         this.center = this.mapOptions.center; // 更新初始origin
         this.mode = this.mapOptions.mode; // 更新初始map操作模式
+        this.refreshDelayWhenZooming = this.mapOptions.refreshDelayWhenZooming; // 是否持续缩放时延时刷新
         this.zoomWhenDrawing = this.mapOptions.zoomWhenDrawing; // 更新是否绘制过程中允许缩放
         this.panWhenDrawing = this.mapOptions.panWhenDrawing; // 更新是否绘制过程中允许平移
         this.xAxis = this.mapOptions.xAxis; // x轴设置
@@ -222,13 +226,22 @@ export default class Map {
     }
 
     // 定位且zoom到指定zoom值
-    centerAndZoom(options: ICenterAndZoom): Map {
-        const {center, zoom} = options;
+    centerAndZoom(centerZoom: ICenterAndZoom, option: IObject = {}): Map {
+        const {refreshDelay = false} = option;
+        const {center, zoom} = centerZoom;
         center && (this.center = center);
         _isNumber(zoom) && (this.zoom = zoom);
-        this.refresh();
+        // 只有map设置了this.refreshDelayWhenZooming = true && refreshDelay = true才能允许延时刷新
+        this.refresh(refreshDelay && this.refreshDelayWhenZooming);
         this.triggerBoundsChanged();
         return this;
+    }
+
+    // 缩放到指定zoom
+    zoomTo(zoom: number): void {
+        this.zoom = zoom;
+        this.refresh();
+        this.triggerBoundsChanged();
     }
 
     // 放大-中心点放大
@@ -302,9 +315,10 @@ export default class Map {
     }
 
     // 刷新当前视图
-    refresh() {
+    // refreshDelay 是否需要延迟刷新，主要为了解决滑轮缩放时频繁触发元素refresh
+    refresh(refreshDelay = false) {
         // 用户加入layer刷新
-        _forEach(this.layers, (layer: Layer) => layer.refresh());
+        _forEach(this.layers, (layer: Layer) => layer.refresh(refreshDelay));
         // markerLayer也要伴随刷新
         this.markerLayer.refresh();
     }
@@ -519,6 +533,11 @@ export default class Map {
         this.layerDom2.style.top = `${dltY}px`;
     }
 
+    // map缩放
+    onZoom(scale: number) {
+        this.dom.style.transform = `scale(${scale})`;
+    }
+
     // 复位
     reset(): Map {
         this.layerDom.style.left = '0';
@@ -526,6 +545,8 @@ export default class Map {
 
         this.layerDom2.style.left = '0';
         this.layerDom2.style.top = '0';
+
+        // this.dom.style.transform = 'scale(1)';
         return this;
     }
 

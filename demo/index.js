@@ -5353,6 +5353,28 @@
   var map_1 = map;
 
   /**
+   * Gets the last element of `array`.
+   *
+   * @static
+   * @memberOf _
+   * @since 0.1.0
+   * @category Array
+   * @param {Array} array The array to query.
+   * @returns {*} Returns the last element of `array`.
+   * @example
+   *
+   * _.last([1, 2, 3]);
+   * // => 3
+   */
+
+  function last(array) {
+    var length = array == null ? 0 : array.length;
+    return length ? array[length - 1] : undefined;
+  }
+
+  var last_1 = last;
+
+  /**
    * The base implementation of `_.findIndex` and `_.findLastIndex` without
    * support for iteratee shorthands.
    *
@@ -5947,7 +5969,8 @@
 
     }, {
       key: "refresh",
-      value: function refresh() {} // 重新resize和刷新
+      value: function refresh() {
+      } // 重新resize和刷新
 
     }, {
       key: "resizeAndRefresh",
@@ -7336,7 +7359,20 @@
           x: startScreeX + dltX,
           y: startScreeY + dltY
         };
-        var middleGlobalPoint = this.map.transformScreenToGlobal(middleScreenPoint);
+        var middleGlobalPoint = this.map.transformScreenToGlobal(middleScreenPoint); // 数据筛选过滤无效路径节点
+
+        var lastPoint = last_1(this.tmpPointsStore);
+
+        if (lastPoint) {
+          var lastScreenPoint = lastPoint.screen;
+          var distance = Util.MathUtil.distance(lastScreenPoint, middleScreenPoint);
+
+          if (distance <= 3) {
+            return;
+          }
+        } // 对有效路径节点添加
+
+
         this.tmpPointsStore.push({
           screen: middleScreenPoint,
           global: middleGlobalPoint
@@ -7450,8 +7486,29 @@
         this.map.centerAndZoom({
           center: newCenter,
           zoom: newZoom
+        }, {
+          refreshDelay: true
         });
-      }
+      } // // 尝试改变dom容器的scale(但是会对一些sr的圆造成放大缩小展示问题)
+      // mouseWheelTimer: number | null | undefined
+      // zoomScale: number = 1
+      // public handleMapZoom_abort(e: WheelEvent) {
+      //     if (this.mouseWheelTimer) {
+      //         window.clearTimeout(this.mouseWheelTimer);
+      //         this.mouseWheelTimer = null;
+      //     }
+      //     this.zoomScale = e.deltaY >= 0
+      //         ? this.zoomScale * 95 / 100 // zoomIn
+      //         : this.zoomScale * 105.263 / 100; // 为了返回上一次的zoom
+      //     this.map.onZoom(this.zoomScale);
+      //     this.mouseWheelTimer = window.setTimeout(() => {
+      //         const newZoom = this.map.zoom / this.zoomScale;
+      //         this.zoomScale = 1;
+      //         this.map.reset();
+      //         this.map.zoomTo(newZoom);
+      //     }, 300);
+      // }
+
       /*****************************************************/
 
       /************** map 双击编辑 ***********************/
@@ -8113,7 +8170,7 @@
         var mapMode = this.map.mode;
         var dragging = this.dragging;
 
-        if (!this.map.activeFeature) {
+        if (!this.map.activeFeature && !dragging) {
           // 首先清空临时层
           this.map.overlayLayer.removeAllFeatureActionText();
         }
@@ -8895,7 +8952,6 @@
             points = _ref2.points;
             _ref2.inner;
         var dpr = CanvasLayer.dpr;
-        console.log('--this.style--', this.style);
         Graphic.drawPolygon(this.layer.canvasContext, points, this.style, {
           format: function format(point) {
             var _this2$layer$map$tran = _this2.layer.map.transformGlobalToScreen(point),
@@ -9774,6 +9830,8 @@
 
       this.mode = this.mapOptions.mode; // 更新初始map操作模式
 
+      this.refreshDelayWhenZooming = this.mapOptions.refreshDelayWhenZooming; // 是否持续缩放时延时刷新
+
       this.zoomWhenDrawing = this.mapOptions.zoomWhenDrawing; // 更新是否绘制过程中允许缩放
 
       this.panWhenDrawing = this.mapOptions.panWhenDrawing; // 更新是否绘制过程中允许平移
@@ -9935,14 +9993,26 @@
 
     }, {
       key: "centerAndZoom",
-      value: function centerAndZoom(options) {
-        var center = options.center,
-            zoom = options.zoom;
+      value: function centerAndZoom(centerZoom) {
+        var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var _option$refreshDelay = option.refreshDelay,
+            refreshDelay = _option$refreshDelay === void 0 ? false : _option$refreshDelay;
+        var center = centerZoom.center,
+            zoom = centerZoom.zoom;
         center && (this.center = center);
-        isNumber_1(zoom) && (this.zoom = zoom);
-        this.refresh();
+        isNumber_1(zoom) && (this.zoom = zoom); // 只有map设置了this.refreshDelayWhenZooming = true && refreshDelay = true才能允许延时刷新
+
+        this.refresh(refreshDelay && this.refreshDelayWhenZooming);
         this.triggerBoundsChanged();
         return this;
+      } // 缩放到指定zoom
+
+    }, {
+      key: "zoomTo",
+      value: function zoomTo(zoom) {
+        this.zoom = zoom;
+        this.refresh();
+        this.triggerBoundsChanged();
       } // 放大-中心点放大
 
     }, {
@@ -10030,13 +10100,16 @@
 
         this.overlayLayer.refresh();
       } // 刷新当前视图
+      // refreshDelay 是否需要延迟刷新，主要为了解决滑轮缩放时频繁触发元素refresh
 
     }, {
       key: "refresh",
       value: function refresh() {
+        var refreshDelay = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
         // 用户加入layer刷新
         forEach_1(this.layers, function (layer) {
-          return layer.refresh();
+          return layer.refresh(refreshDelay);
         }); // markerLayer也要伴随刷新
 
 
@@ -10298,6 +10371,12 @@
         this.layerDom.style.top = "".concat(dltY, "px");
         this.layerDom2.style.left = "".concat(dltX, "px");
         this.layerDom2.style.top = "".concat(dltY, "px");
+      } // map缩放
+
+    }, {
+      key: "onZoom",
+      value: function onZoom(scale) {
+        this.dom.style.transform = "scale(".concat(scale, ")");
       } // 复位
 
     }, {
@@ -10306,7 +10385,8 @@
         this.layerDom.style.left = '0';
         this.layerDom.style.top = '0';
         this.layerDom2.style.left = '0';
-        this.layerDom2.style.top = '0';
+        this.layerDom2.style.top = '0'; // this.dom.style.transform = 'scale(1)';
+
         return this;
       } // 用户事件添加
 
@@ -10331,6 +10411,8 @@
     // 默认当前map模式
     size: null,
     // 可自定义容器宽/高，默认取dom: clientWidth/clientHeight
+    refreshDelayWhenZooming: true,
+    // 当持续缩放时，是否延时feature刷新，默认delay，性能更优
     zoomWhenDrawing: false,
     // 绘制过程中是否允许缩放，默认不会缩放
     panWhenDrawing: false,
@@ -10459,7 +10541,6 @@
 
     var _super = _createSuper(FeatureLayer);
 
-    // 当前featureLayer中所有的features
     // function: constructor
     function FeatureLayer(id) {
       var _this;
@@ -10547,7 +10628,28 @@
     }, {
       key: "refresh",
       value: function refresh() {
-        _get(_getPrototypeOf(FeatureLayer.prototype), "refresh", this).call(this);
+        var _this2 = this;
+
+        var refreshDelay = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+        // 首先清除refreshTimer
+        if (this.refreshDelayTimer) {
+          window.clearTimeout(this.refreshDelayTimer);
+          this.refreshDelayTimer = null;
+        }
+
+        _get(_getPrototypeOf(FeatureLayer.prototype), "refresh", this).call(this); // 延迟执行刷新
+
+
+        if (refreshDelay) {
+          this.refreshDelayTimer = window.setTimeout(function () {
+            forEach_1(_this2.features, function (feature) {
+              return feature.refresh();
+            });
+          }, 100);
+          return;
+        } // 立即执行刷新
+
 
         forEach_1(this.features, function (feature) {
           return feature.refresh();
@@ -11760,8 +11862,7 @@
       key: "setMovingClearAction",
       value: function setMovingClearAction(clearAction) {
         clearAction && clearAction.onAdd(this);
-        this.movingClearAction = clearAction;
-        this.refresh();
+        !clearAction && this.refresh();
       } // 获取当前layer上所有category分类
 
     }, {
@@ -11841,15 +11942,32 @@
     }, {
       key: "refresh",
       value: function refresh() {
-        _get(_getPrototypeOf(MaskLayer.prototype), "refresh", this).call(this); // 绘制actions中所有action对象
+        var _this3 = this;
+
+        var refreshDelay = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+        // 首先清除refreshTimer
+        if (this.refreshDelayTimer) {
+          window.clearTimeout(this.refreshDelayTimer);
+          this.refreshDelayTimer = null;
+        }
+
+        _get(_getPrototypeOf(MaskLayer.prototype), "refresh", this).call(this); // 延迟执行刷新
+
+
+        if (refreshDelay) {
+          this.refreshDelayTimer = window.setTimeout(function () {
+            forEach_1(_this3.actions, function (action) {
+              return action.refresh();
+            });
+          }, 100);
+          return;
+        } // 立即执行
 
 
         forEach_1(this.actions, function (action) {
           return action.refresh();
-        }); // 判断是否存在movingClearAction，如果存在，也需要执行绘制
-
-
-        this.movingClearAction && this.movingClearAction.refresh();
+        });
       }
     }]);
 
@@ -11861,7 +11979,6 @@
 
     var _super = _createSuper(TextLayer);
 
-    // 当前textLayer中所有的texts
     // function: constructor
     function TextLayer(id) {
       var _this;
@@ -11927,7 +12044,28 @@
     }, {
       key: "refresh",
       value: function refresh() {
-        _get(_getPrototypeOf(TextLayer.prototype), "refresh", this).call(this);
+        var _this2 = this;
+
+        var refreshDelay = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+        // 首先清除refreshTimer
+        if (this.refreshDelayTimer) {
+          window.clearTimeout(this.refreshDelayTimer);
+          this.refreshDelayTimer = null;
+        }
+
+        _get(_getPrototypeOf(TextLayer.prototype), "refresh", this).call(this); // 延迟执行刷新
+
+
+        if (refreshDelay) {
+          this.refreshDelayTimer = window.setTimeout(function () {
+            forEach_1(_this2.texts, function (text) {
+              return text.refresh();
+            });
+          }, 100);
+          return;
+        } // 立即刷新
+
 
         forEach_1(this.texts, function (text) {
           return text.refresh();
@@ -12425,7 +12563,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.5' // 和npm-version保持一致
+    version: '5.0.6' // 和npm-version保持一致
 
   };
 

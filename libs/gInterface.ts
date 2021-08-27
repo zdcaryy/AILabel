@@ -48,6 +48,7 @@ export interface IMapOptions {
     zoom?: number,
     size?: ISize,
     mode?: EMapMode,
+    refreshDelayWhenZooming?: boolean,
     zoomWhenDrawing?: boolean,
     panWhenDrawing?: boolean,
     xAxis?: IAxisOption

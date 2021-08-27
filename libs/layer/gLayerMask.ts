@@ -22,8 +22,8 @@ import {IRectShape} from '../feature/gInterface';
 export default class MaskLayer extends CanvasLayer  {
     public actions: Action[] = [] // 当前maskLayer中所有的actions
 
-    // 临时clearAction对象【内部使用变量】
-    public movingClearAction: ActionClear
+    // refresh方法时调用refresh是否延迟
+    public refreshDelayTimer: number | null | undefined
 
     // function: constructor
     constructor(id: string, props: IObject = {}, style: ILayerStyle = {}) {
@@ -69,8 +69,7 @@ export default class MaskLayer extends CanvasLayer  {
     // 此action并非实际真正action, 不会被记录到this.actions中
     setMovingClearAction(clearAction: ActionClear | null) {
         clearAction && clearAction.onAdd(this);
-        this.movingClearAction = clearAction;
-        this.refresh();
+        !clearAction && this.refresh();
     }
 
     // 获取当前layer上所有category分类
@@ -114,12 +113,22 @@ export default class MaskLayer extends CanvasLayer  {
     }
 
     // @override
-    refresh() {
+    refresh(refreshDelay: boolean = false) {
+        // 首先清除refreshTimer
+        if (this.refreshDelayTimer) {
+            window.clearTimeout(this.refreshDelayTimer);
+            this.refreshDelayTimer = null;
+        }
         super.refresh();
 
-        // 绘制actions中所有action对象
+        // 延迟执行刷新
+        if (refreshDelay) {
+            this.refreshDelayTimer = window.setTimeout(() => {
+                _forEach(this.actions, (action: Action) => action.refresh());
+            }, 100);
+            return;
+        }
+        // 立即执行
         _forEach(this.actions, (action: Action) => action.refresh());
-        // 判断是否存在movingClearAction，如果存在，也需要执行绘制
-        this.movingClearAction && this.movingClearAction.refresh();
     }
 }

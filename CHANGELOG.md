@@ -15,8 +15,13 @@
 8、增加绘制时ctrl+z撤销
 9、Map支持自定义坐标轴方向【修改为默认x右，y下】
 
-# 5.0.4
+# 5.0.5
 `2021-08-27`
 1、矩形编辑时坐标显示bug修复
 2、文本text为空时不进行相关绘制【即不显示】
 3、rect/polygon/circle支持IFeatureStyle stroke/fill配置
+
+# 5.0.6
+`2021-08-27`
+1、鼠标滑轮缩放性能优化，MapOption增加refreshDelayWhenZooming配置，默认true
+2、涂抹擦除性能优化，不会存在卡顿现象

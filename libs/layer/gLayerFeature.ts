@@ -12,6 +12,9 @@ import {ELayerType} from './gEnum';
 export default class FeatureLayer extends CanvasLayer  {
     public features: Feature[] = [] // 当前featureLayer中所有的features
 
+    // refresh方法时调用refresh是否延迟
+    public refreshDelayTimer: number | null | undefined
+
     // function: constructor
     constructor(id: string, props: IObject = {}, style: ILayerStyle = {}) {
         super(id, ELayerType.Feature, props, style);
@@ -71,8 +74,23 @@ export default class FeatureLayer extends CanvasLayer  {
     }
 
     // @override
-    refresh() {
+    refresh(refreshDelay: boolean = false) {
+        // 首先清除refreshTimer
+        if (this.refreshDelayTimer) {
+            window.clearTimeout(this.refreshDelayTimer);
+            this.refreshDelayTimer = null;
+        }
         super.refresh();
+
+        // 延迟执行刷新
+        if (refreshDelay) {
+            this.refreshDelayTimer = window.setTimeout(() => {
+                _forEach(this.features, (feature: Feature) => feature.refresh());
+            }, 100);
+            return;
+        }
+
+        // 立即执行刷新
         _forEach(this.features, (feature: Feature) => feature.refresh());
     }
 }

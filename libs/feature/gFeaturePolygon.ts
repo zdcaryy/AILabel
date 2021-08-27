@@ -30,8 +30,6 @@ export default class PolygonFeature extends Feature {
 
         const dpr = CanvasLayer.dpr;
 
-        console.log('--this.style--', this.style);
-
         Graphic.drawPolygon(
             this.layer.canvasContext,
             points,

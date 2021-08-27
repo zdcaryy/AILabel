@@ -80,7 +80,7 @@ export default class Layer {
 
     // 刷新当前数据
     // 各子类各自实现
-    refresh() {}
+    refresh(refreshDelay: boolean = false) {}
 
     // 重新resize和刷新
     resizeAndRefresh() {
