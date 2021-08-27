@@ -36,7 +36,7 @@ npm地址：https://www.npmjs.com/package/ailabel
 ```javascript
 // 声明容器
 const gMap =new AILabel.Map(CONTAINER_ID, {
-    center: {x: 0, y: 0},
+    center: {x: 250, y: 177},
     zoom: 800,
     mode: 'PAN' // 绘制线段
 });
@@ -49,8 +49,8 @@ const gFirstImageLayer = new AILabel.Layer.Image(
         width: image.width,
         height: image.height,
         position: { // 图片左上角坐标
-            x: -250,
-            y: 177
+            x: 0,
+            y: 0
         }
     }, // imageInfo
     {name: '第一个图片图层'}, // props
@@ -94,8 +94,6 @@ gMap.events.on('drawDone', (type: EMapMode, data) => {
 - P0: Control.EagleMap 开发
 - P0: Map 鼠标事件外放
 - P0: ROI 开发
-- P0: 文本text为空时不需要绘制文本优化
-- P0: 矩形/多边形支持填充设置优化
 - P0: Map拓展mapOptions配置项【如最大/最小zoom设置】
 - P1: Feature.Rect 支持中心展示十字丝
 - P1: Feature.Rect 旋转

@@ -18,3 +18,5 @@
 # 5.0.4
 `2021-08-27`
 1、矩形编辑时坐标显示bug修复
+2、文本text为空时不进行相关绘制【即不显示】
+3、rect/polygon/circle支持IFeatureStyle stroke/fill配置

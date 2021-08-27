@@ -1410,7 +1410,7 @@
    * @param {*} value The value to query.
    * @returns {string} Returns the `toStringTag`.
    */
-  function baseGetTag$7(value) {
+  function baseGetTag$8(value) {
     if (value == null) {
       return value === undefined ? undefinedTag : nullTag;
     }
@@ -1419,7 +1419,7 @@
       : objectToString(value);
   }
 
-  var _baseGetTag = baseGetTag$7;
+  var _baseGetTag = baseGetTag$8;
 
   /**
    * Checks if `value` is the
@@ -1454,7 +1454,7 @@
 
   var isObject_1 = isObject$8;
 
-  var baseGetTag$6 = _baseGetTag,
+  var baseGetTag$7 = _baseGetTag,
       isObject$7 = isObject_1;
 
   /** `Object#toString` result references. */
@@ -1486,7 +1486,7 @@
     }
     // The use of `Object#toString` avoids issues with the `typeof` operator
     // in Safari 9 which returns 'object' for typed arrays and other constructors.
-    var tag = baseGetTag$6(value);
+    var tag = baseGetTag$7(value);
     return tag == funcTag$2 || tag == genTag$1 || tag == asyncTag || tag == proxyTag;
   }
 
@@ -2216,14 +2216,14 @@
    * // => false
    */
 
-  function isObjectLike$9(value) {
+  function isObjectLike$a(value) {
     return value != null && typeof value == 'object';
   }
 
-  var isObjectLike_1 = isObjectLike$9;
+  var isObjectLike_1 = isObjectLike$a;
 
-  var baseGetTag$5 = _baseGetTag,
-      isObjectLike$8 = isObjectLike_1;
+  var baseGetTag$6 = _baseGetTag,
+      isObjectLike$9 = isObjectLike_1;
 
   /** `Object#toString` result references. */
   var argsTag$3 = '[object Arguments]';
@@ -2236,13 +2236,13 @@
    * @returns {boolean} Returns `true` if `value` is an `arguments` object,
    */
   function baseIsArguments$1(value) {
-    return isObjectLike$8(value) && baseGetTag$5(value) == argsTag$3;
+    return isObjectLike$9(value) && baseGetTag$6(value) == argsTag$3;
   }
 
   var _baseIsArguments = baseIsArguments$1;
 
   var baseIsArguments = _baseIsArguments,
-      isObjectLike$7 = isObjectLike_1;
+      isObjectLike$8 = isObjectLike_1;
 
   /** Used for built-in method references. */
   var objectProto$a = Object.prototype;
@@ -2272,7 +2272,7 @@
    * // => false
    */
   var isArguments$2 = baseIsArguments(function() { return arguments; }()) ? baseIsArguments : function(value) {
-    return isObjectLike$7(value) && hasOwnProperty$9.call(value, 'callee') &&
+    return isObjectLike$8(value) && hasOwnProperty$9.call(value, 'callee') &&
       !propertyIsEnumerable$1.call(value, 'callee');
   };
 
@@ -2369,14 +2369,14 @@
   module.exports = isBuffer;
   }(isBuffer$3, isBuffer$3.exports));
 
-  var baseGetTag$4 = _baseGetTag,
+  var baseGetTag$5 = _baseGetTag,
       isLength$1 = isLength_1,
-      isObjectLike$6 = isObjectLike_1;
+      isObjectLike$7 = isObjectLike_1;
 
   /** `Object#toString` result references. */
   var argsTag$2 = '[object Arguments]',
       arrayTag$2 = '[object Array]',
-      boolTag$3 = '[object Boolean]',
+      boolTag$4 = '[object Boolean]',
       dateTag$3 = '[object Date]',
       errorTag$2 = '[object Error]',
       funcTag$1 = '[object Function]',
@@ -2408,7 +2408,7 @@
   typedArrayTags[uint8ClampedTag$2] = typedArrayTags[uint16Tag$2] =
   typedArrayTags[uint32Tag$2] = true;
   typedArrayTags[argsTag$2] = typedArrayTags[arrayTag$2] =
-  typedArrayTags[arrayBufferTag$3] = typedArrayTags[boolTag$3] =
+  typedArrayTags[arrayBufferTag$3] = typedArrayTags[boolTag$4] =
   typedArrayTags[dataViewTag$4] = typedArrayTags[dateTag$3] =
   typedArrayTags[errorTag$2] = typedArrayTags[funcTag$1] =
   typedArrayTags[mapTag$5] = typedArrayTags[numberTag$4] =
@@ -2424,8 +2424,8 @@
    * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
    */
   function baseIsTypedArray$1(value) {
-    return isObjectLike$6(value) &&
-      isLength$1(value.length) && !!typedArrayTags[baseGetTag$4(value)];
+    return isObjectLike$7(value) &&
+      isLength$1(value.length) && !!typedArrayTags[baseGetTag$5(value)];
   }
 
   var _baseIsTypedArray = baseIsTypedArray$1;
@@ -2734,8 +2734,8 @@
 
   var _arrayMap = arrayMap$3;
 
-  var baseGetTag$3 = _baseGetTag,
-      isObjectLike$5 = isObjectLike_1;
+  var baseGetTag$4 = _baseGetTag,
+      isObjectLike$6 = isObjectLike_1;
 
   /** `Object#toString` result references. */
   var symbolTag$3 = '[object Symbol]';
@@ -2759,7 +2759,7 @@
    */
   function isSymbol$4(value) {
     return typeof value == 'symbol' ||
-      (isObjectLike$5(value) && baseGetTag$3(value) == symbolTag$3);
+      (isObjectLike$6(value) && baseGetTag$4(value) == symbolTag$3);
   }
 
   var isSymbol_1 = isSymbol$4;
@@ -3811,8 +3811,8 @@
 
   var get_1 = get$1;
 
-  var baseGetTag$2 = _baseGetTag,
-      isObjectLike$4 = isObjectLike_1;
+  var baseGetTag$3 = _baseGetTag,
+      isObjectLike$5 = isObjectLike_1;
 
   /** `Object#toString` result references. */
   var numberTag$3 = '[object Number]';
@@ -3845,7 +3845,7 @@
    */
   function isNumber(value) {
     return typeof value == 'number' ||
-      (isObjectLike$4(value) && baseGetTag$2(value) == numberTag$3);
+      (isObjectLike$5(value) && baseGetTag$3(value) == numberTag$3);
   }
 
   var isNumber_1 = isNumber;
@@ -4279,7 +4279,7 @@
       COMPARE_UNORDERED_FLAG$2 = 2;
 
   /** `Object#toString` result references. */
-  var boolTag$2 = '[object Boolean]',
+  var boolTag$3 = '[object Boolean]',
       dateTag$2 = '[object Date]',
       errorTag$1 = '[object Error]',
       mapTag$4 = '[object Map]',
@@ -4330,7 +4330,7 @@
         }
         return true;
 
-      case boolTag$2:
+      case boolTag$3:
       case dateTag$2:
       case numberTag$2:
         // Coerce booleans to `1` or `0` and dates to milliseconds.
@@ -4624,7 +4624,7 @@
       Promise$1 = _Promise,
       Set$1 = _Set,
       WeakMap = _WeakMap,
-      baseGetTag$1 = _baseGetTag,
+      baseGetTag$2 = _baseGetTag,
       toSource = _toSource;
 
   /** `Object#toString` result references. */
@@ -4650,7 +4650,7 @@
    * @param {*} value The value to query.
    * @returns {string} Returns the `toStringTag`.
    */
-  var getTag$4 = baseGetTag$1;
+  var getTag$4 = baseGetTag$2;
 
   // Fallback for data views, maps, sets, and weak maps in IE 11 and promises in Node.js < 6.
   if ((DataView && getTag$4(new DataView(new ArrayBuffer(1))) != dataViewTag$2) ||
@@ -4659,7 +4659,7 @@
       (Set$1 && getTag$4(new Set$1) != setTag$3) ||
       (WeakMap && getTag$4(new WeakMap) != weakMapTag$1)) {
     getTag$4 = function(value) {
-      var result = baseGetTag$1(value),
+      var result = baseGetTag$2(value),
           Ctor = result == objectTag$2 ? value.constructor : undefined,
           ctorString = Ctor ? toSource(Ctor) : '';
 
@@ -4763,7 +4763,7 @@
   var _baseIsEqualDeep = baseIsEqualDeep$1;
 
   var baseIsEqualDeep = _baseIsEqualDeep,
-      isObjectLike$3 = isObjectLike_1;
+      isObjectLike$4 = isObjectLike_1;
 
   /**
    * The base implementation of `_.isEqual` which supports partial comparisons
@@ -4783,7 +4783,7 @@
     if (value === other) {
       return true;
     }
-    if (value == null || other == null || (!isObjectLike$3(value) && !isObjectLike$3(other))) {
+    if (value == null || other == null || (!isObjectLike$4(value) && !isObjectLike$4(other))) {
       return value !== value && other !== other;
     }
     return baseIsEqualDeep(value, other, bitmask, customizer, baseIsEqual$2, stack);
@@ -5438,9 +5438,9 @@
 
   var _baseIndexOf = baseIndexOf$2;
 
-  var baseGetTag = _baseGetTag,
+  var baseGetTag$1 = _baseGetTag,
       isArray$1 = isArray_1,
-      isObjectLike$2 = isObjectLike_1;
+      isObjectLike$3 = isObjectLike_1;
 
   /** `Object#toString` result references. */
   var stringTag$2 = '[object String]';
@@ -5464,7 +5464,7 @@
    */
   function isString$1(value) {
     return typeof value == 'string' ||
-      (!isArray$1(value) && isObjectLike$2(value) && baseGetTag(value) == stringTag$2);
+      (!isArray$1(value) && isObjectLike$3(value) && baseGetTag$1(value) == stringTag$2);
   }
 
   var isString_1 = isString$1;
@@ -5841,6 +5841,36 @@
 
   });
 
+  var baseGetTag = _baseGetTag,
+      isObjectLike$2 = isObjectLike_1;
+
+  /** `Object#toString` result references. */
+  var boolTag$2 = '[object Boolean]';
+
+  /**
+   * Checks if `value` is classified as a boolean primitive or object.
+   *
+   * @static
+   * @memberOf _
+   * @since 0.1.0
+   * @category Lang
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is a boolean, else `false`.
+   * @example
+   *
+   * _.isBoolean(false);
+   * // => true
+   *
+   * _.isBoolean(null);
+   * // => false
+   */
+  function isBoolean(value) {
+    return value === true || value === false ||
+      (isObjectLike$2(value) && baseGetTag(value) == boolTag$2);
+  }
+
+  var isBoolean_1 = isBoolean;
+
   var Layer$1 = /*#__PURE__*/function () {
     // layerId
     // layerType
@@ -6022,10 +6052,12 @@
 
         forEach_1(fullStyle, function (value, key) {
           if (isFunction_1(Graphic.formatStyle[key])) {
-            var dprValue = Graphic.formatStyle[key](value);
-            ctx[key] = dprValue;
+            var dprValue = Graphic.formatStyle[key](value); // 排除方法被覆盖，比如fill/stroke
+
+            !isFunction_1(ctx[key]) && (ctx[key] = dprValue);
           } else {
-            ctx[key] = value;
+            // 排除方法被覆盖，比如fill/stroke
+            !isFunction_1(ctx[key]) && (ctx[key] = value);
           }
         });
       } // 多段线绘制
@@ -6088,12 +6120,10 @@
       key: "drawRect",
       value: function drawRect(ctx, shape, style, option) {
         var _ref2 = option || {},
-            format = _ref2.format,
-            _ref2$fill = _ref2.fill,
-            fill = _ref2$fill === void 0 ? false : _ref2$fill,
-            _ref2$stroke = _ref2.stroke,
-            stroke = _ref2$stroke === void 0 ? true : _ref2$stroke;
+            format = _ref2.format;
 
+        var stroke = isBoolean_1(style.stroke) ? style.stroke : true;
+        var fill = isBoolean_1(style.fill) ? style.fill : false;
         var formatShape = isFunction_1(format) ? format(shape) : shape;
         var startX = formatShape.x,
             startY = formatShape.y,
@@ -6125,14 +6155,12 @@
       key: "drawPolygon",
       value: function drawPolygon(ctx, points, style, option) {
         var format = option.format,
-            _option$stroke = option.stroke,
-            stroke = _option$stroke === void 0 ? true : _option$stroke,
-            _option$fill = option.fill,
-            fill = _option$fill === void 0 ? false : _option$fill,
             _option$limitCount2 = option.limitCount,
             limitCount = _option$limitCount2 === void 0 ? 2 : _option$limitCount2,
             _option$closePath = option.closePath,
-            closePath = _option$closePath === void 0 ? true : _option$closePath; // 校验
+            closePath = _option$closePath === void 0 ? true : _option$closePath;
+        var stroke = isBoolean_1(style.stroke) ? style.stroke : true;
+        var fill = isBoolean_1(style.fill) ? style.fill : false; // 校验
 
         var pointsLength = points.length;
 
@@ -6161,17 +6189,20 @@
         closePath && ctx.closePath(); // 是否闭合
 
         fill && ctx.fill();
-        stroke && ctx.stroke();
+
+        if (stroke) {
+          ctx.globalAlpha = 1; // 字体不能设置透明
+
+          ctx.stroke();
+        }
       } // 圆绘制
 
     }, {
       key: "drawCircle",
       value: function drawCircle(ctx, shape, style, option) {
-        var format = option.format,
-            _option$stroke2 = option.stroke,
-            stroke = _option$stroke2 === void 0 ? true : _option$stroke2,
-            _option$fill2 = option.fill,
-            fill = _option$fill2 === void 0 ? true : _option$fill2;
+        var format = option.format;
+        var stroke = isBoolean_1(style.stroke) ? style.stroke : true;
+        var fill = isBoolean_1(style.fill) ? style.fill : false;
         var formatShape = isFunction_1(format) ? format(shape) : shape;
         var cx = formatShape.cx,
             cy = formatShape.cy,
@@ -6180,7 +6211,12 @@
         ctx.beginPath();
         ctx.arc(cx, cy, r, 0, 2 * Math.PI);
         fill && ctx.fill();
-        stroke && ctx.stroke();
+
+        if (stroke) {
+          ctx.globalAlpha = 1; // 字体不能设置透明
+
+          ctx.stroke();
+        }
       } // 绘制点
 
     }, {
@@ -6213,13 +6249,17 @@
       key: "drawText",
       value: function drawText(ctx, textInfo, style, option) {
         var withBackground = style.background;
-        var format = option.format,
-            _option$fill3 = option.fill,
-            fill = _option$fill3 === void 0 ? true : _option$fill3;
+        var format = option.format;
+        var fill = isBoolean_1(style.fill) ? style.fill : true;
         var formatTextInfo = isFunction_1(format) ? format(textInfo) : textInfo;
         var text = formatTextInfo.text,
             position = formatTextInfo.position,
-            offset = formatTextInfo.offset;
+            offset = formatTextInfo.offset; // 首先判断text文本是否为空，如果为空，就不进行绘制，直接返回
+
+        if (!text) {
+          return;
+        }
+
         Graphic.setStyle(ctx, style);
         var x = position.x + offset.x;
         var y = position.y - offset.y;
@@ -6248,9 +6288,9 @@
             width: width,
             height: height
           };
-          Graphic.drawRect(ctx, rectShape, style, {
+          Graphic.drawRect(ctx, rectShape, _objectSpread2(_objectSpread2({}, style || {}), {}, {
             fill: true
-          });
+          }));
         } // 执行文本绘制
 
 
@@ -6852,9 +6892,7 @@
         var circleShape = {
           cx: global.x,
           cy: global.y,
-          sr: screenDlt,
-          stroke: true,
-          fill: false
+          sr: screenDlt
         };
         this.map.overlayLayer.addCircleFeature(circleShape);
         this.map.tipLayer.addText({
@@ -8857,6 +8895,7 @@
             points = _ref2.points;
             _ref2.inner;
         var dpr = CanvasLayer.dpr;
+        console.log('--this.style--', this.style);
         Graphic.drawPolygon(this.layer.canvasContext, points, this.style, {
           format: function format(point) {
             var _this2$layer$map$tran = _this2.layer.map.transformGlobalToScreen(point),
@@ -9555,13 +9594,13 @@
           _this2.addCircleFeature({
             sr: 3,
             cx: x1,
-            cy: y1,
-            stroke: false,
-            fill: true
+            cy: y1
           }, {
             clear: false,
             style: {
-              fillStyle: '#FF0000'
+              fillStyle: '#FF0000',
+              stroke: false,
+              fill: true
             }
           });
 
@@ -9575,13 +9614,13 @@
             _this2.addCircleFeature({
               sr: 3,
               cx: middleX,
-              cy: middleY,
-              stroke: false,
-              fill: true
+              cy: middleY
             }, {
               clear: false,
               style: {
-                fillStyle: '#FFDEAD'
+                fillStyle: '#FFDEAD',
+                stroke: false,
+                fill: true
               }
             });
           }

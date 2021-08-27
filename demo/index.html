@@ -234,7 +234,7 @@
             'first-feature-rect', // id
             {x: 200, y: 50, width: 100, height: 100}, // shape
             {name: '第一个矢量图层'}, // props
-            {strokeStyle: '#808080', lineWidth: 2} // style
+            {strokeStyle: '#808080', lineWidth: 2, fillStyle: '#f00', globalAlpha: .3, fill: true} // style
         );
         gFirstFeatureLayer.addFeature(gFirstFeatureRect);
         const gFirstFeaturePolygon = new AILabel.Feature.Polygon(
@@ -357,7 +357,7 @@
                     break;
                 }
                 case 'POLYGON': {
-                    drawingStyle = {strokeStyle: '#008080', lineWidth: 1}
+                    drawingStyle = {strokeStyle: '#00f', fillStyle: '#0f0', globalAlpha: .3, lineWidth: 1, fill: true, stroke: true}
                     gMap.setDrawingStyle(drawingStyle);
                     break;
                 }

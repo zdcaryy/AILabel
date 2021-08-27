@@ -4,6 +4,7 @@ import _forEach from 'lodash/forEach';
 import _isFunction from 'lodash/isFunction';
 import _isNumber from 'lodash/isNumber';
 import _includes from 'lodash/includes';
+import _isBoolean from 'lodash/isBoolean';
 
 import {IObject, IPoint} from './gInterface';
 import {ICircleShape, IFeatureStyle, ILineShape, IPointShape, IPolylineShape, IRectShape} from './feature/gInterface';
@@ -47,10 +48,13 @@ export default class Graphic {
         _forEach(fullStyle, (value: any, key: string) => {
             if (_isFunction(Graphic.formatStyle[key])) {
                 const dprValue = Graphic.formatStyle[key](value);
-                ctx[key] = dprValue;
+                // 排除方法被覆盖，比如fill/stroke
+                !_isFunction(ctx[key]) && (ctx[key] = dprValue);
+
             }
             else {
-                ctx[key] = value;
+                // 排除方法被覆盖，比如fill/stroke
+                !_isFunction(ctx[key]) && (ctx[key] = value);
             }
         });
     }
@@ -94,7 +98,9 @@ export default class Graphic {
 
     // 矩形绘制
     static drawRect(ctx: CanvasContext2D, shape: IRectShape, style: IFeatureStyle, option?: IObject) {
-        const {format, fill = false, stroke = true} = option || {};
+        const {format} = option || {};
+        const stroke = _isBoolean(style.stroke) ? style.stroke : true;
+        const fill = _isBoolean(style.fill) ? style.fill : false;
         const formatShape = _isFunction(format) ? format(shape) : shape;
 
         const {x: startX, y: startY, width, height} = formatShape;
@@ -112,7 +118,10 @@ export default class Graphic {
 
     // 多边形绘制
     static drawPolygon(ctx: CanvasContext2D, points: IPoint[], style: IFeatureStyle, option?: IObject) {
-        const {format, stroke = true, fill = false, limitCount = 2, closePath = true} = option;
+        const {format, limitCount = 2, closePath = true} = option;
+        const stroke = _isBoolean(style.stroke) ? style.stroke : true;
+        const fill = _isBoolean(style.fill) ? style.fill : false;
+
         // 校验
         const pointsLength = points.length;
         if (pointsLength < limitCount) {
@@ -129,12 +138,17 @@ export default class Graphic {
         }
         closePath && ctx.closePath(); // 是否闭合
         fill && ctx.fill();
-        stroke && ctx.stroke();
+        if (stroke) {
+            ctx.globalAlpha = 1; // 字体不能设置透明
+            ctx.stroke();
+        }
     }
 
     // 圆绘制
     static drawCircle(ctx: CanvasContext2D, shape: ICircleShape, style: IFeatureStyle, option?: IObject) {
-        const {format, stroke = true, fill = true} = option;
+        const {format} = option;
+        const stroke = _isBoolean(style.stroke) ? style.stroke : true;
+        const fill = _isBoolean(style.fill) ? style.fill : false;
 
         const formatShape = _isFunction(format) ? format(shape) : shape;
         const {cx, cy, r} = formatShape;
@@ -143,7 +157,10 @@ export default class Graphic {
         ctx.beginPath();
         ctx.arc(cx, cy, r, 0, 2 * Math.PI);
         fill && ctx.fill();
-        stroke && ctx.stroke();
+        if (stroke) {
+            ctx.globalAlpha = 1; // 字体不能设置透明
+            ctx.stroke();
+        }
     }
 
     // 绘制点
@@ -167,9 +184,16 @@ export default class Graphic {
     // 文本绘制
     static drawText(ctx: CanvasContext2D, textInfo: ITextInfo, style: ITextStyle, option?: IObject) {
         const withBackground = style.background;
-        const {format, fill = true} = option;
+        const {format} = option;
+        const fill = _isBoolean(style.fill) ? style.fill : true;
         const formatTextInfo = _isFunction(format) ? format(textInfo) : textInfo;
         const {text, position, offset} = formatTextInfo;
+
+        // 首先判断text文本是否为空，如果为空，就不进行绘制，直接返回
+        if (!text) {
+            return;
+        }
+
         Graphic.setStyle(ctx, style);
         const x = position.x + offset.x;
         const y = position.y - offset.y;
@@ -199,7 +223,7 @@ export default class Graphic {
                 width,
                 height
             };
-            Graphic.drawRect(ctx, rectShape, style, {fill: true});
+            Graphic.drawRect(ctx, rectShape, {...(style || {}), fill: true});
         }
 
         // 执行文本绘制

@@ -6,7 +6,7 @@ import Feature from './gFeature';
 import Graphic from '../gGraphic';
 import CanvasLayer from '../layer/gLayerCanvas';
 import Util from '../gUtil';
-import { EXAxisDirection, EYAxisDirection } from '../gEnum';
+import {EXAxisDirection, EYAxisDirection} from '../gEnum';
 
 export default class RectFeature extends Feature {
     // function: constructor

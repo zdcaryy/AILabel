@@ -367,6 +367,20 @@ const gMap = new AILabel.Map(&#39;map&#39;, {
 <td>&#39;#FF0000&#39;</td>
 </tr>
 <tr>
+<td>自定义：stroke</td>
+<td>是否闭合</td>
+<td>否</td>
+<td>true</td>
+<td>boolean</td>
+</tr>
+<tr>
+<td>自定义：fill</td>
+<td>是否填充</td>
+<td>否</td>
+<td>false</td>
+<td>boolean</td>
+</tr>
+<tr>
 <td>其他配置</td>
 <td>--</td>
 <td>否</td>
@@ -2222,7 +2236,7 @@ constructor(id: string, shape: ICircleShape, props: IObject = {}, style: IFeatur
 // demo
 const gFirstFeatureCircle = new AILabel.Feature.Circle(
    &#39;first-feature-circle&#39;, // id
-   {cx: 0, cy: 0, r: 100, stroke: true, fill: false}, // shape
+   {cx: 0, cy: 0, r: 100}, // shape
    {name: &#39;第一个矢量图层&#39;}, // props
    {fillStyle: &#39;#F4A460&#39;, strokeStyle: &#39;#D2691E&#39;, globalAlpha: 1} // style
 );
@@ -2309,20 +2323,6 @@ gFirstFeatureLayer.addFeature(gFirstFeatureCircle);
 <td>否</td>
 <td>--</td>
 <td>number</td>
-</tr>
-<tr>
-<td>stroke</td>
-<td>是否闭合圆圈</td>
-<td>否</td>
-<td>true</td>
-<td>boolean</td>
-</tr>
-<tr>
-<td>fill</td>
-<td>是否填充圆圈</td>
-<td>否</td>
-<td>false</td>
-<td>boolean</td>
 </tr>
 </tbody>
 </table>

@@ -213,15 +213,15 @@ export default class OverlayLayer extends CanvasLayer  {
         _forEach(points, (point, index) => {
             const {x: x1, y: y1} = point;
             this.addCircleFeature(
-                {sr: 3, cx: x1, cy: y1, stroke: false, fill: true},
-                {clear: false, style: {fillStyle: '#FF0000'}}
+                {sr: 3, cx: x1, cy: y1},
+                {clear: false, style: {fillStyle: '#FF0000', stroke: false, fill: true}}
             );
             if (withCenterPoint) {
                 const nextPoint = points[index + 1] || points[0];
                 const {x: middleX, y: middleY} = Util.MathUtil.getMiddlePoint(point, nextPoint);
                 this.addCircleFeature(
-                    {sr: 3, cx: middleX, cy: middleY, stroke: false, fill: true},
-                    {clear: false, style: {fillStyle: '#FFDEAD'}}
+                    {sr: 3, cx: middleX, cy: middleY},
+                    {clear: false, style: {fillStyle: '#FFDEAD', stroke: false, fill: true}}
                 );
             }
         });

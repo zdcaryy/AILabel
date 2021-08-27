@@ -104,6 +104,8 @@ canvas样式：比如lineWidth/strokeStyle/fillStyle等
 |lineWidth|线宽|否|1|number|
 |strokeStyle|边框颜色|否|--|'#FF0000'|
 |fillStyle等|填充色|否|--|'#FF0000'|
+|自定义：stroke|是否闭合|否|true|boolean|
+|自定义：fill|是否填充|否|false|boolean|
 |其他配置|--|否|--|--|
 
 
@@ -1123,7 +1125,7 @@ constructor(id: string, shape: ICircleShape, props: IObject = {}, style: IFeatur
 // demo
 const gFirstFeatureCircle = new AILabel.Feature.Circle(
    'first-feature-circle', // id
-   {cx: 0, cy: 0, r: 100, stroke: true, fill: false}, // shape
+   {cx: 0, cy: 0, r: 100}, // shape
    {name: '第一个矢量图层'}, // props
    {fillStyle: '#F4A460', strokeStyle: '#D2691E', globalAlpha: 1} // style
 );
@@ -1147,8 +1149,6 @@ gFirstFeatureLayer.addFeature(gFirstFeatureCircle);
 |cy|坐标y|是|--|number|
 |r|半径（实际坐标系半径，会伴随放大缩小变化）|否|--|number|
 |sr|半径（屏幕坐标系半径，不会伴随放大缩小变化）|否|--|number|
-|stroke|是否闭合圆圈|否|true|boolean|
-|fill|是否填充圆圈|否|false|boolean|
 注：r 和 sr 【sr与r只会存在一个，如果同时存在，r优先级高】
 
 ## updateShape

@@ -228,7 +228,7 @@ export default class MaskLayer extends Layer  {
 
         const moveGlobal = {x: global.x + globalDltX, y: global.y - globalDltY};
 
-        const circleShape = {cx: global.x, cy: global.y, sr: screenDlt, stroke: true, fill: false};
+        const circleShape = {cx: global.x, cy: global.y, sr: screenDlt};
         this.map.overlayLayer.addCircleFeature(circleShape);
         this.map.tipLayer.addText({text: '抬起完成绘制', position: moveGlobal});
     }
