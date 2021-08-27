@@ -7760,10 +7760,12 @@
                   var isTop = this.hoverFeatureIndex === 0 || this.hoverFeatureIndex === 1;
                   var preNewX = _isLeft ? _x + globalDltX : _x;
                   var preNewY = isTop ? _y - globalDltY : _y;
-                  var preNewWidth = _isLeft ? width - globalDltX : width + globalDltX;
-                  var preNewHeight = isTop ? height - globalDltY : height + globalDltY;
-                  var newX = Math.min(preNewX, preNewX + preNewWidth);
-                  var newY = Math.max(preNewY, preNewY - preNewHeight);
+                  var preNewWidth = _isLeft ? width - preGlobalDltX : width + preGlobalDltX;
+                  var preNewHeight = isTop ? height - preGlobalDltY : height + preGlobalDltY;
+                  var RBX = isXAxisRight ? preNewX + preNewWidth : preNewX - preNewWidth;
+                  var RBY = isYAxisTop ? preNewY - preNewHeight : preNewY + preNewHeight;
+                  var newX = isXAxisRight ? Math.min(preNewX, RBX) : Math.max(preNewX, RBX);
+                  var newY = isYAxisTop ? Math.max(preNewY, RBY) : Math.min(preNewY, RBY);
                   var newWidth = Math.abs(preNewWidth);
                   var newHeight = Math.abs(preNewHeight);
                   newRectShape = {
@@ -12384,7 +12386,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.4' // 和npm-version保持一致
+    version: '5.0.5' // 和npm-version保持一致
 
   };
 

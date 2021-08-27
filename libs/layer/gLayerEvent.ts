@@ -794,11 +794,18 @@ export default class MaskLayer extends Layer  {
                     const isTop = this.hoverFeatureIndex === 0 || this.hoverFeatureIndex === 1;
                     const preNewX = isLeft ? (x + globalDltX) : x;
                     const preNewY = isTop ?  (y - globalDltY) : y;
-                    const preNewWidth = isLeft ? (width - globalDltX) : (width + globalDltX);
-                    const preNewHeight = isTop ? (height - globalDltY) : (height + globalDltY);
+                    const preNewWidth = isLeft ? (width - preGlobalDltX) : (width + preGlobalDltX);
+                    const preNewHeight = isTop ? (height - preGlobalDltY) : (height + preGlobalDltY);
 
-                    const newX = Math.min(preNewX, preNewX + preNewWidth);
-                    const newY = Math.max(preNewY, preNewY - preNewHeight);
+                    const RBX = isXAxisRight ? (preNewX + preNewWidth) : (preNewX - preNewWidth);
+                    const RBY = isYAxisTop ? (preNewY - preNewHeight) : (preNewY + preNewHeight);
+
+                    const newX = isXAxisRight
+                        ? Math.min(preNewX, RBX)
+                        : Math.max(preNewX, RBX);
+                    const newY = isYAxisTop
+                        ? Math.max(preNewY, RBY)
+                        : Math.min(preNewY, RBY);
                     const newWidth = Math.abs(preNewWidth);
                     const newHeight = Math.abs(preNewHeight);
 
