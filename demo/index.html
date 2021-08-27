@@ -47,6 +47,11 @@
             panWhenDrawing: true
         });
 
+        // click单击事件
+        gMap.events.on('click', point => {
+            // console.log('--click--', point);
+        });
+
         gMap.events.on('drawDone', (type, data, data1) => {
             console.log('--type, data--', type, data);
             if (type === 'MARKER') {

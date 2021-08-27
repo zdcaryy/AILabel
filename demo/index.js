@@ -5261,6 +5261,13 @@
     EEventType["DrawDone"] = "drawDone";
     EEventType["FeatureUpdated"] = "featureUpdated";
     EEventType["FeatureDeleted"] = "featureDeleted";
+    EEventType["Click"] = "click";
+    EEventType["DblClick"] = "dblClick";
+    EEventType["MouseDown"] = "mouseDown";
+    EEventType["MouseMove"] = "mouseMove";
+    EEventType["MouseUp"] = "mouseUp";
+    EEventType["MouseOver"] = "mouseOver";
+    EEventType["MouseOut"] = "mouseOut";
   })(EEventType || (EEventType = {}));
 
   var ECursorType;
@@ -6673,6 +6680,7 @@
       _this.onMouseUp = _this.onMouseUp.bind(_assertThisInitialized(_this));
       _this.onMouseOut = _this.onMouseOut.bind(_assertThisInitialized(_this));
       _this.onMouseOver = _this.onMouseOver.bind(_assertThisInitialized(_this));
+      _this.onMouseClick = _this.onMouseClick.bind(_assertThisInitialized(_this));
       _this.onMouseDblClick = _this.onMouseDblClick.bind(_assertThisInitialized(_this));
       _this.onMouseWheel = _this.onMouseWheel.bind(_assertThisInitialized(_this));
       return _this;
@@ -6712,6 +6720,7 @@
         this.eventDom.addEventListener("mousedown", this.onMouseDown);
         this.eventDom.addEventListener("mousemove", this.onMouseMove);
         this.eventDom.addEventListener("mouseup", this.onMouseUp);
+        this.eventDom.addEventListener('click', this.onMouseClick);
         this.eventDom.addEventListener('dblclick', this.onMouseDblClick);
         this.eventDom.addEventListener("mousewheel", this.onMouseWheel);
         this.eventDom.addEventListener("mouseout", this.onMouseOut);
@@ -6724,6 +6733,8 @@
         this.eventDom.removeEventListener("mousedown", this.onMouseDown);
         this.eventDom.removeEventListener("mousemove", this.onMouseMove);
         this.eventDom.removeEventListener("mouseup", this.onMouseUp);
+        this.eventDom.removeEventListener('click', this.onMouseClick);
+        this.eventDom.removeEventListener('dblclick', this.onMouseDblClick);
         this.eventDom.removeEventListener("mousewheel", this.onMouseWheel);
         this.eventDom.removeEventListener("mouseout", this.onMouseOut);
         this.eventDom.removeEventListener("mouseover", this.onMouseOver);
@@ -8077,6 +8088,24 @@
               }
           }
         }
+      } // 获取mouse事件point
+
+    }, {
+      key: "getMouseEventPoint",
+      value: function getMouseEventPoint(e) {
+        // 相关坐标值处理
+        var offsetX = e.offsetX,
+            offsetY = e.offsetY; // 记录起始坐标
+
+        var screen = {
+          x: offsetX,
+          y: offsetY
+        };
+        var global = this.map.transformScreenToGlobal(screen);
+        return {
+          screen: screen,
+          global: global
+        };
       }
       /*****************************************************/
 
@@ -8089,21 +8118,10 @@
       key: "onMouseDown",
       value: function onMouseDown(e) {
         // 相关坐标值处理
-        var offsetX = e.offsetX,
-            offsetY = e.offsetY,
-            screenX = e.screenX,
-            screenY = e.screenY; // 记录起始坐标
+        var screenX = e.screenX,
+            screenY = e.screenY; // 设置保存起始坐标
 
-        var screen = {
-          x: offsetX,
-          y: offsetY
-        };
-        var global = this.map.transformScreenToGlobal(screen); // 设置保存起始坐标
-
-        this.startPoint = {
-          screen: screen,
-          global: global
-        };
+        this.startPoint = this.getMouseEventPoint(e);
         this.startPageScreenPoint = {
           x: screenX,
           y: screenY
@@ -8113,7 +8131,9 @@
 
         var isCapturedFeature = this.hoverFeature || isNumber_1(this.hoverFeatureIndex);
 
-        var drawing = !dragging && !isCapturedFeature; // 首先判断是否是取消选中
+        var drawing = !dragging && !isCapturedFeature; // 对外暴露事件执行
+
+        this.map.eventsObServer.emit(EEventType.MouseDown, this.startPoint); // 首先判断是否是取消选中
 
         if (this.map.activeFeature && !isCapturedFeature) {
           this.map.eventsObServer.emit(EEventType.FeatureUnselected, this.map.activeFeature, 'cancel by click');
@@ -8154,21 +8174,20 @@
       key: "onMouseMove",
       value: function onMouseMove(e) {
         // 实时记录mouseMoveEvent事件对象
-        this.mouseMoveEvent = e; // 相关坐标值处理
+        this.mouseMoveEvent = e; // 获取move坐标
 
-        var offsetX = e.offsetX,
-            offsetY = e.offsetY;
-            e.screenX;
-            e.screenY; // 记录起始坐标
+        var _this$getMouseEventPo = this.getMouseEventPoint(e),
+            screen = _this$getMouseEventPo.screen,
+            global = _this$getMouseEventPo.global; // 后续对应模式处理
 
-        var screen = {
-          x: offsetX,
-          y: offsetY
-        };
-        var global = this.map.transformScreenToGlobal(screen); // 后续对应模式处理
 
         var mapMode = this.map.mode;
-        var dragging = this.dragging;
+        var dragging = this.dragging; // 对外暴露事件执行
+
+        this.map.eventsObServer.emit(EEventType.MouseMove, {
+          screen: screen,
+          global: global
+        });
 
         if (!this.map.activeFeature && !dragging) {
           // 首先清空临时层
@@ -8230,7 +8249,17 @@
 
     }, {
       key: "onMouseUp",
-      value: function onMouseUp(e) {} // onMouseDblClick: 事件绑定-双击事件
+      value: function onMouseUp(e) {
+        // 对外暴露事件执行
+        this.map.eventsObServer.emit(EEventType.MouseUp, this.getMouseEventPoint(e));
+      } // 单击事件
+
+    }, {
+      key: "onMouseClick",
+      value: function onMouseClick(e) {
+        // 对外暴露事件执行
+        this.map.eventsObServer.emit(EEventType.Click, this.getMouseEventPoint(e));
+      } // onMouseDblClick: 事件绑定-双击事件
 
     }, {
       key: "onMouseDblClick",
@@ -8238,7 +8267,9 @@
         // 判断是否在绘制或者编辑拖拽过程中
         var mapMode = this.map.mode;
         this.clearDownTimer();
-        var drawing = this.dragging || this.tmpPointsStore.length;
+        var drawing = this.dragging || this.tmpPointsStore.length; // 对外暴露事件执行
+
+        this.map.eventsObServer.emit(EEventType.DblClick, this.getMouseEventPoint(e));
 
         if (mapMode === EMapMode.Ban) {
           // 禁用任何逻辑判断
@@ -8373,7 +8404,9 @@
 
         this.map.tipLayer.removeAllFeatureActionText(); // 如果在绘制过程中，此时需要判断是否需要自动平移视野
 
-        this.handlePanWhenDrawing(e);
+        this.handlePanWhenDrawing(e); // 对外暴露事件执行
+
+        this.map.eventsObServer.emit(EEventType.MouseOut, this.getMouseEventPoint(e));
       } // onMouseOver: 鼠标移入
 
     }, {
@@ -8383,7 +8416,9 @@
 
         this.map.tipLayer.removeAllFeatureActionText(); // 清除绘制过程中timer
 
-        this.clearPanWhenDrawingTimer();
+        this.clearPanWhenDrawingTimer(); // 对外暴露事件执行
+
+        this.map.eventsObServer.emit(EEventType.MouseOver, this.getMouseEventPoint(e));
       } // 撤销临时绘制点集
 
     }, {

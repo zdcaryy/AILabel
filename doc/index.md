@@ -421,6 +421,13 @@ gMap.events.on('boundsChanged', () => {console.log('bounds has changed')});
 |drawDone|绘制结束时触发|string|DrawDone|
 |featureUpdated|feature编辑完成触发|string|FeatureUpdated|
 |featureDeleted|目前只针对点双击选中右键触发|string|FeatureDeleted|
+|click|单击事件|string|MouseCallback|
+|dblClick|双击事件|string|MouseCallback|
+|mouseDown|鼠标按下|string|MouseCallback|
+|mouseMove|鼠标移动|string|MouseCallback|
+|mouseUp|鼠标抬起|string|MouseCallback|
+|mouseOut|鼠标移出|string|MouseCallback|
+|mouseOver|鼠标进入|string|MouseCallback|
 
 **BoundsChanged**
 ```javascript
@@ -469,6 +476,21 @@ callback: (feature:PointFeature) => void
 // demo
 gMap.events.on('featureDeleted', callback);
 ```
+
+**MouseCallback**
+```javascript
+// define
+callback: (point:IBasePoint) => void
+// demo
+gMap.events.on('click', callback);
+```
+
+**IBasePoint**
+
+|参数|说明|类型|
+|---|---|---|
+|screen|屏幕坐标|IPoint|
+|global|实际坐标|IPoint|
 
 # AILabel.Layer.Image
 图片图层
@@ -1452,3 +1474,18 @@ distance(start: IPoint, end: IPoint): number
 ```javascript
 getButtonIndex(event: MouseEvent): number
 ```
+
+# 联系作者
+## author
+
+- author: 丁扬
+- email: dingyang9642@126.com
+- wx: dingyang9642
+- qq: 378301400
+
+# 开源协议
+
+## Apache License
+
+请遵循：Apache License 2.0
+

@@ -67,6 +67,7 @@ export default class MaskLayer extends Layer  {
         this.onMouseUp = this.onMouseUp.bind(this);
         this.onMouseOut = this.onMouseOut.bind(this);
         this.onMouseOver = this.onMouseOver.bind(this);
+        this.onMouseClick = this.onMouseClick.bind(this);
         this.onMouseDblClick = this.onMouseDblClick.bind(this);
         this.onMouseWheel = this.onMouseWheel.bind(this);
     }
@@ -102,6 +103,7 @@ export default class MaskLayer extends Layer  {
         this.eventDom.addEventListener("mousedown", this.onMouseDown);
         this.eventDom.addEventListener("mousemove", this.onMouseMove);
         this.eventDom.addEventListener("mouseup", this.onMouseUp);
+        this.eventDom.addEventListener('click', this.onMouseClick);
         this.eventDom.addEventListener('dblclick', this.onMouseDblClick);
         this.eventDom.addEventListener("mousewheel", this.onMouseWheel);
         this.eventDom.addEventListener("mouseout", this.onMouseOut);
@@ -113,6 +115,8 @@ export default class MaskLayer extends Layer  {
         this.eventDom.removeEventListener("mousedown", this.onMouseDown);
         this.eventDom.removeEventListener("mousemove", this.onMouseMove);
         this.eventDom.removeEventListener("mouseup", this.onMouseUp);
+        this.eventDom.removeEventListener('click', this.onMouseClick);
+        this.eventDom.removeEventListener('dblclick', this.onMouseDblClick);
         this.eventDom.removeEventListener("mousewheel", this.onMouseWheel);
         this.eventDom.removeEventListener("mouseout", this.onMouseOut);
         this.eventDom.removeEventListener("mouseover", this.onMouseOver);
@@ -1005,6 +1009,15 @@ export default class MaskLayer extends Layer  {
     }
 
 
+    // 获取mouse事件point
+    getMouseEventPoint(e: MouseEvent): IBasePoint {
+        // 相关坐标值处理
+        const {offsetX, offsetY} = e;
+        // 记录起始坐标
+        const screen = {x: offsetX, y: offsetY};
+        const global = this.map.transformScreenToGlobal(screen);
+        return {screen, global};
+    }
 
     /*****************************************************/
     /**************** map 事件绑定 ************************/
@@ -1012,18 +1025,21 @@ export default class MaskLayer extends Layer  {
     // onMouseDown: 事件绑定
     public onMouseDown(e: MouseEvent) {
         // 相关坐标值处理
-        const {offsetX, offsetY, screenX, screenY} = e;
-        // 记录起始坐标
-        const screen = {x: offsetX, y: offsetY};
-        const global = this.map.transformScreenToGlobal(screen);
+        const {screenX, screenY} = e;
         // 设置保存起始坐标
-        this.startPoint = {screen, global};
+        this.startPoint = this.getMouseEventPoint(e);
         this.startPageScreenPoint = {x: screenX, y: screenY};
 
         const mapMode = this.map.mode;
         const dragging = this.dragging;
         const isCapturedFeature = this.hoverFeature || _isNumber(this.hoverFeatureIndex);
         const drawing = !dragging && !isCapturedFeature;
+
+        // 对外暴露事件执行
+        this.map.eventsObServer.emit(
+            EEventType.MouseDown,
+            this.startPoint
+        );
 
         // 首先判断是否是取消选中
         if (this.map.activeFeature && !isCapturedFeature) {
@@ -1075,15 +1091,18 @@ export default class MaskLayer extends Layer  {
         // 实时记录mouseMoveEvent事件对象
         this.mouseMoveEvent = e;
 
-        // 相关坐标值处理
-        const {offsetX, offsetY, screenX, screenY} = e;
-        // 记录起始坐标
-        const screen = {x: offsetX, y: offsetY};
-        const global = this.map.transformScreenToGlobal(screen);
+        // 获取move坐标
+        const {screen, global} = this.getMouseEventPoint(e);
 
         // 后续对应模式处理
         const mapMode = this.map.mode;
         const dragging = this.dragging;
+
+        // 对外暴露事件执行
+        this.map.eventsObServer.emit(
+            EEventType.MouseMove,
+            {screen, global}
+        );
 
         if (!this.map.activeFeature && !dragging) {
             // 首先清空临时层
@@ -1149,7 +1168,20 @@ export default class MaskLayer extends Layer  {
 
     // onMouseUp: 事件绑定
     public onMouseUp(e: MouseEvent) {
+        // 对外暴露事件执行
+        this.map.eventsObServer.emit(
+            EEventType.MouseUp,
+            this.getMouseEventPoint(e)
+        );
+    }
 
+    // 单击事件
+    public onMouseClick(e: MouseEvent) {
+       // 对外暴露事件执行
+        this.map.eventsObServer.emit(
+            EEventType.Click,
+            this.getMouseEventPoint(e)
+        );
     }
 
     // onMouseDblClick: 事件绑定-双击事件
@@ -1158,6 +1190,12 @@ export default class MaskLayer extends Layer  {
         const mapMode = this.map.mode;
         this.clearDownTimer();
         const drawing = this.dragging || this.tmpPointsStore.length;
+
+        // 对外暴露事件执行
+        this.map.eventsObServer.emit(
+            EEventType.DblClick,
+            this.getMouseEventPoint(e)
+        );
 
         if (mapMode === EMapMode.Ban) {
             // 禁用任何逻辑判断
@@ -1274,9 +1312,15 @@ export default class MaskLayer extends Layer  {
         e.preventDefault();
         // 清空文字提示层
         this.map.tipLayer.removeAllFeatureActionText();
-
         // 如果在绘制过程中，此时需要判断是否需要自动平移视野
         this.handlePanWhenDrawing(e);
+
+        // 对外暴露事件执行
+        this.map.eventsObServer.emit(
+            EEventType.MouseOut,
+            this.getMouseEventPoint(e)
+        );
+
     }
 
     // onMouseOver: 鼠标移入
@@ -1286,6 +1330,12 @@ export default class MaskLayer extends Layer  {
         this.map.tipLayer.removeAllFeatureActionText();
         // 清除绘制过程中timer
         this.clearPanWhenDrawingTimer();
+
+        // 对外暴露事件执行
+        this.map.eventsObServer.emit(
+            EEventType.MouseOver,
+            this.getMouseEventPoint(e)
+        );
     }
 
     // 撤销临时绘制点集

@@ -38,7 +38,16 @@ export enum EEventType {
     FeatureUnselected = "featureUnselected", // feature取消选中触发
     DrawDone = "drawDone", // feature绘制完成
     FeatureUpdated = "featureUpdated", // feature更新完成
-    FeatureDeleted = "featureDeleted" // feature删除完成【目前只针对点的右键删除回调】
+    FeatureDeleted = "featureDeleted", // feature删除完成【目前只针对点的右键删除回调】
+
+    // 鼠标事件
+    Click = "click",
+    DblClick = "dblClick",
+    MouseDown = "mouseDown",
+    MouseMove = "mouseMove",
+    MouseUp = "mouseUp",
+    MouseOver = "mouseOver",
+    MouseOut = "mouseOut",
 };
 
 // 手势类型

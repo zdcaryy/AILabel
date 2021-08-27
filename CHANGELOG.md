@@ -25,3 +25,4 @@
 `2021-08-27`
 1、鼠标滑轮缩放性能优化，MapOption增加refreshDelayWhenZooming配置，默认true
 2、涂抹擦除性能优化，不会存在卡顿现象
+3、Map鼠标事件外放

@@ -896,6 +896,48 @@ gMap.events.on(&#39;boundsChanged&#39;, () =&gt; {console.log(&#39;bounds has ch
 <td>string</td>
 <td>FeatureDeleted</td>
 </tr>
+<tr>
+<td>click</td>
+<td>单击事件</td>
+<td>string</td>
+<td>MouseCallback</td>
+</tr>
+<tr>
+<td>dblClick</td>
+<td>双击事件</td>
+<td>string</td>
+<td>MouseCallback</td>
+</tr>
+<tr>
+<td>mouseDown</td>
+<td>鼠标按下</td>
+<td>string</td>
+<td>MouseCallback</td>
+</tr>
+<tr>
+<td>mouseMove</td>
+<td>鼠标移动</td>
+<td>string</td>
+<td>MouseCallback</td>
+</tr>
+<tr>
+<td>mouseUp</td>
+<td>鼠标抬起</td>
+<td>string</td>
+<td>MouseCallback</td>
+</tr>
+<tr>
+<td>mouseOut</td>
+<td>鼠标移出</td>
+<td>string</td>
+<td>MouseCallback</td>
+</tr>
+<tr>
+<td>mouseOver</td>
+<td>鼠标进入</td>
+<td>string</td>
+<td>MouseCallback</td>
+</tr>
 </tbody>
 </table>
 <p><strong>BoundsChanged</strong></p>
@@ -934,6 +976,34 @@ callback: (feature:PointFeature) =&gt; void
 // demo
 gMap.events.on(&#39;featureDeleted&#39;, callback);
 </code></pre>
+<p><strong>MouseCallback</strong></p>
+<pre><code class="lang-javascript">// define
+callback: (point:IBasePoint) =&gt; void
+// demo
+gMap.events.on(&#39;click&#39;, callback);
+</code></pre>
+<p><strong>IBasePoint</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>screen</td>
+<td>屏幕坐标</td>
+<td>IPoint</td>
+</tr>
+<tr>
+<td>global</td>
+<td>实际坐标</td>
+<td>IPoint</td>
+</tr>
+</tbody>
+</table>
 <h1 id="ailabel-layer-image">AILabel.Layer.Image</h1>
 <p>图片图层</p>
 <h2 id="-">实例化</h2>
@@ -2992,6 +3062,17 @@ gFirstTextLayer.addText(gFirstText);
 <p>获取鼠标左右键index</p>
 <pre><code class="lang-javascript">getButtonIndex(event: MouseEvent): number
 </code></pre>
+<h1 id="-">联系作者</h1>
+<h2 id="author">author</h2>
+<ul>
+<li>author: 丁扬</li>
+<li>email: <a href="mailto:dingyang9642@126.com">dingyang9642@126.com</a></li>
+<li>wx: dingyang9642</li>
+<li>qq: 378301400</li>
+</ul>
+<h1 id="-">开源协议</h1>
+<h2 id="apache-license">Apache License</h2>
+<p>请遵循：Apache License 2.0</p>
 
           	</article>
         </div>
