@@ -308,10 +308,11 @@
             console.log('marker dragEnd');
             marker.updatePosition(newPosition);
         });
-        gFirstMarker.events.on('click', marker => {
+        gFirstMarker.events.on('rightClick', marker => {
             console.log('marker click');
             gMap.markerLayer.removeMarkerById(marker.id);
         });
+        gFirstMarker.enableDragging();
         gMap.markerLayer.addMarker(gFirstMarker);
 
         console.log('--AILabel--', AILabel);

@@ -26,3 +26,8 @@
 1、鼠标滑轮缩放性能优化，MapOption增加refreshDelayWhenZooming配置，默认true
 2、涂抹擦除性能优化，不会存在卡顿现象
 3、Map鼠标事件外放
+
+# 5.0.7
+`2021-08-28`
+1、Circle绘制提示tip位置bug
+2、Marker拖拽坐标bug修复

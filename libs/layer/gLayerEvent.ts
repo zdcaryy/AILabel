@@ -226,9 +226,14 @@ export default class MaskLayer extends Layer  {
     }
     handleCircleMove(e: MouseEvent) {
         const global = this.startPoint.global;
-        const {x: globalDltX, y: globalDltY} = this.getDltXY(e, {transform: true});
+        const {x: preGlobalDltX, y: preGlobalDltY} = this.getDltXY(e, {transform: true});
         const {x: screenDltX, y: screenDltY} = this.getDltXY(e, {transform: false});
         const screenDlt = Math.sqrt(screenDltX * screenDltX + screenDltY * screenDltY);
+
+        const isXAxisRight = this.map.xAxis.direction === EXAxisDirection.Right;
+        const isYAxisTop = this.map.yAxis.direction === EYAxisDirection.Top;
+        const globalDltX = isXAxisRight ? preGlobalDltX : -preGlobalDltX;
+        const globalDltY = isYAxisTop ? preGlobalDltY : -preGlobalDltY;
 
         const moveGlobal = {x: global.x + globalDltX, y: global.y - globalDltY};
 

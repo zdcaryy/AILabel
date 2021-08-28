@@ -6909,8 +6909,8 @@
         var _this$getDltXY3 = this.getDltXY(e, {
           transform: true
         }),
-            globalDltX = _this$getDltXY3.x,
-            globalDltY = _this$getDltXY3.y;
+            preGlobalDltX = _this$getDltXY3.x,
+            preGlobalDltY = _this$getDltXY3.y;
 
         var _this$getDltXY4 = this.getDltXY(e, {
           transform: false
@@ -6919,6 +6919,10 @@
             screenDltY = _this$getDltXY4.y;
 
         var screenDlt = Math.sqrt(screenDltX * screenDltX + screenDltY * screenDltY);
+        var isXAxisRight = this.map.xAxis.direction === EXAxisDirection.Right;
+        var isYAxisTop = this.map.yAxis.direction === EYAxisDirection.Top;
+        var globalDltX = isXAxisRight ? preGlobalDltX : -preGlobalDltX;
+        var globalDltY = isYAxisTop ? preGlobalDltY : -preGlobalDltY;
         var moveGlobal = {
           x: global.x + globalDltX,
           y: global.y - globalDltY
@@ -12427,9 +12431,16 @@
           y: screenY
         }; // 重置
 
-        this.toUpdatePosition = null; // 首先执行回调
+        this.toUpdatePosition = null; // 鼠标event事件
 
-        this.eventsObServer.emit(EMarkerEventType.MouseDown, this); // 然后判断是否允许dragging
+        var buttonIndex = Util.EventUtil.getButtonIndex(e); // 首先执行回调
+
+        this.eventsObServer.emit(EMarkerEventType.MouseDown, this); // 单击鼠标右键
+
+        if (buttonIndex === 2) {
+          this.eventsObServer.emit(EMarkerEventType.RightClick, this);
+        } // 然后判断是否允许dragging
+
 
         if (!this.draggingEnabled) {
           return;
@@ -12461,8 +12472,12 @@
             y = _this$startPageScreen.y;
         var screenDltX = screenX - x;
         var screenDltY = screenY - y;
-        var globalDltX = screenDltX / scale;
-        var globalDltY = screenDltY / scale;
+        var preGlobalDltX = screenDltX / scale;
+        var preGlobalDltY = screenDltY / scale;
+        var isXAxisRight = this.layer.map.xAxis.direction === EXAxisDirection.Right;
+        var isYAxisTop = this.layer.map.yAxis.direction === EYAxisDirection.Top;
+        var globalDltX = isXAxisRight ? preGlobalDltX : -preGlobalDltX;
+        var globalDltY = isYAxisTop ? preGlobalDltY : -preGlobalDltY;
         var position = this.markerInfo.position;
         this.toUpdatePosition = {
           x: position.x + globalDltX,
@@ -12510,13 +12525,6 @@
     }, {
       key: "handleClick",
       value: function handleClick(e) {
-        var buttonIndex = Util.EventUtil.getButtonIndex(e);
-
-        if (buttonIndex === 2) {
-          // 单击鼠标右键
-          this.eventsObServer.emit(EMarkerEventType.RightClick, this);
-        }
-
         this.eventsObServer.emit(EMarkerEventType.Click, this);
       } // marker添加事件绑定
 
@@ -12598,7 +12606,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.6' // 和npm-version保持一致
+    version: '5.0.7' // 和npm-version保持一致
 
   };
 

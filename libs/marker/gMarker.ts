@@ -6,6 +6,7 @@ import {EMarkerEventType, EMarkerType} from './gEnum';
 import MarkerLayer from '../layer/gLayerMarker';
 import {IMarkerInfo} from './gInterface';
 import Util from '../gUtil';
+import {EXAxisDirection, EYAxisDirection} from '../gEnum';
 
 export default class Marker {
     // markerId
@@ -118,12 +119,23 @@ export default class Marker {
         this.startPageScreenPoint = {x: screenX, y: screenY};
         // 重置
         this.toUpdatePosition = null;
+        // 鼠标event事件
+        const buttonIndex = Util.EventUtil.getButtonIndex(e);
 
         // 首先执行回调
         this.eventsObServer.emit(
             EMarkerEventType.MouseDown,
             this
         );
+
+        // 单击鼠标右键
+        if (buttonIndex === 2) {
+            this.eventsObServer.emit(
+                EMarkerEventType.RightClick,
+                this
+            );
+        }
+
         // 然后判断是否允许dragging
         if (!this.draggingEnabled) {
             return;
@@ -146,8 +158,13 @@ export default class Marker {
         const {x, y} = this.startPageScreenPoint;
         const screenDltX = screenX - x;
         const screenDltY = screenY - y;
-        const globalDltX = screenDltX / scale;
-        const globalDltY = screenDltY / scale;
+        const preGlobalDltX =  screenDltX / scale;
+        const preGlobalDltY = screenDltY / scale;
+
+        const isXAxisRight = this.layer.map.xAxis.direction === EXAxisDirection.Right;
+        const isYAxisTop = this.layer.map.yAxis.direction === EYAxisDirection.Top;
+        const globalDltX = isXAxisRight ? preGlobalDltX : -preGlobalDltX;
+        const globalDltY = isYAxisTop ? preGlobalDltY : -preGlobalDltY;
 
         const {position} = this.markerInfo;
         this.toUpdatePosition = {x: position.x + globalDltX, y: position.y - globalDltY};
@@ -203,14 +220,6 @@ export default class Marker {
         );
     }
     handleClick(e: MouseEvent) {
-        const buttonIndex = Util.EventUtil.getButtonIndex(e);
-        if (buttonIndex === 2) {
-            // 单击鼠标右键
-            this.eventsObServer.emit(
-                EMarkerEventType.RightClick,
-                this
-            );
-        }
         this.eventsObServer.emit(
             EMarkerEventType.Click,
             this
