@@ -1,15 +1,15 @@
 import _forEach from 'lodash/forEach';
 import _assign from 'lodash/assign';
-
-import Feature from '../feature/gFeature';
+import _get from 'lodash/get';
 
 import Map from '../gMap';
 import {IObject, IPoint} from '../gInterface';
 import Graphic from '../gGraphic';
 
-import {ILayerStyle, IImageInfo} from './gInterface';
+import {ILayerStyle, IImageInfo, IGridInfo, IGridItemInfo} from './gInterface';
 import CanvasLayer from './gLayerCanvas';
 import {ELayerType} from './gEnum';
+import {EXAxisDirection, EYAxisDirection} from '../gEnum';
 
 export default class ImageLayer extends CanvasLayer  {
     /**
@@ -21,12 +21,18 @@ export default class ImageLayer extends CanvasLayer  {
         src: '',
         width: 0,
         height: 0,
-        position: {x: 0, y: 0} // 默认起始位置
+        position: {x: 0, y: 0}, // 默认起始位置
+        grid: {
+            columns: [],
+            rows: []
+        }
     }
     public imageInfo: IImageInfo
     public image: HTMLImageElement
 
     public position: IPoint // 图片当前的位置
+
+    public grid: IGridInfo // 图片网格
 
     // function: constructor
     constructor(id: string, image: IImageInfo, props: IObject = {}, style: ILayerStyle = {}) {
@@ -34,6 +40,7 @@ export default class ImageLayer extends CanvasLayer  {
 
         this.imageInfo = _assign({}, ImageLayer.defaultImageInfo, image);
         this.position = this.imageInfo.position;
+        this.grid = this.imageInfo.grid;
         this.updateImage();
     }
 
@@ -54,6 +61,12 @@ export default class ImageLayer extends CanvasLayer  {
                 this.map && this.refresh();
             }
         }
+    }
+
+    // 更新grid网格
+    updateGrid(gridInfo: IGridInfo) {
+        this.grid = gridInfo;
+        this.refresh();
     }
 
     // @override
@@ -86,9 +99,79 @@ export default class ImageLayer extends CanvasLayer  {
         );
     }
 
+    // 绘制grid信息
+    drawGrid() {
+        const {width, height} = this.imageInfo;
+        const {x: startX, y: startY} = this.position;
+        const dpr = CanvasLayer.dpr;
+
+        const isXAxisRight = this.map.xAxis.direction === EXAxisDirection.Right;
+        const isYAxisTop = this.map.yAxis.direction === EYAxisDirection.Top;
+
+        const columns = _get(this.grid, 'columns', []);
+        const rows = _get(this.grid, 'rows', []);
+
+        // 绘制列
+        const columnsCount = columns.length;
+        const columnItemWidth = width / (columnsCount + 1);
+        _forEach(columns, (column: IGridItemInfo, index: number) => {
+            const {color: lineColor = '#333', width: lineWidth = 1} = column || {};
+            const totalItemWidth = (index + 1) * columnItemWidth;
+            const itemX = isXAxisRight ? (startX + totalItemWidth) : (startX - totalItemWidth);
+
+            const itemTopY = startY;
+            const itemBottomY = isYAxisTop ? (startY - height) : (startY + height);
+
+            const startPoint = this.map.transformGlobalToScreen({x: itemX, y: itemTopY});
+            const endPoint = this.map.transformGlobalToScreen({x: itemX, y: itemBottomY});
+
+            Graphic.drawLine(
+                this.canvasContext,
+                {
+                    start: {x: startPoint.x * dpr, y: startPoint.y * dpr},
+                    end: {x: endPoint.x * dpr, y: endPoint.y * dpr}
+                },
+                {
+                    strokeStyle: lineColor,
+                    lineWidth: lineWidth,
+                    globalAlpha: .8
+                }
+            );
+        });
+
+        // 绘制行
+        const rowsCount = rows.length;
+        const rowItemHeight = height / (rowsCount + 1);
+        _forEach(rows, (row: IGridItemInfo, index: number) => {
+            const {color: lineColor = '#333', width: lineWidth = 1} = row || {};
+            const totalItemHeight = (index + 1) * rowItemHeight;
+            const itemY = isYAxisTop ? (startY - totalItemHeight) : (startY + totalItemHeight);
+
+            const itemLeftX = startX;
+            const itemRightX = isXAxisRight ? (startX + width) : (startX - width);
+
+            const startPoint = this.map.transformGlobalToScreen({x: itemLeftX, y: itemY});
+            const endPoint = this.map.transformGlobalToScreen({x: itemRightX, y: itemY});
+
+            Graphic.drawLine(
+                this.canvasContext,
+                {
+                    start: {x: startPoint.x * dpr, y: startPoint.y * dpr},
+                    end: {x: endPoint.x * dpr, y: endPoint.y * dpr}
+                },
+                {
+                    strokeStyle: lineColor,
+                    lineWidth: lineWidth,
+                    globalAlpha: .8
+                }
+            );
+        });
+    }
+
     // @override
     refresh() {
         super.refresh();
         this.drawImage();
+        this.drawGrid();
     }
 }

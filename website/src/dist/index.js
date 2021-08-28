@@ -10482,7 +10482,7 @@
      * defaultImageInfo: 默认配置项
      * image: userImage merge defaultImageInfo
     */
-    // 图片当前的位置
+    // 图片网格
     // function: constructor
     function ImageLayer(id, image) {
       var _this;
@@ -10495,6 +10495,7 @@
       _this = _super.call(this, id, ELayerType.Image, props, style);
       _this.imageInfo = assign_1({}, ImageLayer.defaultImageInfo, image);
       _this.position = _this.imageInfo.position;
+      _this.grid = _this.imageInfo.grid;
 
       _this.updateImage();
 
@@ -10524,6 +10525,13 @@
             _this2.map && _this2.refresh();
           };
         }
+      } // 更新grid网格
+
+    }, {
+      key: "updateGrid",
+      value: function updateGrid(gridInfo) {
+        this.grid = gridInfo;
+        this.refresh();
       } // @override
 
     }, {
@@ -10556,6 +10564,110 @@
           width: screenWidth * dpr,
           height: screenHeight * dpr
         }, {});
+      } // 绘制grid信息
+
+    }, {
+      key: "drawGrid",
+      value: function drawGrid() {
+        var _this3 = this;
+
+        var _this$imageInfo2 = this.imageInfo,
+            width = _this$imageInfo2.width,
+            height = _this$imageInfo2.height;
+        var _this$position = this.position,
+            startX = _this$position.x,
+            startY = _this$position.y;
+        var dpr = CanvasLayer.dpr;
+        var isXAxisRight = this.map.xAxis.direction === EXAxisDirection.Right;
+        var isYAxisTop = this.map.yAxis.direction === EYAxisDirection.Top;
+
+        var columns = get_1(this.grid, 'columns', []);
+
+        var rows = get_1(this.grid, 'rows', []); // 绘制列
+
+
+        var columnsCount = columns.length;
+        var columnItemWidth = width / (columnsCount + 1);
+
+        forEach_1(columns, function (column, index) {
+          var _ref = column || {},
+              _ref$color = _ref.color,
+              lineColor = _ref$color === void 0 ? '#333' : _ref$color,
+              _ref$width = _ref.width,
+              lineWidth = _ref$width === void 0 ? 1 : _ref$width;
+
+          var totalItemWidth = (index + 1) * columnItemWidth;
+          var itemX = isXAxisRight ? startX + totalItemWidth : startX - totalItemWidth;
+          var itemTopY = startY;
+          var itemBottomY = isYAxisTop ? startY - height : startY + height;
+
+          var startPoint = _this3.map.transformGlobalToScreen({
+            x: itemX,
+            y: itemTopY
+          });
+
+          var endPoint = _this3.map.transformGlobalToScreen({
+            x: itemX,
+            y: itemBottomY
+          });
+
+          Graphic.drawLine(_this3.canvasContext, {
+            start: {
+              x: startPoint.x * dpr,
+              y: startPoint.y * dpr
+            },
+            end: {
+              x: endPoint.x * dpr,
+              y: endPoint.y * dpr
+            }
+          }, {
+            strokeStyle: lineColor,
+            lineWidth: lineWidth,
+            globalAlpha: .8
+          });
+        }); // 绘制行
+
+
+        var rowsCount = rows.length;
+        var rowItemHeight = height / (rowsCount + 1);
+
+        forEach_1(rows, function (row, index) {
+          var _ref2 = row || {},
+              _ref2$color = _ref2.color,
+              lineColor = _ref2$color === void 0 ? '#333' : _ref2$color,
+              _ref2$width = _ref2.width,
+              lineWidth = _ref2$width === void 0 ? 1 : _ref2$width;
+
+          var totalItemHeight = (index + 1) * rowItemHeight;
+          var itemY = isYAxisTop ? startY - totalItemHeight : startY + totalItemHeight;
+          var itemLeftX = startX;
+          var itemRightX = isXAxisRight ? startX + width : startX - width;
+
+          var startPoint = _this3.map.transformGlobalToScreen({
+            x: itemLeftX,
+            y: itemY
+          });
+
+          var endPoint = _this3.map.transformGlobalToScreen({
+            x: itemRightX,
+            y: itemY
+          });
+
+          Graphic.drawLine(_this3.canvasContext, {
+            start: {
+              x: startPoint.x * dpr,
+              y: startPoint.y * dpr
+            },
+            end: {
+              x: endPoint.x * dpr,
+              y: endPoint.y * dpr
+            }
+          }, {
+            strokeStyle: lineColor,
+            lineWidth: lineWidth,
+            globalAlpha: .8
+          });
+        });
       } // @override
 
     }, {
@@ -10564,6 +10676,7 @@
         _get(_getPrototypeOf(ImageLayer.prototype), "refresh", this).call(this);
 
         this.drawImage();
+        this.drawGrid();
       }
     }]);
 
@@ -10577,8 +10690,12 @@
     position: {
       x: 0,
       y: 0
-    } // 默认起始位置
-
+    },
+    // 默认起始位置
+    grid: {
+      columns: [],
+      rows: []
+    }
   });
 
   var FeatureLayer = /*#__PURE__*/function (_CanvasLayer) {

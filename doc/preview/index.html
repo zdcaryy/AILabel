@@ -1026,6 +1026,10 @@ const gFirstImageLayer = new AILabel.Layer.Image(
        position: { // 图片左上角对应的坐标位置
            x: -250,
            y: 177
+       },
+       grid: { // 3 * 3
+           columns: [{color: &#39;#9370DB&#39;}, {color: &#39;#FF6347&#39;}],
+           rows: [{color: &#39;#9370DB&#39;}, {color: &#39;#FF6347&#39;}]
        }
    }, // imageInfo
    {name: &#39;第一个图片图层&#39;}, // props
@@ -1114,6 +1118,69 @@ gMap.addLayer(gFirstImageLayer);
 <td>否</td>
 <td>{x:0,y:0}</td>
 <td>IPoint</td>
+</tr>
+<tr>
+<td>grid</td>
+<td>图片网格</td>
+<td>否</td>
+<td>{columns: [], rows: []}</td>
+<td>IGridInfo</td>
+</tr>
+</tbody>
+</table>
+<p><strong>IGridInfo</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>是否必填</th>
+<th>默认</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>columns</td>
+<td>列配置</td>
+<td>否</td>
+<td>[]</td>
+<td>IGridItemInfo[]</td>
+</tr>
+<tr>
+<td>rows</td>
+<td>行配置</td>
+<td>否</td>
+<td>[]</td>
+<td>IGridItemInfo[]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>IGridItemInfo</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>是否必填</th>
+<th>默认</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color</td>
+<td>线颜色</td>
+<td>否</td>
+<td>&#39;#333333&#39;</td>
+<td>string</td>
+</tr>
+<tr>
+<td>width</td>
+<td>线宽</td>
+<td>否</td>
+<td>1</td>
+<td>number</td>
 </tr>
 </tbody>
 </table>

@@ -517,6 +517,10 @@ const gFirstImageLayer = new AILabel.Layer.Image(
        position: { // 图片左上角对应的坐标位置
            x: -250,
            y: 177
+       },
+       grid: { // 3 * 3
+           columns: [{color: '#9370DB'}, {color: '#FF6347'}],
+           rows: [{color: '#9370DB'}, {color: '#FF6347'}]
        }
    }, // imageInfo
    {name: '第一个图片图层'}, // props
@@ -542,6 +546,21 @@ gMap.addLayer(gFirstImageLayer);
 |width|图片宽度|是|--|number|
 |height|图片高度|是|--|number|
 |position|图片位置|否|{x:0,y:0}|IPoint|
+|grid|图片网格|否|{columns: [], rows: []}|IGridInfo|
+
+**IGridInfo**
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|columns|列配置|否|[]|IGridItemInfo[]|
+|rows|行配置|否|[]|IGridItemInfo[]|
+
+**IGridItemInfo**
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|color|线颜色|否|'#333333'|string|
+|width|线宽|否|1|number|
 
 **ILayerStyle**
 

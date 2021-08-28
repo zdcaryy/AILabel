@@ -19,9 +19,20 @@ export interface IImage extends ISize {
     src: string // 图片地址，支持base64/url
 };
 
+export interface IGridItemInfo {
+    color: string, // 绘制grid的线条颜色
+    width?: number // 线宽度
+};
+
+export interface IGridInfo {
+    columns?: IGridItemInfo[],
+    rows?: IGridItemInfo[]
+};
+
 // 图片层图片信息
 export interface IImageInfo extends IObject, IImage {
-    position?: IPoint // 图片起始位置
+    position?: IPoint, // 图片起始位置
+    grid?: IGridInfo
 };
 
 // graphic图片信息
