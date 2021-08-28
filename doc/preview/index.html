@@ -758,6 +758,13 @@ getActiveFeature(): Feature | null
 // demo
 gMap.getActiveFeature();
 </code></pre>
+<h2 id="gettargetfeaturewithpoint">getTargetFeatureWithPoint</h2>
+<p>获取命中的矢量Feature对象，没有命中，则返回null</p>
+<pre><code class="lang-javascript">// define
+getTargetFeatureWithPoint(globalPoint: IPoint): Feature | null
+// demo
+const targetFeature = gMap.getTargetFeatureWithPoint(point);
+</code></pre>
 <h2 id="transformscreentoglobal">transformScreenToGlobal</h2>
 <p>屏幕坐标转实际坐标</p>
 <pre><code class="lang-javascript">// define
