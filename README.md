@@ -90,7 +90,7 @@ gMap.events.on('drawDone', (type: EMapMode, data) => {
 ```
 
 ## TODO
-- P0: mouseMove是否开启捕捉矢量要素feature
+- P0: Layer.Image网格设置
 - P0: Control.Scale 开发
 - P0: Control.EagleMap 开发
 - P0: ROI 开发

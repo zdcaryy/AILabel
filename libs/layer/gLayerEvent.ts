@@ -615,19 +615,7 @@ export default class MaskLayer extends Layer  {
     /************** map 双击编辑 ***********************/
     /*****************************************************/
     public handleFeatureSelect(e: MouseEvent) {
-        const {global} = this.startPoint;
-        const mapLayers = this.map.getLayers();
-        const targetFeatures = [];
-        _forEach(mapLayers, layer => {
-            if (layer.type === ELayerType.Feature) {
-                const target = layer.getTargetFeatureWithPoint(global);
-                if (target) {
-                    targetFeatures.push(target);
-                    return false;
-                }
-            }
-        });
-        const targetFeature = _get(targetFeatures, '[0]', null);
+        const targetFeature = this.map.getTargetFeatureWithPoint(this.startPoint.global);
         // 如果捕捉到，则触发事件回调
         targetFeature && this.map.eventsObServer.emit(
             EEventType.FeatureSelected,

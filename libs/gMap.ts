@@ -14,10 +14,12 @@ import {EMapMode, ECursorType, EEventType, EUrlCursorType, EXAxisDirection, EYAx
 import {IMapOptions, ISize, IPoint, ICenterAndZoom, ITransPointOption, IObject, IAxisOption} from './gInterface';
 import Layer from './layer/gLayer';
 import EventLayer from './layer/gLayerEvent';
+import FeatureLayer from './layer/gLayerFeature';
 import OverlayLayer from './layer/gLayerOverlay';
 import MarkerLayer from './layer/gLayerMarker';
 import {IFeatureStyle, IRectShape} from './feature/gInterface';
 import Feature from './feature/gFeature';
+import {ELayerType } from './layer/gEnum';
 
 export default class Map {
     // props: domId / dom
@@ -340,6 +342,23 @@ export default class Map {
     // 撤销临时绘制点【如线段/多段线/多边形等】
     removeDrawingPoints() {
         this.eventLayer.revokeTmpPointsStore();
+    }
+
+    // 根据点获取各Layer.Feature上的
+    getTargetFeatureWithPoint(globalPoint: IPoint): Feature | null {
+        const mapLayers = this.getLayers();
+        const targetFeatures = [];
+        _forEach(mapLayers, (layer: Layer) => {
+            if (layer.type === ELayerType.Feature) {
+                const target = (layer as FeatureLayer).getTargetFeatureWithPoint(globalPoint);
+                if (target) {
+                    targetFeatures.push(target);
+                    return false;
+                }
+            }
+        });
+        const targetFeature = _get(targetFeatures, '[0]', null);
+        return targetFeature;
     }
 
 

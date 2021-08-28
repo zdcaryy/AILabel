@@ -7533,23 +7533,7 @@
     }, {
       key: "handleFeatureSelect",
       value: function handleFeatureSelect(e) {
-        var global = this.startPoint.global;
-        var mapLayers = this.map.getLayers();
-        var targetFeatures = [];
-
-        forEach_1(mapLayers, function (layer) {
-          if (layer.type === ELayerType.Feature) {
-            var target = layer.getTargetFeatureWithPoint(global);
-
-            if (target) {
-              targetFeatures.push(target);
-              return false;
-            }
-          }
-        });
-
-        var targetFeature = get_1(targetFeatures, '[0]', null); // 如果捕捉到，则触发事件回调
-
+        var targetFeature = this.map.getTargetFeatureWithPoint(this.startPoint.global); // 如果捕捉到，则触发事件回调
 
         targetFeature && this.map.eventsObServer.emit(EEventType.FeatureSelected, targetFeature);
       }
@@ -10176,6 +10160,28 @@
       key: "removeDrawingPoints",
       value: function removeDrawingPoints() {
         this.eventLayer.revokeTmpPointsStore();
+      } // 根据点获取各Layer.Feature上的
+
+    }, {
+      key: "getTargetFeatureWithPoint",
+      value: function getTargetFeatureWithPoint(globalPoint) {
+        var mapLayers = this.getLayers();
+        var targetFeatures = [];
+
+        forEach_1(mapLayers, function (layer) {
+          if (layer.type === ELayerType.Feature) {
+            var target = layer.getTargetFeatureWithPoint(globalPoint);
+
+            if (target) {
+              targetFeatures.push(target);
+              return false;
+            }
+          }
+        });
+
+        var targetFeature = get_1(targetFeatures, '[0]', null);
+
+        return targetFeature;
       } // 屏幕坐标转换全局【实际】坐标，默认基于中心点基准point进行计算
 
     }, {

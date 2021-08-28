@@ -31,3 +31,4 @@
 `2021-08-28`
 1、Circle绘制提示tip位置bug
 2、Marker拖拽坐标bug修复
+3、Map对象增加getTargetFeatureWithPoint方法获取命中feature｜null
