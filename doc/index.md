@@ -569,6 +569,15 @@ gMap.addLayer(gFirstImageLayer);
 |zIndex|层级|否|1|number|
 |opacity|透明度|否|1.0|number|
 
+## updateGrid
+更新网格
+```javascript
+// define
+updateGrid(gridInfo: IGridInfo)
+// demo
+gFirstImageLayer.updateGrid({columns: [{color: '#333'}], rows: [{color: '#666'}]});
+```
+
 # AILabel.Layer.Feature
 矢量图层（用于承载Feature.Point, Feature.Line, Feature.Polyline, Feature.Polygon, Feature.Rect, Feature.Circle等矢量要素的展示）
 ## 实例化
