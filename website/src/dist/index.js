@@ -7287,6 +7287,8 @@
         } else if (drawingPointsCount > 1) {
           this.map.overlayLayer.addPolygonFeature({
             points: drawingGlobalPoints
+          }, {
+            node: true
           });
           var tipText = drawingPointsCount === 2 ? '单击绘制' : '单击绘制/双击结束';
           this.map.tipLayer.addText({
@@ -9449,7 +9451,12 @@
         style || this.map.drawingStyle);
         this.addFeatureActionText(feature, {
           clear: clear
-        });
+        }); // 节点绘制
+
+        var _ref2 = shape,
+            start = _ref2.start,
+            end = _ref2.end;
+        this.addDrawingPoints([start, end]);
       } // 添加polyline
 
     }, {
@@ -9465,7 +9472,9 @@
         style || this.map.drawingStyle);
         this.addFeatureActionText(feature, {
           clear: clear
-        });
+        }); // 节点绘制
+
+        this.addDrawingPoints(shape.points);
       } // 添加rect
 
     }, {
@@ -9482,6 +9491,8 @@
         this.addFeatureActionText(feature, {
           clear: clear
         });
+        var rectPoints = feature.getPoints();
+        this.addDrawingPoints(rectPoints);
       } // 添加polygon
 
     }, {
@@ -9498,18 +9509,22 @@
         style || this.map.drawingStyle);
         this.addFeatureActionText(feature, {
           clear: clear
-        });
+        }); // 节点绘制
+
+        this.addDrawingPoints(shape.points);
       } // 添加circle
 
     }, {
       key: "addCircleFeature",
       value: function addCircleFeature(shape, option) {
-        var _ref2 = option || {},
-            _ref2$clear = _ref2.clear,
-            clear = _ref2$clear === void 0 ? true : _ref2$clear,
-            style = _ref2.style,
-            _ref2$active = _ref2.active,
-            active = _ref2$active === void 0 ? false : _ref2$active;
+        var _ref3 = option || {},
+            _ref3$clear = _ref3.clear,
+            clear = _ref3$clear === void 0 ? true : _ref3$clear,
+            style = _ref3.style,
+            _ref3$active = _ref3.active,
+            active = _ref3$active === void 0 ? false : _ref3$active,
+            _ref3$withPoints = _ref3.withPoints,
+            withPoints = _ref3$withPoints === void 0 ? false : _ref3$withPoints;
 
         var feature = new CircleFeature("".concat(+new Date()), // id
         shape, // shape
@@ -9520,7 +9535,12 @@
         });
         this.addFeatureActionText(feature, {
           clear: clear
-        });
+        }); // 节点绘制
+
+        if (withPoints) {
+          var edgePoints = feature.getEdgePoints();
+          this.addDrawingPoints(edgePoints);
+        }
       } // 添加涂抹action
 
     }, {
@@ -9539,9 +9559,9 @@
     }, {
       key: "addText",
       value: function addText(textInfo, option) {
-        var _ref3 = option || {},
-            _ref3$clear = _ref3.clear,
-            clear = _ref3$clear === void 0 ? true : _ref3$clear;
+        var _ref4 = option || {},
+            _ref4$clear = _ref4.clear,
+            clear = _ref4$clear === void 0 ? true : _ref4$clear;
 
         var text = new Text("".concat(+new Date()), // id
         _objectSpread2(_objectSpread2({}, textInfo), {}, {
@@ -9584,9 +9604,6 @@
         switch (type) {
           case EFeatureType.Point:
             {
-              // this.addLineFeature(shape, {style});
-              // const {start, end} = shape as ILineShape;
-              // this.addActivePoints([start, end], {withCenterPoint: false});
               this.addPointFeature(shape, {
                 style: style,
                 active: true
@@ -9599,12 +9616,6 @@
               this.addLineFeature(shape, {
                 style: style
               });
-              var _ref4 = shape,
-                  start = _ref4.start,
-                  end = _ref4.end;
-              this.addActivePoints([start, end], {
-                withCenterPoint: false
-              });
               break;
             }
 
@@ -9613,9 +9624,7 @@
               this.addPolylineFeature(shape, {
                 style: style
               });
-              this.addActivePoints(shape.points, {
-                withCenterPoint: true
-              });
+              this.addActiveMiddlePoints(shape.points);
               break;
             }
 
@@ -9623,10 +9632,6 @@
             {
               this.addRectFeature(shape, {
                 style: style
-              });
-              var rectPoints = feature.getPoints();
-              this.addActivePoints(rectPoints, {
-                withCenterPoint: false
               });
               break;
             }
@@ -9636,74 +9641,90 @@
               this.addPolygonFeature(shape, {
                 style: style
               });
-              this.addActivePoints(shape.points, {
-                withCenterPoint: true
-              });
+              this.addActiveMiddlePoints(shape.points);
               break;
             }
 
           case EFeatureType.Circle:
             {
               this.addCircleFeature(shape, {
-                style: style
-              });
-              var edgePoints = feature.getEdgePoints();
-              this.addActivePoints(edgePoints, {
-                withCenterPoint: false
+                style: style,
+                withPoints: true
               });
               break;
             }
         }
-      } // 绘制高亮点
+      } // 绘制节点中间高亮点
 
     }, {
-      key: "addActivePoints",
-      value: function addActivePoints(points) {
+      key: "addActiveMiddlePoints",
+      value: function addActiveMiddlePoints(points) {
         var _this2 = this;
 
-        var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-        // withCenterPoint是否绘制节点中心点
-        var _option$withCenterPoi = option.withCenterPoint,
-            withCenterPoint = _option$withCenterPoi === void 0 ? false : _option$withCenterPoi;
-
         forEach_1(points, function (point, index) {
-          var x1 = point.x,
-              y1 = point.y;
+          var nextPoint = points[index + 1] || points[0];
+          var middlePoint = Util.MathUtil.getMiddlePoint(point, nextPoint);
 
-          _this2.addCircleFeature({
-            sr: 3,
-            cx: x1,
-            cy: y1
+          _this2.addDrawingPoint(middlePoint, {
+            strokeStyle: '#228B22',
+            withAddIcon: true
+          });
+        });
+      } // 绘制过程中节点
+
+    }, {
+      key: "addDrawingPoints",
+      value: function addDrawingPoints(points) {
+        var _this3 = this;
+
+        forEach_1(points, function (point) {
+          _this3.addDrawingPoint(point);
+        });
+      } // 绘制节点
+
+    }, {
+      key: "addDrawingPoint",
+      value: function addDrawingPoint(point) {
+        var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var _option$strokeStyle = option.strokeStyle,
+            strokeStyle = _option$strokeStyle === void 0 ? '#666' : _option$strokeStyle,
+            _option$fillStyle = option.fillStyle,
+            fillStyle = _option$fillStyle === void 0 ? '#fff' : _option$fillStyle,
+            _option$withAddIcon = option.withAddIcon,
+            withAddIcon = _option$withAddIcon === void 0 ? false : _option$withAddIcon,
+            _option$iconColor = option.iconColor,
+            iconColor = _option$iconColor === void 0 ? '#228B22' : _option$iconColor;
+        var cx = point.x,
+            cy = point.y;
+        this.addCircleFeature({
+          sr: 3.5,
+          cx: cx,
+          cy: cy
+        }, {
+          clear: false,
+          style: {
+            strokeStyle: strokeStyle,
+            fillStyle: fillStyle,
+            stroke: true,
+            fill: true,
+            lineWidth: 1
+          }
+        }); // 绘制+号
+
+        if (withAddIcon) {
+          this.addCircleFeature({
+            sr: 1.25,
+            cx: cx,
+            cy: cy
           }, {
             clear: false,
             style: {
-              fillStyle: '#FF0000',
+              fillStyle: iconColor,
               stroke: false,
               fill: true
             }
           });
-
-          if (withCenterPoint) {
-            var nextPoint = points[index + 1] || points[0];
-
-            var _Util$MathUtil$getMid = Util.MathUtil.getMiddlePoint(point, nextPoint),
-                middleX = _Util$MathUtil$getMid.x,
-                middleY = _Util$MathUtil$getMid.y;
-
-            _this2.addCircleFeature({
-              sr: 3,
-              cx: middleX,
-              cy: middleY
-            }, {
-              clear: false,
-              style: {
-                fillStyle: '#FFDEAD',
-                stroke: false,
-                fill: true
-              }
-            });
-          }
-        });
+        }
       } // 清空所有子对象
 
     }, {

@@ -225,7 +225,7 @@
             'first-feature-circle', // id
             {cx: 100, cy: 100, sr: 20, stroke: true, fill: false}, // shape
             {name: '第一个矢量图层'}, // props
-            {fillStyle: '#F4A460', strokeStyle: '#D2691E', lineWidth: 2} // style
+            {fillStyle: '#F4A460', strokeStyle: '#00f', lineWidth: 1} // style
         );
         gFirstFeatureLayer.addFeature(gFirstFeatureCircle);
 
@@ -240,7 +240,7 @@
             'first-feature-rect', // id
             {x: 200, y: 50, width: 100, height: 100}, // shape
             {name: '第一个矢量图层'}, // props
-            {strokeStyle: '#808080', lineWidth: 2, fillStyle: '#f00', globalAlpha: .3, fill: true} // style
+            {strokeStyle: '#00f', lineWidth: 1, fillStyle: '#00f', globalAlpha: .3, fill: true} // style
         );
         gFirstFeatureLayer.addFeature(gFirstFeatureRect);
         const gFirstFeaturePolygon = new AILabel.Feature.Polygon(
@@ -250,7 +250,7 @@
                 {x: 474, y: 210}, {x: 467, y: 151}, {x: 426, y: 124}
             ]}, // shape
             {name: '第一个多边形'}, // props
-            {strokeStyle: '#0000FF', lineWidth: 2} // style
+            {strokeStyle: '#0000FF', lineWidth: 1} // style
         );
         gFirstFeatureLayer.addFeature(gFirstFeaturePolygon);
 

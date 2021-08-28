@@ -452,7 +452,7 @@ export default class MaskLayer extends Layer  {
             this.map.tipLayer.addText({text: '单击确定起点', position: moveGlobalPoint});
         }
         else if (drawingPointsCount > 1) {
-            this.map.overlayLayer.addPolygonFeature({points: drawingGlobalPoints});
+            this.map.overlayLayer.addPolygonFeature({points: drawingGlobalPoints}, {node: true});
 
             const tipText = drawingPointsCount === 2 ? '单击绘制' : '单击绘制/双击结束';
             this.map.tipLayer.addText({text: tipText, position: moveGlobalPoint});

@@ -21,6 +21,7 @@ import Action from '../mask/gAction';
 import {EFeatureType} from '../feature/gEnum';
 import Util from '../gUtil';
 import {ITextInfo} from '../text/gInterface';
+import Graphic from '../gGraphic';
 
 export default class OverlayLayer extends CanvasLayer  {
     public featureActionTexts: Array<Feature | Action | Text> = [] // 当前featureLayer中所有的features
@@ -69,6 +70,10 @@ export default class OverlayLayer extends CanvasLayer  {
             (style || this.map.drawingStyle) // style
         );
         this.addFeatureActionText(feature, {clear});
+
+        // 节点绘制
+        const {start, end} = shape as ILineShape;
+        this.addDrawingPoints([start, end]);
     }
 
     // 添加polyline
@@ -81,6 +86,9 @@ export default class OverlayLayer extends CanvasLayer  {
             (style || this.map.drawingStyle) // style
         );
         this.addFeatureActionText(feature, {clear});
+
+        // 节点绘制
+        this.addDrawingPoints(shape.points);
     }
 
     // 添加rect
@@ -93,6 +101,9 @@ export default class OverlayLayer extends CanvasLayer  {
             (style || this.map.drawingStyle) // style
         );
         this.addFeatureActionText(feature, {clear});
+
+        const rectPoints = feature.getPoints();
+        this.addDrawingPoints(rectPoints);
     }
 
     // 添加polygon
@@ -105,11 +116,14 @@ export default class OverlayLayer extends CanvasLayer  {
             (style || this.map.drawingStyle) // style
         );
         this.addFeatureActionText(feature, {clear});
+
+        // 节点绘制
+        this.addDrawingPoints(shape.points);
     }
 
     // 添加circle
     addCircleFeature(shape: ICircleShape, option?: IObject) {
-        const {clear = true, style,  active = false} = option || {};
+        const {clear = true, style,  active = false, withPoints = false} = option || {};
 
         const feature = new Circle(
             `${+new Date()}`, // id
@@ -119,6 +133,12 @@ export default class OverlayLayer extends CanvasLayer  {
             {active}
         );
         this.addFeatureActionText(feature, {clear});
+
+        // 节点绘制
+        if (withPoints) {
+            const edgePoints = feature.getEdgePoints();
+            this.addDrawingPoints(edgePoints);
+        }
     }
 
     // 添加涂抹action
@@ -168,63 +188,75 @@ export default class OverlayLayer extends CanvasLayer  {
         const {type, shape} = feature;
         switch (type) {
             case EFeatureType.Point: {
-                // this.addLineFeature(shape, {style});
-                // const {start, end} = shape as ILineShape;
-                // this.addActivePoints([start, end], {withCenterPoint: false});
                 this.addPointFeature(shape, {style, active: true});
                 break;
             }
             case EFeatureType.Line: {
                 this.addLineFeature(shape, {style});
-                const {start, end} = shape as ILineShape;
-                this.addActivePoints([start, end], {withCenterPoint: false});
                 break;
             }
             case EFeatureType.Polyline: {
                 this.addPolylineFeature(shape, {style});
-                this.addActivePoints(shape.points, {withCenterPoint: true});
+                this.addActiveMiddlePoints(shape.points);
                 break;
             }
             case EFeatureType.Rect: {
                 this.addRectFeature(shape, {style});
-                const rectPoints = feature.getPoints();
-                this.addActivePoints(rectPoints, {withCenterPoint: false});
                 break;
             }
             case EFeatureType.Polygon: {
                 this.addPolygonFeature(shape, {style});
-                this.addActivePoints(shape.points, {withCenterPoint: true});
+                this.addActiveMiddlePoints(shape.points);
                 break;
             }
             case EFeatureType.Circle: {
-                this.addCircleFeature(shape, {style});
-                const edgePoints = feature.getEdgePoints();
-                this.addActivePoints(edgePoints, {withCenterPoint: false});
+                this.addCircleFeature(shape, {style, withPoints: true});
                 break;
             }
         }
     }
 
-    // 绘制高亮点
-    addActivePoints(points: IPoint[], option: IObject = {}) {
-        // withCenterPoint是否绘制节点中心点
-        const {withCenterPoint = false} = option;
-
-        _forEach(points, (point, index) => {
-            const {x: x1, y: y1} = point;
-            this.addCircleFeature(
-                {sr: 3, cx: x1, cy: y1},
-                {clear: false, style: {fillStyle: '#FF0000', stroke: false, fill: true}}
-            );
-            if (withCenterPoint) {
-                const nextPoint = points[index + 1] || points[0];
-                const {x: middleX, y: middleY} = Util.MathUtil.getMiddlePoint(point, nextPoint);
-                this.addCircleFeature(
-                    {sr: 3, cx: middleX, cy: middleY},
-                    {clear: false, style: {fillStyle: '#FFDEAD', stroke: false, fill: true}}
-                );
-            }
+    // 绘制节点中间高亮点
+    addActiveMiddlePoints(points: IPoint[], option: IObject = {}) {
+        _forEach(points, (point: IPoint, index: number) => {
+            const nextPoint = points[index + 1] || points[0];
+            const middlePoint = Util.MathUtil.getMiddlePoint(point, nextPoint);
+            this.addDrawingPoint(middlePoint, {strokeStyle: '#228B22', withAddIcon: true});
         });
+    }
+
+    // 绘制过程中节点
+    addDrawingPoints(points: IPoint[], option: IObject = {}) {
+        _forEach(points, (point: IPoint) => {
+            this.addDrawingPoint(point);
+        });
+    }
+
+    // 绘制节点
+    addDrawingPoint(point: IPoint, option: IObject = {}) {
+        const {
+            strokeStyle = '#666',
+            fillStyle = '#fff',
+            withAddIcon = false,
+            iconColor = '#228B22'
+        } = option;
+
+        const {x: cx, y: cy} = point;
+        this.addCircleFeature(
+            {sr: 3.5, cx, cy},
+            {
+                clear: false,
+                style: {strokeStyle, fillStyle, stroke: true, fill: true, lineWidth: 1}
+            }
+        );
+
+        // 绘制+号
+        if (withAddIcon) {
+            this.addCircleFeature(
+                {sr: 1.25, cx, cy},
+                {clear: false, style: {fillStyle: iconColor, stroke: false, fill: true}}
+            );
+        }
     }
 
     // 清空所有子对象
