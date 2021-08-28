@@ -12750,7 +12750,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.7' // 和npm-version保持一致
+    version: '5.0.8' // 和npm-version保持一致
 
   };
 

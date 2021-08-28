@@ -33,3 +33,7 @@
 2、Marker拖拽坐标bug修复
 3、Map对象增加getTargetFeatureWithPoint方法获取命中feature｜null
 4、Layer.Image支持grid网格设置
+
+# 5.0.8
+`2021-08-28`
+1、绘制样式优化
