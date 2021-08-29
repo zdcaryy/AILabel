@@ -1,6 +1,7 @@
 import _forEach from 'lodash/forEach';
 import _get from 'lodash/get';
 import _filter from 'lodash/filter';
+import _find from 'lodash/find';
 
 import {IObject} from '../gInterface';
 import {ILayerStyle} from './gInterface';
@@ -36,6 +37,11 @@ export default class MarkerLayer extends Layer  {
         this.markers = newMarkers;
 
         this.refresh();
+    }
+
+    // 获取指定marker对象
+    getMarkerById(targetMarkerId: string) {
+        return _find(this.markers, ({id}) => (id === targetMarkerId));
     }
 
     // 删除所有markers

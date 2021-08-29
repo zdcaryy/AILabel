@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AILabel-标注篇</title>
+    <script src='../index.js'></script>
+</head>
+<body>
+    <div style="line-height: 30px;"></div>
+
+    <div
+        id="map"
+        style="overflow: hidden; position: relative; width: 700px; height: 600px; border: 1px solid red"></div>
+    <br/>
+    <button onclick="setMode('PAN');">平移</button>
+    <button onclick="setMode('RECT');">矩形</button>
+    <br/>
+
+    <br/>
+    <div>注：在绘制模式（点/线/面）时，双击图形可进行选中编辑；单击未选中图形区域或切换mode模式会取消选中</div>
+
+    <script>
+        let drawingStyle = {}; // 绘制过程中样式
+        const dpr = window.devicePixelRatio;
+
+        const gMap = new AILabel.Map('map', {
+            center: {x: 250, y: 177}, // 为了让图片居中
+            zoom: 800,
+            mode: 'PAN', // 绘制线段
+            refreshDelayWhenZooming: true, // 缩放时是否允许刷新延时，性能更优
+            zoomWhenDrawing: true,
+            panWhenDrawing: true
+        });
+
+        gMap.events.on('drawDone', (type, data, data1) => {
+            console.log('--data--', data);
+            const relatedTextId = `label-text-id-${+new Date()}`;
+            const relatedDeleteMarkerId = `label-marker-id-${+new Date()}`;
+            if (type === 'RECT') {
+                // 添加feature
+                const rectFeature = new AILabel.Feature.Rect(
+                    `${+new Date()}`, // id
+                    data, // shape
+                    {name: '矢量图形', textId: relatedTextId, deleteMarkerId: relatedDeleteMarkerId}, // props
+                    drawingStyle // style
+                );
+                gFirstFeatureLayer.addFeature(rectFeature);
+                // 添加feature标签名
+                const {x: ltx, y: lty} = data;
+                const gFirstText = new AILabel.Text(
+                    relatedTextId, // id
+                    {text: '铅笔', position: {x: ltx, y: lty}, offset: {x: 0, y: 0}}, // shape, 左上角
+                    {name: '第一个文本对象'}, // props
+                    {fillStyle: '#F4A460', strokeStyle: '#D2691E', background: true, globalAlpha: 1, fontColor: '#0f0'} // style
+                );
+                gFirstTextLayer.addText(gFirstText);
+            }
+        });
+
+        gMap.events.on('featureSelected', feature => {
+            // 高亮选中feature
+            gMap.setActiveFeature(feature);
+            const markerId = feature.props.deleteMarkerId;
+            const textId = feature.props.textId;
+            // 添加delete-icon
+            const gFirstMarker = new AILabel.Marker(
+                markerId, // id
+                {
+                    src: './delete.png',
+                    position: feature.getPoints()[1], // 矩形右上角
+                    offset: {
+                        x: -20,
+                        y: -4
+                    }
+                }, // markerInfo
+                {name: '第一个marker注记'} // props
+            );
+            gFirstMarker.events.on('click', marker => {
+                // 首先删除当前marker
+                gMap.markerLayer.removeMarkerById(marker.id);
+                // 删除对应text
+                gFirstTextLayer.removeTextById(textId);
+                // 删除对应feature
+                gFirstFeatureLayer.removeFeatureById(feature.id);
+            });
+
+            gMap.markerLayer.addMarker(gFirstMarker);
+        });
+        gMap.events.on('featureUnselected', feature => {
+            gMap.setActiveFeature(null);
+            gMap.markerLayer.removeMarkerById(feature.props.deleteMarkerId);
+        });
+        gMap.events.on('featureUpdated', (feature, shape) => {
+            feature.updateShape(shape);
+
+            const markerId = feature.props.deleteMarkerId;
+            const textId = feature.props.textId;
+            // 更新marker位置
+            const targetMarker = gMap.markerLayer.getMarkerById(markerId);
+            targetMarker.updatePosition(feature.getPoints()[1]);
+            // 更新text位置
+            const targetText = gFirstTextLayer.getTextById(textId);
+            console.log('--targetText--', targetText);
+            targetText.updatePosition(feature.getPoints()[0]);
+        });
+
+        // feature-层
+        const gFirstFeatureLayer = new AILabel.Layer.Feature(
+            'first-layer-feature', // id
+            {name: '第一个矢量图层'}, // props
+            {zIndex: 10} // style
+        );
+        gMap.addLayer(gFirstFeatureLayer);
+
+        // text-层
+        const gFirstTextLayer = new AILabel.Layer.Text(
+            'first-layer-text', // id
+            {name: '第一个文本图层'}, // props
+            {zIndex: 12, opacity: 1} // style
+        );
+        gMap.addLayer(gFirstTextLayer);
+
+        // 图片层添加
+        const gFirstImageLayer = new AILabel.Layer.Image(
+            'first-layer-image', // id
+            {
+                src: 'https://img2.baidu.com/it/u=2053804264,1341330775&fm=26&fmt=auto&gp=0.jpg',
+                width: 500,
+                height: 354,
+                position: { // 左上角相对中心点偏移量
+                    x: 0,
+                    y: 0
+                },
+                grid: { // 3 * 3
+                    columns: [{color: '#9370DB'}, {color: '#FF6347'}],
+                    rows: [{color: '#9370DB'}, {color: '#FF6347'}]
+                }
+            }, // imageInfo
+            {name: '第一个图片图层'}, // props
+            {zIndex: 5} // style
+        );
+        gMap.addLayer(gFirstImageLayer);
+
+        function setMode(mode) {
+            gMap.setMode(mode);
+            // 后续对应模式处理
+            switch (gMap.mode) {
+                case 'PAN': {
+                    break;
+                }
+                case 'RECT': {
+                    drawingStyle = {strokeStyle: '#00f', lineWidth: 1}
+                    gMap.setDrawingStyle(drawingStyle);
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>

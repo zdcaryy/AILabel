@@ -1,6 +1,6 @@
 import _assign from 'lodash/assign';
 
-import {IObject} from '../gInterface';
+import {IObject, IPoint} from '../gInterface';
 import {ETextType} from './gEnum';
 import CanvasLayer from '../layer/gLayerCanvas';
 import TextLayer from '../layer/gLayerText';
@@ -68,6 +68,16 @@ export default class Text {
     // layer exits first
     onRemove(): void {
 
+    }
+
+    // 更新text位置
+    updatePosition(position: IPoint) {
+        const textInfo = this.textInfo
+        this.textInfo = {
+            ...textInfo,
+            position
+        };
+        this.layer?.refresh();
     }
 
     // 刷新当前数据

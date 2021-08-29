@@ -41,3 +41,9 @@
 # 5.0.9
 `2021-08-29`
 1、Map增加resize方法，支持大小重设
+
+# 5.0.10
+`2021-08-29`
+1、Layer.Feature/Layer.Marker/Layer.Text增加获取指定对象方法
+2、Text新增updatePosition方法
+3、demo 新增标注demo[矩形为例]

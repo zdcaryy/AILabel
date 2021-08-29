@@ -1369,6 +1369,15 @@ gFirstFeatureLayer.removeFeatureById(polygonFeature.id);
 </tr>
 </tbody>
 </table>
+<h2 id="getfeaturebyid">getFeatureById</h2>
+<p>获取指定featureId的feature，如果没有，则返回null</p>
+<pre><code class="lang-javascript">// define
+getFeatureById(targetFeatureId: string)
+// demo
+const polygonFeature = new AILabel.Feature.Polygon(...);
+gFirstFeatureLayer.addFeature(polygonFeature);
+gFirstFeatureLayer.getFeatureById(polygonFeature.id);
+</code></pre>
 <h2 id="removeallfeatures">removeAllFeatures</h2>
 <p>移出当前featureLayer上所有features</p>
 <pre><code class="lang-javascript">// define
@@ -1477,6 +1486,15 @@ gMap.markerLayer.removeMarkerById(marker.id);
 </tr>
 </tbody>
 </table>
+<h2 id="getmarkerbyid">getMarkerById</h2>
+<p>获取指定markerId的marker，如果没有，则返回null</p>
+<pre><code class="lang-javascript">// define
+getMarkerById(targetMarkerId: string)
+// demo
+const marker = new AILabel.Marker(...);
+gMap.markerLayer.addMarker(marker);
+gMap.markerLayer.getMarkerById(marker.id);
+</code></pre>
 <h2 id="removeallmarkers">removeAllMarkers</h2>
 <p>移除所有markers</p>
 <pre><code class="lang-javascript">// define
@@ -1621,6 +1639,15 @@ gFirstTextLayer.removeTextById(text.id);
 </tr>
 </tbody>
 </table>
+<h2 id="gettextbyid">getTextById</h2>
+<p>获取指定textId的text，如果没有，则返回null</p>
+<pre><code class="lang-javascript">// define
+getTextById(targetTextId: string)
+// demo
+const text = new AILabel.Text(...);
+gFirstTextLayer.addText(text);
+gFirstTextLayer.getTextById(text.id);
+</code></pre>
 <h2 id="removealltexts">removeAllTexts</h2>
 <p>移除所有texts</p>
 <pre><code class="lang-javascript">// define
@@ -3133,6 +3160,35 @@ gFirstTextLayer.addText(gFirstText);
 <td>否</td>
 <td>--</td>
 <td>string</td>
+</tr>
+</tbody>
+</table>
+<h2 id="updateposition">updatePosition</h2>
+<p>更新text的位置</p>
+<pre><code class="lang-javascript">// define
+updatePosition(position: IPoint)
+// demo
+const gFirstText = new AILabel.Text(...);
+gFirstText.updatePosition({x: 0, y: 0});
+</code></pre>
+<p><strong>Params</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>是否必填</th>
+<th>默认</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>position</td>
+<td>位置信息</td>
+<td>是</td>
+<td>--</td>
+<td>IPoint</td>
 </tr>
 </tbody>
 </table>

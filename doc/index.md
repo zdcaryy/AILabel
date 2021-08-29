@@ -658,6 +658,17 @@ gFirstFeatureLayer.removeFeatureById(polygonFeature.id);
 |---|---|---|---|---|
 |targetFeatureId|待删除feature-id|是|--|string|
 
+## getFeatureById
+获取指定featureId的feature，如果没有，则返回null
+```javascript
+// define
+getFeatureById(targetFeatureId: string)
+// demo
+const polygonFeature = new AILabel.Feature.Polygon(...);
+gFirstFeatureLayer.addFeature(polygonFeature);
+gFirstFeatureLayer.getFeatureById(polygonFeature.id);
+```
+
 ## removeAllFeatures
 移出当前featureLayer上所有features
 ```javascript
@@ -723,6 +734,17 @@ gMap.markerLayer.removeMarkerById(marker.id);
 |参数|说明|是否必填|默认|类型|
 |---|---|---|---|---|
 |targetMarkerId|待删除marker-id|是|--|string|
+
+## getMarkerById
+获取指定markerId的marker，如果没有，则返回null
+```javascript
+// define
+getMarkerById(targetMarkerId: string)
+// demo
+const marker = new AILabel.Marker(...);
+gMap.markerLayer.addMarker(marker);
+gMap.markerLayer.getMarkerById(marker.id);
+```
 
 ## removeAllMarkers
 移除所有markers
@@ -797,6 +819,17 @@ gFirstTextLayer.removeTextById(text.id);
 |参数|说明|是否必填|默认|类型|
 |---|---|---|---|---|
 |targetTextId|待删除text-id|是|--|string|
+
+## getTextById
+获取指定textId的text，如果没有，则返回null
+```javascript
+// define
+getTextById(targetTextId: string)
+// demo
+const text = new AILabel.Text(...);
+gFirstTextLayer.addText(text);
+gFirstTextLayer.getTextById(text.id);
+```
 
 ## removeAllTexts
 移除所有texts
@@ -1500,6 +1533,22 @@ gFirstTextLayer.addText(gFirstText);
 |---|---|---|---|---|
 |background|是否展示文字背景|否|--|boolean|
 |fontColor|字体颜色|否|--|string|
+
+## updatePosition
+更新text的位置
+```javascript
+// define
+updatePosition(position: IPoint)
+// demo
+const gFirstText = new AILabel.Text(...);
+gFirstText.updatePosition({x: 0, y: 0});
+```
+
+**Params**
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|position|位置信息|是|--|IPoint|
 
 # AILabel.Util
 通用工具方法

@@ -1825,7 +1825,7 @@
   var apply = _apply;
 
   /* Built-in method references for those with the same name as other `lodash` methods. */
-  var nativeMax$1 = Math.max;
+  var nativeMax$2 = Math.max;
 
   /**
    * A specialized version of `baseRest` which transforms the rest array.
@@ -1837,11 +1837,11 @@
    * @returns {Function} Returns the new function.
    */
   function overRest$1(func, start, transform) {
-    start = nativeMax$1(start === undefined ? (func.length - 1) : start, 0);
+    start = nativeMax$2(start === undefined ? (func.length - 1) : start, 0);
     return function() {
       var args = arguments,
           index = -1,
-          length = nativeMax$1(args.length - start, 0),
+          length = nativeMax$2(args.length - start, 0),
           array = Array(length);
 
       while (++index < length) {
@@ -2047,11 +2047,11 @@
    * _.isArrayLike(_.noop);
    * // => false
    */
-  function isArrayLike$7(value) {
+  function isArrayLike$8(value) {
     return value != null && isLength$2(value.length) && !isFunction(value);
   }
 
-  var isArrayLike_1 = isArrayLike$7;
+  var isArrayLike_1 = isArrayLike$8;
 
   /** Used as references for various `Number` constants. */
 
@@ -2081,7 +2081,7 @@
   var _isIndex = isIndex$3;
 
   var eq$2 = eq_1,
-      isArrayLike$6 = isArrayLike_1,
+      isArrayLike$7 = isArrayLike_1,
       isIndex$2 = _isIndex,
       isObject$5 = isObject_1;
 
@@ -2101,7 +2101,7 @@
     }
     var type = typeof index;
     if (type == 'number'
-          ? (isArrayLike$6(object) && isIndex$2(index, object.length))
+          ? (isArrayLike$7(object) && isIndex$2(index, object.length))
           : (type == 'string' && index in object)
         ) {
       return eq$2(object[index], value);
@@ -2616,7 +2616,7 @@
 
   var arrayLikeKeys$1 = _arrayLikeKeys,
       baseKeys = _baseKeys,
-      isArrayLike$5 = isArrayLike_1;
+      isArrayLike$6 = isArrayLike_1;
 
   /**
    * Creates an array of the own enumerable property names of `object`.
@@ -2646,18 +2646,18 @@
    * _.keys('hi');
    * // => ['0', '1']
    */
-  function keys$7(object) {
-    return isArrayLike$5(object) ? arrayLikeKeys$1(object) : baseKeys(object);
+  function keys$8(object) {
+    return isArrayLike$6(object) ? arrayLikeKeys$1(object) : baseKeys(object);
   }
 
-  var keys_1 = keys$7;
+  var keys_1 = keys$8;
 
   var assignValue$1 = _assignValue,
       copyObject$4 = _copyObject,
       createAssigner = _createAssigner,
-      isArrayLike$4 = isArrayLike_1,
+      isArrayLike$5 = isArrayLike_1,
       isPrototype$2 = _isPrototype,
-      keys$6 = keys_1;
+      keys$7 = keys_1;
 
   /** Used for built-in method references. */
   var objectProto$7 = Object.prototype;
@@ -2698,8 +2698,8 @@
    * // => { 'a': 1, 'c': 3 }
    */
   var assign = createAssigner(function(object, source) {
-    if (isPrototype$2(source) || isArrayLike$4(source)) {
-      copyObject$4(source, keys$6(source), object);
+    if (isPrototype$2(source) || isArrayLike$5(source)) {
+      copyObject$4(source, keys$7(source), object);
       return;
     }
     for (var key in source) {
@@ -2929,7 +2929,7 @@
   var _baseFor = baseFor$1;
 
   var baseFor = _baseFor,
-      keys$5 = keys_1;
+      keys$6 = keys_1;
 
   /**
    * The base implementation of `_.forOwn` without support for iteratee shorthands.
@@ -2940,12 +2940,12 @@
    * @returns {Object} Returns `object`.
    */
   function baseForOwn$1(object, iteratee) {
-    return object && baseFor(object, iteratee, keys$5);
+    return object && baseFor(object, iteratee, keys$6);
   }
 
   var _baseForOwn = baseForOwn$1;
 
-  var isArrayLike$3 = isArrayLike_1;
+  var isArrayLike$4 = isArrayLike_1;
 
   /**
    * Creates a `baseEach` or `baseEachRight` function.
@@ -2960,7 +2960,7 @@
       if (collection == null) {
         return collection;
       }
-      if (!isArrayLike$3(collection)) {
+      if (!isArrayLike$4(collection)) {
         return eachFunc(collection, iteratee);
       }
       var length = collection.length,
@@ -4481,7 +4481,7 @@
 
   var baseGetAllKeys$1 = _baseGetAllKeys,
       getSymbols$2 = _getSymbols,
-      keys$4 = keys_1;
+      keys$5 = keys_1;
 
   /**
    * Creates an array of own enumerable property names and symbols of `object`.
@@ -4491,7 +4491,7 @@
    * @returns {Array} Returns the array of property names and symbols.
    */
   function getAllKeys$2(object) {
-    return baseGetAllKeys$1(object, keys$4, getSymbols$2);
+    return baseGetAllKeys$1(object, keys$5, getSymbols$2);
   }
 
   var _getAllKeys = getAllKeys$2;
@@ -4871,7 +4871,7 @@
   var _isStrictComparable = isStrictComparable$2;
 
   var isStrictComparable$1 = _isStrictComparable,
-      keys$3 = keys_1;
+      keys$4 = keys_1;
 
   /**
    * Gets the property names, values, and compare flags of `object`.
@@ -4881,7 +4881,7 @@
    * @returns {Array} Returns the match data of `object`.
    */
   function getMatchData$1(object) {
-    var result = keys$3(object),
+    var result = keys$4(object),
         length = result.length;
 
     while (length--) {
@@ -5143,7 +5143,7 @@
    * @param {*} [value=_.identity] The value to convert to an iteratee.
    * @returns {Function} Returns the iteratee.
    */
-  function baseIteratee$2(value) {
+  function baseIteratee$4(value) {
     // Don't store the `typeof` result in a variable to avoid a JIT bug in Safari 9.
     // See https://bugs.webkit.org/show_bug.cgi?id=156034 for more details.
     if (typeof value == 'function') {
@@ -5160,11 +5160,11 @@
     return property(value);
   }
 
-  var _baseIteratee = baseIteratee$2;
+  var _baseIteratee = baseIteratee$4;
 
   var arrayFilter = _arrayFilter,
       baseFilter = _baseFilter,
-      baseIteratee$1 = _baseIteratee,
+      baseIteratee$3 = _baseIteratee,
       isArray$3 = isArray_1;
 
   /**
@@ -5210,7 +5210,7 @@
    */
   function filter(collection, predicate) {
     var func = isArray$3(collection) ? arrayFilter : baseFilter;
-    return func(collection, baseIteratee$1(predicate));
+    return func(collection, baseIteratee$3(predicate));
   }
 
   var filter_1 = filter;
@@ -5283,7 +5283,7 @@
   })(ECursorType || (ECursorType = {}));
 
   var baseEach = _baseEach,
-      isArrayLike$2 = isArrayLike_1;
+      isArrayLike$3 = isArrayLike_1;
 
   /**
    * The base implementation of `_.map` without support for iteratee shorthands.
@@ -5295,7 +5295,7 @@
    */
   function baseMap$1(collection, iteratee) {
     var index = -1,
-        result = isArrayLike$2(collection) ? Array(collection.length) : [];
+        result = isArrayLike$3(collection) ? Array(collection.length) : [];
 
     baseEach(collection, function(value, key, collection) {
       result[++index] = iteratee(value, key, collection);
@@ -5306,7 +5306,7 @@
   var _baseMap = baseMap$1;
 
   var arrayMap$1 = _arrayMap,
-      baseIteratee = _baseIteratee,
+      baseIteratee$2 = _baseIteratee,
       baseMap = _baseMap,
       isArray$2 = isArray_1;
 
@@ -5354,7 +5354,7 @@
    */
   function map(collection, iteratee) {
     var func = isArray$2(collection) ? arrayMap$1 : baseMap;
-    return func(collection, baseIteratee(iteratee));
+    return func(collection, baseIteratee$2(iteratee));
   }
 
   var map_1 = map;
@@ -5393,7 +5393,7 @@
    * @returns {number} Returns the index of the matched value, else `-1`.
    */
 
-  function baseFindIndex$1(array, predicate, fromIndex, fromRight) {
+  function baseFindIndex$2(array, predicate, fromIndex, fromRight) {
     var length = array.length,
         index = fromIndex + (fromRight ? 1 : -1);
 
@@ -5405,7 +5405,7 @@
     return -1;
   }
 
-  var _baseFindIndex = baseFindIndex$1;
+  var _baseFindIndex = baseFindIndex$2;
 
   /**
    * The base implementation of `_.isNaN` without support for number objects.
@@ -5446,7 +5446,7 @@
 
   var _strictIndexOf = strictIndexOf$1;
 
-  var baseFindIndex = _baseFindIndex,
+  var baseFindIndex$1 = _baseFindIndex,
       baseIsNaN = _baseIsNaN,
       strictIndexOf = _strictIndexOf;
 
@@ -5462,7 +5462,7 @@
   function baseIndexOf$2(array, value, fromIndex) {
     return value === value
       ? strictIndexOf(array, value, fromIndex)
-      : baseFindIndex(array, baseIsNaN, fromIndex);
+      : baseFindIndex$1(array, baseIsNaN, fromIndex);
   }
 
   var _baseIndexOf = baseIndexOf$2;
@@ -5675,14 +5675,14 @@
    * _.toInteger('3.2');
    * // => 3
    */
-  function toInteger$1(value) {
+  function toInteger$2(value) {
     var result = toFinite(value),
         remainder = result % 1;
 
     return result === result ? (remainder ? result - remainder : result) : 0;
   }
 
-  var toInteger_1 = toInteger$1;
+  var toInteger_1 = toInteger$2;
 
   var arrayMap = _arrayMap;
 
@@ -5705,7 +5705,7 @@
   var _baseValues = baseValues$1;
 
   var baseValues = _baseValues,
-      keys$2 = keys_1;
+      keys$3 = keys_1;
 
   /**
    * Creates an array of the own enumerable string keyed property values of `object`.
@@ -5734,19 +5734,19 @@
    * // => ['h', 'i']
    */
   function values$1(object) {
-    return object == null ? [] : baseValues(object, keys$2(object));
+    return object == null ? [] : baseValues(object, keys$3(object));
   }
 
   var values_1 = values$1;
 
   var baseIndexOf$1 = _baseIndexOf,
-      isArrayLike$1 = isArrayLike_1,
+      isArrayLike$2 = isArrayLike_1,
       isString = isString_1,
-      toInteger = toInteger_1,
+      toInteger$1 = toInteger_1,
       values = values_1;
 
   /* Built-in method references for those with the same name as other `lodash` methods. */
-  var nativeMax = Math.max;
+  var nativeMax$1 = Math.max;
 
   /**
    * Checks if `value` is in `collection`. If `collection` is a string, it's
@@ -5779,12 +5779,12 @@
    * // => true
    */
   function includes(collection, value, fromIndex, guard) {
-    collection = isArrayLike$1(collection) ? collection : values(collection);
-    fromIndex = (fromIndex && !guard) ? toInteger(fromIndex) : 0;
+    collection = isArrayLike$2(collection) ? collection : values(collection);
+    fromIndex = (fromIndex && !guard) ? toInteger$1(fromIndex) : 0;
 
     var length = collection.length;
     if (fromIndex < 0) {
-      fromIndex = nativeMax(length + fromIndex, 0);
+      fromIndex = nativeMax$1(length + fromIndex, 0);
     }
     return isString(collection)
       ? (fromIndex <= length && collection.indexOf(value, fromIndex) > -1)
@@ -9320,7 +9320,19 @@
 
     }, {
       key: "onRemove",
-      value: function onRemove() {} // 刷新当前数据
+      value: function onRemove() {} // 更新text位置
+
+    }, {
+      key: "updatePosition",
+      value: function updatePosition(position) {
+        var _this$layer;
+
+        var textInfo = this.textInfo;
+        this.textInfo = _objectSpread2(_objectSpread2({}, textInfo), {}, {
+          position: position
+        });
+        (_this$layer = this.layer) === null || _this$layer === void 0 ? void 0 : _this$layer.refresh();
+      } // 刷新当前数据
 
     }, {
       key: "refresh",
@@ -9762,6 +9774,131 @@
     return OverlayLayer;
   }(CanvasLayer);
 
+  var baseIteratee$1 = _baseIteratee,
+      isArrayLike$1 = isArrayLike_1,
+      keys$2 = keys_1;
+
+  /**
+   * Creates a `_.find` or `_.findLast` function.
+   *
+   * @private
+   * @param {Function} findIndexFunc The function to find the collection index.
+   * @returns {Function} Returns the new find function.
+   */
+  function createFind$1(findIndexFunc) {
+    return function(collection, predicate, fromIndex) {
+      var iterable = Object(collection);
+      if (!isArrayLike$1(collection)) {
+        var iteratee = baseIteratee$1(predicate);
+        collection = keys$2(collection);
+        predicate = function(key) { return iteratee(iterable[key], key, iterable); };
+      }
+      var index = findIndexFunc(collection, predicate, fromIndex);
+      return index > -1 ? iterable[iteratee ? collection[index] : index] : undefined;
+    };
+  }
+
+  var _createFind = createFind$1;
+
+  var baseFindIndex = _baseFindIndex,
+      baseIteratee = _baseIteratee,
+      toInteger = toInteger_1;
+
+  /* Built-in method references for those with the same name as other `lodash` methods. */
+  var nativeMax = Math.max;
+
+  /**
+   * This method is like `_.find` except that it returns the index of the first
+   * element `predicate` returns truthy for instead of the element itself.
+   *
+   * @static
+   * @memberOf _
+   * @since 1.1.0
+   * @category Array
+   * @param {Array} array The array to inspect.
+   * @param {Function} [predicate=_.identity] The function invoked per iteration.
+   * @param {number} [fromIndex=0] The index to search from.
+   * @returns {number} Returns the index of the found element, else `-1`.
+   * @example
+   *
+   * var users = [
+   *   { 'user': 'barney',  'active': false },
+   *   { 'user': 'fred',    'active': false },
+   *   { 'user': 'pebbles', 'active': true }
+   * ];
+   *
+   * _.findIndex(users, function(o) { return o.user == 'barney'; });
+   * // => 0
+   *
+   * // The `_.matches` iteratee shorthand.
+   * _.findIndex(users, { 'user': 'fred', 'active': false });
+   * // => 1
+   *
+   * // The `_.matchesProperty` iteratee shorthand.
+   * _.findIndex(users, ['active', false]);
+   * // => 0
+   *
+   * // The `_.property` iteratee shorthand.
+   * _.findIndex(users, 'active');
+   * // => 2
+   */
+  function findIndex$1(array, predicate, fromIndex) {
+    var length = array == null ? 0 : array.length;
+    if (!length) {
+      return -1;
+    }
+    var index = fromIndex == null ? 0 : toInteger(fromIndex);
+    if (index < 0) {
+      index = nativeMax(length + index, 0);
+    }
+    return baseFindIndex(array, baseIteratee(predicate), index);
+  }
+
+  var findIndex_1 = findIndex$1;
+
+  var createFind = _createFind,
+      findIndex = findIndex_1;
+
+  /**
+   * Iterates over elements of `collection`, returning the first element
+   * `predicate` returns truthy for. The predicate is invoked with three
+   * arguments: (value, index|key, collection).
+   *
+   * @static
+   * @memberOf _
+   * @since 0.1.0
+   * @category Collection
+   * @param {Array|Object} collection The collection to inspect.
+   * @param {Function} [predicate=_.identity] The function invoked per iteration.
+   * @param {number} [fromIndex=0] The index to search from.
+   * @returns {*} Returns the matched element, else `undefined`.
+   * @example
+   *
+   * var users = [
+   *   { 'user': 'barney',  'age': 36, 'active': true },
+   *   { 'user': 'fred',    'age': 40, 'active': false },
+   *   { 'user': 'pebbles', 'age': 1,  'active': true }
+   * ];
+   *
+   * _.find(users, function(o) { return o.age < 40; });
+   * // => object for 'barney'
+   *
+   * // The `_.matches` iteratee shorthand.
+   * _.find(users, { 'age': 1, 'active': true });
+   * // => object for 'pebbles'
+   *
+   * // The `_.matchesProperty` iteratee shorthand.
+   * _.find(users, ['active', false]);
+   * // => object for 'fred'
+   *
+   * // The `_.property` iteratee shorthand.
+   * _.find(users, 'active');
+   * // => object for 'barney'
+   */
+  var find = createFind(findIndex);
+
+  var find_1 = find;
+
   var MarkerLayer = /*#__PURE__*/function (_Layer) {
     _inherits(MarkerLayer, _Layer);
 
@@ -9809,6 +9946,15 @@
 
         this.markers = newMarkers;
         this.refresh();
+      } // 获取指定marker对象
+
+    }, {
+      key: "getMarkerById",
+      value: function getMarkerById(targetMarkerId) {
+        return find_1(this.markers, function (_ref) {
+          var id = _ref.id;
+          return id === targetMarkerId;
+        });
       } // 删除所有markers
 
     }, {
@@ -10826,6 +10972,15 @@
         this.features = newFeatures; // 执行重绘刷新
 
         this.refresh();
+      } // 获取指定feature对象
+
+    }, {
+      key: "getFeatureById",
+      value: function getFeatureById(targetFeatureId) {
+        return find_1(this.features, function (_ref2) {
+          var id = _ref2.id;
+          return id === targetFeatureId;
+        });
       } // 删除所有features
 
     }, {
@@ -12259,6 +12414,15 @@
         this.texts = newTexts; // 执行重绘刷新
 
         this.refresh();
+      } // 获取指定text对象
+
+    }, {
+      key: "getTextById",
+      value: function getTextById(targetTextId) {
+        return find_1(this.texts, function (_ref2) {
+          var id = _ref2.id;
+          return id === targetTextId;
+        });
       } // 删除所有texts
 
     }, {
@@ -12801,7 +12965,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.9' // 和npm-version保持一致
+    version: '5.0.10' // 和npm-version保持一致
 
   };
 

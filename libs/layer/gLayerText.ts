@@ -1,6 +1,7 @@
 import _forEach from 'lodash/forEach';
 import _get from 'lodash/get';
 import _filter from 'lodash/filter';
+import _find from 'lodash/find';
 
 import Text from '../text/gText';
 
@@ -42,6 +43,11 @@ export default class TextLayer extends CanvasLayer  {
         this.texts = newTexts;
         // 执行重绘刷新
         this.refresh();
+    }
+
+    // 获取指定text对象
+    getTextById(targetTextId: string) {
+        return _find(this.texts, ({id}) => (id === targetTextId));
     }
 
     // 删除所有texts

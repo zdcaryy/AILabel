@@ -1,6 +1,7 @@
 import _forEach from 'lodash/forEach';
 import _get from 'lodash/get';
 import _filter from 'lodash/filter';
+import _find from 'lodash/find';
 
 import Feature from '../feature/gFeature';
 
@@ -46,6 +47,11 @@ export default class FeatureLayer extends CanvasLayer  {
         this.features = newFeatures;
         // 执行重绘刷新
         this.refresh();
+    }
+
+    // 获取指定feature对象
+    getFeatureById(targetFeatureId: string) {
+        return _find(this.features, ({id}) => (id === targetFeatureId));
     }
 
     // 删除所有features
