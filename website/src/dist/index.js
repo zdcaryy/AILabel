@@ -6006,12 +6006,18 @@
 
     // function: constructor
     function CanvasLayer(id, layerType) {
+      var _this;
+
       var props = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
       var style = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
       _classCallCheck(this, CanvasLayer);
 
-      return _super.call(this, id, layerType, props, style);
+      _this = _super.call(this, id, layerType, props, style);
+
+      _this.createRenderCanvas();
+
+      return _this;
     }
 
     _createClass(CanvasLayer, [{
@@ -6019,28 +6025,36 @@
       value: function onAdd(map) {
         _get(_getPrototypeOf(CanvasLayer.prototype), "onAdd", this).call(this, map);
 
-        this.createRenderCanvas();
+        this.resize();
       } // 创建canvas层
 
     }, {
       key: "createRenderCanvas",
       value: function createRenderCanvas() {
+        this.canvas = document.createElement('canvas');
+        this.canvas.style.position = 'absolute';
+        this.canvas.style.left = '0';
+        this.canvas.style.top = '0';
+        this.dom.appendChild(this.canvas); // canvas上下文赋值
+
+        this.canvasContext = this.canvas.getContext('2d');
+      } // @override
+
+    }, {
+      key: "resize",
+      value: function resize() {
+        // 对容器进行重新resize
+        _get(_getPrototypeOf(CanvasLayer.prototype), "resize", this).call(this); // 对canvas进行resize
+
+
         var _this$map$getSize = this.map.getSize(),
             width = _this$map$getSize.width,
             height = _this$map$getSize.height;
 
-        var canvas = document.createElement('canvas');
-        canvas.style.position = 'absolute';
-        canvas.style.left = '0';
-        canvas.style.top = '0';
-        canvas.width = width * CanvasLayer.dpr;
-        canvas.height = height * CanvasLayer.dpr;
-        canvas.style.width = width + 'px';
-        canvas.style.height = height + 'px';
-        this.dom.appendChild(canvas); // canvas上下文赋值
-
-        this.canvas = canvas;
-        this.canvasContext = canvas.getContext('2d');
+        this.canvas.width = width * CanvasLayer.dpr;
+        this.canvas.height = height * CanvasLayer.dpr;
+        this.canvas.style.width = width + 'px';
+        this.canvas.style.height = height + 'px';
       } // @override
 
     }, {
@@ -9883,7 +9897,12 @@
       this.xAxis = this.mapOptions.xAxis; // x轴设置
 
       this.yAxis = this.mapOptions.yAxis; // y轴设置
-      // 设置容器样式
+
+      this.size = this.mapOptions.size || {
+        // 容器大小设置
+        width: get_1(this.dom, 'clientWidth', 0),
+        height: get_1(this.dom, 'clientHeight', 0)
+      }; // 设置容器样式
 
       this.setDomStyle(); // 分别创建platformContainer/layerContainer/controlCOntainer
 
@@ -9937,10 +9956,7 @@
     }, {
       key: "getSize",
       value: function getSize() {
-        return this.mapOptions.size || {
-          width: get_1(this.dom, 'clientWidth', 0),
-          height: get_1(this.dom, 'clientHeight', 0)
-        };
+        return this.size;
       } // 获取当前的缩放值
 
     }, {
@@ -10158,6 +10174,29 @@
 
 
         this.markerLayer.refresh();
+      } // 刷新当前视图
+
+    }, {
+      key: "resize",
+      value: function resize(size) {
+        // 重设size大小
+        this.size = size || {
+          // 容器大小设置
+          width: get_1(this.dom, 'clientWidth', 0),
+          height: get_1(this.dom, 'clientHeight', 0)
+        }; // 重设最外层容器大小
+
+        this.setLayerDomSize();
+        this.setPlatformDomSize(); // resize-layer
+
+        forEach_1(this.layers, function (layer) {
+          return layer.resizeAndRefresh();
+        }); // 内置图层markerLayer/overlayLayer/tipLayer执行resize
+
+
+        this.markerLayer.resizeAndRefresh();
+        this.overlayLayer.resizeAndRefresh();
+        this.tipLayer.resizeAndRefresh();
       } // 设置当前active的feature
 
     }, {
@@ -10289,41 +10328,53 @@
     }, {
       key: "setLayerDom",
       value: function setLayerDom() {
-        var _this$getSize4 = this.getSize(),
-            width = _this$getSize4.width,
-            height = _this$getSize4.height;
-
         this.layerDomId = "layer-wrapper-".concat(uniqueId_1());
         this.layerDom = document.createElement('div');
         this.layerDom.setAttribute('id', this.layerDomId);
         this.layerDom.style.position = 'absolute';
         this.layerDom.style.left = '0';
         this.layerDom.style.top = '0';
-        this.layerDom.style.width = "".concat(width, "px");
-        this.layerDom.style.height = "".concat(height, "px");
-        this.layerDom.style.zIndex = '1'; // add this.layerDom to dom
+        this.layerDom.style.zIndex = '1'; // 设置大小
+
+        this.setLayerDomSize(); // add this.layerDom to dom
 
         this.dom.appendChild(this.layerDom);
+      }
+    }, {
+      key: "setLayerDomSize",
+      value: function setLayerDomSize() {
+        var _this$getSize4 = this.getSize(),
+            width = _this$getSize4.width,
+            height = _this$getSize4.height;
+
+        this.layerDom.style.width = "".concat(width, "px");
+        this.layerDom.style.height = "".concat(height, "px");
       } // 创建platform平台container[不会进行位置的移动]
 
     }, {
       key: "setPlatformDom",
       value: function setPlatformDom() {
-        var _this$getSize5 = this.getSize(),
-            width = _this$getSize5.width,
-            height = _this$getSize5.height;
-
         this.platformDomId = "platform-wrapper-".concat(uniqueId_1());
         this.platformDom = document.createElement('div');
         this.platformDom.setAttribute('id', this.platformDomId);
         this.platformDom.style.position = 'absolute';
         this.platformDom.style.left = '0';
         this.platformDom.style.top = '0';
-        this.platformDom.style.width = "".concat(width, "px");
-        this.platformDom.style.height = "".concat(height, "px");
-        this.platformDom.style.zIndex = '5'; // add this.platformDom to dom
+        this.platformDom.style.zIndex = '5'; // 设置大小
+
+        this.setPlatformDomSize(); // add this.platformDom to dom
 
         this.dom.appendChild(this.platformDom);
+      }
+    }, {
+      key: "setPlatformDomSize",
+      value: function setPlatformDomSize() {
+        var _this$getSize5 = this.getSize(),
+            width = _this$getSize5.width,
+            height = _this$getSize5.height;
+
+        this.platformDom.style.width = "".concat(width, "px");
+        this.platformDom.style.height = "".concat(height, "px");
       } // 创建layer控件container【不同于setLayerDom的是：此容器width=0, height=0】
 
     }, {
@@ -12750,7 +12801,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.8' // 和npm-version保持一致
+    version: '5.0.9' // 和npm-version保持一致
 
   };
 

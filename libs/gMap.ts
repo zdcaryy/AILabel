@@ -65,6 +65,9 @@ export default class Map {
     // y坐标轴方向设置
     public yAxis: IAxisOption
 
+    // 容器大小
+    public size:ISize
+
     // 当持续缩放时，是否延时feature刷新，默认delay，性能更优
     public refreshDelayWhenZooming: boolean
     // 绘制过程中是否允许缩放，默认不会缩放
@@ -114,6 +117,10 @@ export default class Map {
         this.panWhenDrawing = this.mapOptions.panWhenDrawing; // 更新是否绘制过程中允许平移
         this.xAxis = this.mapOptions.xAxis; // x轴设置
         this.yAxis = this.mapOptions.yAxis; // y轴设置
+        this.size = this.mapOptions.size || { // 容器大小设置
+            width: _get(this.dom, 'clientWidth', 0),
+            height: _get(this.dom, 'clientHeight', 0)
+        };
 
         // 设置容器样式
         this.setDomStyle();
@@ -163,10 +170,7 @@ export default class Map {
 
     // 获取dom宽高（width/height）
     public getSize(): ISize {
-        return this.mapOptions.size || {
-            width: _get(this.dom, 'clientWidth', 0),
-            height: _get(this.dom, 'clientHeight', 0)
-        };
+        return this.size;
     }
 
     // 获取当前的缩放值
@@ -325,6 +329,25 @@ export default class Map {
         this.markerLayer.refresh();
     }
 
+    // 刷新当前视图
+    resize(size?: ISize) {
+        // 重设size大小
+        this.size = size || { // 容器大小设置
+            width: _get(this.dom, 'clientWidth', 0),
+            height: _get(this.dom, 'clientHeight', 0)
+        };
+        // 重设最外层容器大小
+        this.setLayerDomSize();
+        this.setPlatformDomSize();
+
+        // resize-layer
+        _forEach(this.layers, (layer: Layer) => layer.resizeAndRefresh());
+        // 内置图层markerLayer/overlayLayer/tipLayer执行resize
+        this.markerLayer.resizeAndRefresh();
+        this.overlayLayer.resizeAndRefresh();
+        this.tipLayer.resizeAndRefresh();
+    }
+
     // 设置当前active的feature
     setActiveFeature(feature: Feature | null) {
         this.activeFeature = feature;
@@ -425,34 +448,41 @@ export default class Map {
 
     // 创建图层container
     setLayerDom(): void {
-        const {width, height} = this.getSize();
         this.layerDomId = `layer-wrapper-${_uniqueId()}`;
         this.layerDom = document.createElement('div');
         this.layerDom.setAttribute('id', this.layerDomId);
         this.layerDom.style.position = 'absolute';
         this.layerDom.style.left = '0';
         this.layerDom.style.top = '0';
-        this.layerDom.style.width = `${width}px`;
-        this.layerDom.style.height = `${height}px`;
         this.layerDom.style.zIndex = '1';
-
+        // 设置大小
+        this.setLayerDomSize();
         // add this.layerDom to dom
         this.dom.appendChild(this.layerDom);
     }
+    setLayerDomSize() {
+        const {width, height} = this.getSize();
+        this.layerDom.style.width = `${width}px`;
+        this.layerDom.style.height = `${height}px`;
+    }
     // 创建platform平台container[不会进行位置的移动]
     setPlatformDom(): void {
-        const {width, height} = this.getSize();
         this.platformDomId = `platform-wrapper-${_uniqueId()}`;
         this.platformDom = document.createElement('div');
         this.platformDom.setAttribute('id', this.platformDomId);
         this.platformDom.style.position = 'absolute';
         this.platformDom.style.left = '0';
         this.platformDom.style.top = '0';
-        this.platformDom.style.width = `${width}px`;
-        this.platformDom.style.height = `${height}px`;
         this.platformDom.style.zIndex = '5';
+        // 设置大小
+        this.setPlatformDomSize();
         // add this.platformDom to dom
         this.dom.appendChild(this.platformDom);
+    }
+    setPlatformDomSize() {
+        const {width, height} = this.getSize();
+        this.platformDom.style.width = `${width}px`;
+        this.platformDom.style.height = `${height}px`;
     }
     // 创建layer控件container【不同于setLayerDom的是：此容器width=0, height=0】
     setLayerDom2(): void {

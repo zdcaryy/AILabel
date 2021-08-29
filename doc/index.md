@@ -338,6 +338,15 @@ refresh()
 gMap.refresh();
 ```
 
+## resize
+大小重设map，可以指定size大小或者不传入(会自动获取dom-size大小进行重设)
+```javascript
+// define
+resize(size?: ISize)
+// demo
+gMap.resize();
+```
+
 ## setActiveFeature
 设置map当前的待编辑feature，最多只会存在一个activeFeature
 ```javascript

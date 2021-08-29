@@ -30,6 +30,7 @@
     <button onclick="getRle()">获取rle数据</button>
     <br/>
     <button onclick="setCenter(100, 100);">定位(100, 100)</button>
+    <button onclick="resize(400, 400);">resize(400, 400)</button>
 
     <br/>
     <div>注：在绘制模式（点/线/面）时，双击图形可进行选中编辑；单击未选中图形区域或切换mode模式会取消选中</div>
@@ -388,6 +389,11 @@
         }
         function setCenter(x, y) {
             gMap.setCenter({x, y});
+        }
+        function resize(width, height) {
+            document.getElementById('map').style.width = width + 'px';
+            document.getElementById('map').style.height = height + 'px';
+            gMap.resize();
         }
     </script>
 </body>
