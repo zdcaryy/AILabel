@@ -9992,6 +9992,7 @@
   }(Layer$1);
 
   var Map = /*#__PURE__*/function () {
+    // 用户侧传入的dom
     // props: domId / dom
     // props: layerDomId / layerDom
     // props: platformDomId / platformDom
@@ -10004,6 +10005,7 @@
      * mapOptions: userMapOptions merge defaultMapOptions
     */
     // 左上角代表的实际坐标值
+    // 当前map中包含的controls
     // 当前map中包含的layers
     // 绘制状态下相关样式设置
     // 当前选中的激活feature对象
@@ -10012,6 +10014,8 @@
       var _this = this;
 
       _classCallCheck(this, Map);
+
+      _defineProperty$1(this, "controls", []);
 
       _defineProperty$1(this, "layers", []);
 
@@ -10025,8 +10029,11 @@
         }
       });
 
-      this.domId = domId;
-      this.dom = document.getElementById(domId);
+      this.wrapperDomId = domId;
+      this.wrapperDom = document.getElementById(domId); // 在dom容器创建map主容器
+
+      this.createMainDom(); // 相关参数初始化
+
       this.mapOptions = assign_1({}, Map.defaultMapOptions, mapOptions);
       this.zoom = this.mapOptions.zoom; // 更新初始zoom
 
@@ -10235,6 +10242,31 @@
         this.zoom = this.zoom * 2;
         this.refresh();
         this.triggerBoundsChanged();
+      } // 添加控件
+
+    }, {
+      key: "addControl",
+      value: function addControl(control) {
+        control.onAdd(this);
+        this.controls.push(control);
+      } // 删除指定control
+
+    }, {
+      key: "removeControlById",
+      value: function removeControlById(targetControlId) {
+        var newControls = filter_1(this.controls, function (control) {
+          var controlId = control.id;
+
+          if (controlId === targetControlId) {
+            control.onRemove();
+            return false;
+          }
+
+          return true;
+        }); // 重新设置最新的controls
+
+
+        this.controls = newControls;
       } // 添加layer至当前map容器
 
     }, {
@@ -10460,6 +10492,20 @@
           x: screenX,
           y: screenY
         };
+      } // 创建this.dom
+
+    }, {
+      key: "createMainDom",
+      value: function createMainDom() {
+        this.domId = "main-wrapper-".concat(uniqueId_1());
+        this.dom = document.createElement('div');
+        this.dom.setAttribute('id', this.domId);
+        this.dom.style.position = 'absolute';
+        this.dom.style.left = '0';
+        this.dom.style.top = '0';
+        this.dom.style.right = '0';
+        this.dom.style.bottom = '0';
+        this.wrapperDom.appendChild(this.dom);
       } // 创建map容器下相关的container
 
     }, {
@@ -10542,6 +10588,7 @@
     }, {
       key: "setControlDom",
       value: function setControlDom() {
+        // 暂时不用，control直接会在dom上进行添加
         this.controlDomId = "control-wrapper-".concat(uniqueId_1());
         this.controlDom = document.createElement('div');
         this.controlDom.setAttribute('id', this.controlDomId);
@@ -12598,20 +12645,58 @@
   var Control$1 = /*#__PURE__*/function () {
     // controlId
     // controlType
+    // control位置
+    // props属性
+    // option属性
+    // props: domId
+    // control-container
     // function: constructor
-    function Control() {
+    function Control(id, type, props, option) {
       _classCallCheck(this, Control);
-    } // function: trigger when control add to map
 
+      this.id = id;
+      this.type = type;
+      this.props = props || {};
+      this.option = option || {};
+      this.domId = "control-grid-".concat(id, "-wrapper");
+      this.createContainer();
+    }
 
     _createClass(Control, [{
+      key: "createContainer",
+      value: function createContainer() {
+        if (!this.dom) {
+          this.dom = document.createElement('div');
+          this.dom.setAttribute('id', this.domId);
+          this.dom.style.position = 'absolute';
+          this.dom.style.left = '0';
+          this.dom.style.top = '0';
+          this.dom.style.zIndex = '20';
+        }
+      } // function: trigger when control add to map
+
+    }, {
       key: "onAdd",
-      value: function onAdd(map) {} // trigger when control remove from map
+      value: function onAdd(map) {
+        // 首先判断当前layer是否已经被添加至map对象中
+        this.map = map;
+        this.map.dom.appendChild(this.dom);
+      } // trigger when control remove from map
       // map exits first
 
     }, {
       key: "onRemove",
-      value: function onRemove() {} // 刷新当前数据
+      value: function onRemove() {
+        var controlElement = document.getElementById(this.domId);
+        controlElement && controlElement.remove();
+      } //
+
+    }, {
+      key: "updatePosition",
+      value: function updatePosition(position) {
+        this.position = position;
+        this.refresh();
+      } // 刷新当前数据
 
     }, {
       key: "refresh",
@@ -12647,8 +12732,131 @@
     return ScaleControl;
   }(Control$1);
 
+  var EControlType;
+
+  (function (EControlType) {
+    EControlType["Scale"] = "SCALE";
+    EControlType["Grid"] = "GRID";
+  })(EControlType || (EControlType = {}));
+
+  var GridControl = /*#__PURE__*/function (_Control) {
+    _inherits(GridControl, _Control);
+
+    var _super = _createSuper(GridControl);
+
+    /**
+     * props: gridInfo可选初始化配置项
+     * defaultGridInfo: 默认配置项
+     * grid: userGridInfo merge defaultGridInfo
+    */
+    // function: constructor
+    function GridControl(id, gridInfo, props, option) {
+      var _this;
+
+      _classCallCheck(this, GridControl);
+
+      console.log(111, id);
+      _this = _super.call(this, id, EControlType.Grid, props, option);
+      _this.gridInfo = assign_1({}, GridControl.defaultGridInfo, gridInfo); // 创建canvas
+
+      _this.creatCanvasElement();
+
+      _this.refreshElement();
+
+      return _this;
+    }
+
+    _createClass(GridControl, [{
+      key: "refreshElement",
+      value: function refreshElement() {
+        // 设置container相关
+        this.setContainerSize();
+        this.setContainerPosition();
+        this.setContainerStyle(); // 设置canvas大小
+
+        this.setRenderCanvasSize();
+      }
+    }, {
+      key: "setContainerSize",
+      value: function setContainerSize() {
+        var _this$gridInfo$size = this.gridInfo.size,
+            width = _this$gridInfo$size.width,
+            height = _this$gridInfo$size.height;
+        this.dom.style.width = width + 'px';
+        this.dom.style.height = height + 'px';
+      }
+    }, {
+      key: "setContainerPosition",
+      value: function setContainerPosition() {
+        var _this$gridInfo$positi = this.gridInfo.position,
+            left = _this$gridInfo$positi.left,
+            top = _this$gridInfo$positi.top,
+            right = _this$gridInfo$positi.right,
+            bottom = _this$gridInfo$positi.bottom;
+        this.dom.style.left = isNumber_1(left) ? "".concat(left, "px") : 'initial';
+        this.dom.style.right = isNumber_1(right) ? "".concat(right, "px") : 'initial';
+        this.dom.style.top = isNumber_1(top) ? "".concat(top, "px") : 'initial';
+        this.dom.style.bottom = isNumber_1(bottom) ? "".concat(bottom, "px") : 'initial';
+      }
+    }, {
+      key: "setContainerStyle",
+      value: function setContainerStyle() {
+        this.dom.style.border = '1px solid red';
+      } // 创建相关element:div & canvas
+
+    }, {
+      key: "creatCanvasElement",
+      value: function creatCanvasElement() {
+        this.canvas = document.createElement('canvas');
+        this.canvas.style.position = 'absolute';
+        this.canvas.style.left = '0';
+        this.canvas.style.top = '0';
+        this.dom.appendChild(this.canvas); // canvas上下文赋值
+
+        this.canvasContext = this.canvas.getContext('2d');
+      }
+    }, {
+      key: "setRenderCanvasSize",
+      value: function setRenderCanvasSize() {
+        var _this$gridInfo$size2 = this.gridInfo.size,
+            width = _this$gridInfo$size2.width,
+            height = _this$gridInfo$size2.height;
+        this.canvas.width = width * CanvasLayer.dpr;
+        this.canvas.height = height * CanvasLayer.dpr;
+        this.canvas.style.width = width + 'px';
+        this.canvas.style.height = height + 'px';
+      } // 执行绘制当前
+      // @override
+
+    }, {
+      key: "refresh",
+      value: function refresh() {}
+    }]);
+
+    return GridControl;
+  }(Control$1);
+
+  _defineProperty$1(GridControl, "defaultGridInfo", {
+    position: {
+      right: 10,
+      bottom: 10
+    },
+    // 位置
+    size: {
+      width: 200,
+      height: 200
+    },
+    // 大小
+    grid: {
+      // 网格信息
+      columns: [],
+      rows: []
+    }
+  });
+
   var Control = {
-    Scale: ScaleControl
+    Scale: ScaleControl,
+    Grid: GridControl
   };
 
   var EMarkerType; // marker事件监听

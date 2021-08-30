@@ -143,6 +143,18 @@
         );
         gMap.addLayer(gFirstImageLayer);
 
+        console.log(111, AILabel);
+
+        // control-层
+        const gGridControl = new AILabel.Control.Grid(
+            'control-grid', // id
+            {
+                size: {width: 300, height: 300},
+                grid: {columns: [{}], rows: [{}]}
+            }
+        );
+        gMap.addControl(gGridControl);
+
         function setMode(mode) {
             gMap.setMode(mode);
             // 后续对应模式处理

@@ -13,6 +13,7 @@ import _filter from 'lodash/filter';
 import {EMapMode, ECursorType, EEventType, EUrlCursorType, EXAxisDirection, EYAxisDirection} from './gEnum';
 import {IMapOptions, ISize, IPoint, ICenterAndZoom, ITransPointOption, IObject, IAxisOption} from './gInterface';
 import Layer from './layer/gLayer';
+import Control from './control/gControl';
 import EventLayer from './layer/gLayerEvent';
 import FeatureLayer from './layer/gLayerFeature';
 import OverlayLayer from './layer/gLayerOverlay';
@@ -22,6 +23,10 @@ import Feature from './feature/gFeature';
 import {ELayerType } from './layer/gEnum';
 
 export default class Map {
+    // 用户侧传入的dom
+    public wrapperDomId: string
+    public wrapperDom: HTMLElement
+
     // props: domId / dom
     public domId: string
     public dom: HTMLElement
@@ -78,6 +83,9 @@ export default class Map {
     public zoom: number // 当前缩放值
     public center: IPoint // 左上角代表的实际坐标值
 
+    // 当前map中包含的controls
+    public controls: Control[] = []
+
     // 当前map中包含的layers
     public layers: Layer[] = []
     // 当前map上的eventLayer: 做事件监听接收
@@ -105,9 +113,12 @@ export default class Map {
 
     // function: constructor
     constructor(domId: string, mapOptions?: IMapOptions) {
-        this.domId = domId;
-        this.dom = document.getElementById(domId);
+        this.wrapperDomId = domId;
+        this.wrapperDom = document.getElementById(domId);
+        // 在dom容器创建map主容器
+        this.createMainDom();
 
+        // 相关参数初始化
         this.mapOptions = _assign({}, Map.defaultMapOptions, mapOptions);
         this.zoom = this.mapOptions.zoom; // 更新初始zoom
         this.center = this.mapOptions.center; // 更新初始origin
@@ -262,6 +273,26 @@ export default class Map {
         this.zoom = this.zoom * 2;
         this.refresh();
         this.triggerBoundsChanged();
+    }
+
+    // 添加控件
+    addControl(control: Control) {
+        control.onAdd(this);
+        this.controls.push(control);
+    }
+
+    // 删除指定control
+    removeControlById(targetControlId: string) {
+        const newControls = _filter(this.controls, (control: Control) => {
+            const controlId = control.id;
+            if (controlId === targetControlId) {
+                control.onRemove();
+                return false;
+            }
+            return true;
+        });
+        // 重新设置最新的controls
+        this.controls = newControls;
     }
 
     // 添加layer至当前map容器
@@ -438,6 +469,19 @@ export default class Map {
         };
     }
 
+    // 创建this.dom
+    createMainDom() {
+        this.domId = `main-wrapper-${_uniqueId()}`;
+        this.dom = document.createElement('div');
+        this.dom.setAttribute('id', this.domId);
+        this.dom.style.position = 'absolute';
+        this.dom.style.left = '0';
+        this.dom.style.top = '0';
+        this.dom.style.right = '0';
+        this.dom.style.bottom = '0';
+        this.wrapperDom.appendChild(this.dom);
+    }
+
     // 创建map容器下相关的container
     createSubDoms(): void {
         this.setLayerDom();
@@ -499,8 +543,11 @@ export default class Map {
         // add this.layerDom2 to dom
         this.dom.appendChild(this.layerDom2);
     }
+
     // 创建control控件container
     setControlDom(): void {
+        // 暂时不用，control直接会在dom上进行添加
+
         this.controlDomId = `control-wrapper-${_uniqueId()}`;
         this.controlDom = document.createElement('div');
         this.controlDom.setAttribute('id', this.controlDomId);
