@@ -5,34 +5,89 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AILabel示例一览</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
     <script src='./index.js'></script>
+
+    <style type="text/css">
+        body {
+            padding: 10px 20px;
+        }
+        .button-wrap {
+            padding-bottom: 10px;
+        }
+        #map {
+            overflow: hidden;
+            position: relative;
+            height: 600px;
+            border: 1px dashed #ccc;
+        }
+        .zoom-icon-wrapper {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            z-index: 1000;
+        }
+        .zoom-icon-plus {
+            width: 30px;
+            height: 30px;
+            line-height: 20px;
+            text-align: center;
+            border: 3px solid #6495ED;
+            font-size: 20px;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            color: #FF8C00;
+            cursor: pointer;
+        }
+        .zoom-icon-plus:hover {
+            border-color: #4169E1;
+        }
+        .zoom-icon-minus {
+            margin-top: 6px;
+            width: 30px;
+            height: 30px;
+            line-height: 20px;
+            text-align: center;
+            border: 3px solid #6495ED;
+            font-size: 25px;
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+            color: #FF8C00;
+            cursor: pointer;
+        }
+        .zoom-icon-minus:hover {
+            border-color: #4169E1;
+        }
+    </style>
 </head>
+
 <body>
-    <div style="line-height: 30px;"></div>
+    <div class="button-wrap">
+        <button class="btn btn-default" onclick="setMode('PAN');">平移</button>
+        <button class="btn btn-default" onclick="setMode('MARKER');">注记</button>
+        &nbsp;&nbsp;
+        <button class="btn btn-default" onclick="setMode('POINT');">点</button>
+        <button class="btn btn-default" onclick="setMode('LINE');">线段</button>
+        <button class="btn btn-default" onclick="setMode('POLYLINE');">多段线</button>
+        <button class="btn btn-default" onclick="setMode('CIRCLE');">圆</button>
+        <button class="btn btn-default" onclick="setMode('RECT');">矩形</button>
+        <button class="btn btn-default" onclick="setMode('POLYGON');">多边形</button>
+        &nbsp;&nbsp;
+        <button class="btn btn-default" onclick="setMode('DRAWMASK');">涂抹</button>
+        <button class="btn btn-default" onclick="setMode('CLEARMASK');">擦除</button>
+        <button class="btn btn-default" onclick="getRle();">获取rle数据</button>
+        &nbsp;&nbsp;
+        <a href="./label/index.html" target="_blank">>>标注demo</a>
+    </div>
 
-    <div
-        id="map"
-        style="overflow: hidden; position: relative; width: 700px; height: 600px; border: 1px solid red"></div>
-    <button onclick="zoomIn();">+放大</button>
-    <button onclick="zoomOut();">-缩小</button>
-    <a href="./label/index.html" target="_blank">跳转>>标注demo</a>
-    <br/>
-    <button onclick="setMode('PAN');">平移</button>
-    <button onclick="setMode('MARKER');">注记</button>
-    <button onclick="setMode('POINT');">点</button>
-    <button onclick="setMode('CIRCLE');">圆</button>
-    <button onclick="setMode('LINE');">线</button>
-    <button onclick="setMode('POLYLINE');">多段线</button>
-    <button onclick="setMode('RECT');">矩形</button>
-    <button onclick="setMode('POLYGON');">多边形</button>
-    <br/>
-    <button onclick="setMode('DRAWMASK');">涂抹</button>
-    <button onclick="setMode('CLEARMASK');">擦除</button>
-    <button onclick="getRle()">获取rle数据</button>
-    <br/>
-    <button onclick="setCenter(100, 100);">定位(100, 100)</button>
-    <button onclick="resize(400, 400);">resize(400, 400)</button>
-
+    <div id="map">
+        <div class="zoom-icon-wrapper">
+            <div class="zoom-icon-plus" onclick="zoomIn();">+</div>
+            <div class="zoom-icon-minus"  onclick="zoomOut();">-</div>
+        </div>
+    </div>
     <br/>
     <div>注：在绘制模式（点/线/面）时，双击图形可进行选中编辑；单击未选中图形区域或切换mode模式会取消选中</div>
 
@@ -388,13 +443,9 @@
                     break;
             }
         }
-        function setCenter(x, y) {
-            gMap.setCenter({x, y});
-        }
-        function resize(width, height) {
-            document.getElementById('map').style.width = width + 'px';
-            document.getElementById('map').style.height = height + 'px';
-            gMap.resize();
+
+        window.onresize = function() {
+            gMap && gMap.resize();
         }
     </script>
 </body>
