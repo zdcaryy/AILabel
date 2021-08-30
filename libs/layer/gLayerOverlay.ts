@@ -197,7 +197,7 @@ export default class OverlayLayer extends CanvasLayer  {
             }
             case EFeatureType.Polyline: {
                 this.addPolylineFeature(shape, {style});
-                this.addActiveMiddlePoints(shape.points);
+                this.addActiveMiddlePoints(shape.points, {withClose: false});
                 break;
             }
             case EFeatureType.Rect: {
@@ -206,7 +206,7 @@ export default class OverlayLayer extends CanvasLayer  {
             }
             case EFeatureType.Polygon: {
                 this.addPolygonFeature(shape, {style});
-                this.addActiveMiddlePoints(shape.points);
+                this.addActiveMiddlePoints(shape.points, {withClose: true});
                 break;
             }
             case EFeatureType.Circle: {
@@ -218,8 +218,12 @@ export default class OverlayLayer extends CanvasLayer  {
 
     // 绘制节点中间高亮点
     addActiveMiddlePoints(points: IPoint[], option: IObject = {}) {
+        const {withClose = true} = option;
         _forEach(points, (point: IPoint, index: number) => {
-            const nextPoint = points[index + 1] || points[0];
+            const nextPoint = withClose ? (points[index + 1] || points[0]) : points[index + 1];
+            if (!nextPoint) {
+                return;
+            }
             const middlePoint = Util.MathUtil.getMiddlePoint(point, nextPoint);
             this.addDrawingPoint(middlePoint, {strokeStyle: '#228B22', withAddIcon: true});
         });

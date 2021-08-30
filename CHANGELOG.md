@@ -47,3 +47,7 @@
 1、Layer.Feature/Layer.Marker/Layer.Text增加获取指定对象方法
 2、Text新增updatePosition方法
 3、demo 新增标注demo[矩形为例]
+
+# 5.0.11
+`2021-08-30`
+1、多段线选中bug修复

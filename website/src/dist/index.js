@@ -9650,7 +9650,9 @@
               this.addPolylineFeature(shape, {
                 style: style
               });
-              this.addActiveMiddlePoints(shape.points);
+              this.addActiveMiddlePoints(shape.points, {
+                withClose: false
+              });
               break;
             }
 
@@ -9667,7 +9669,9 @@
               this.addPolygonFeature(shape, {
                 style: style
               });
-              this.addActiveMiddlePoints(shape.points);
+              this.addActiveMiddlePoints(shape.points, {
+                withClose: true
+              });
               break;
             }
 
@@ -9687,8 +9691,17 @@
       value: function addActiveMiddlePoints(points) {
         var _this2 = this;
 
+        var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var _option$withClose = option.withClose,
+            withClose = _option$withClose === void 0 ? true : _option$withClose;
+
         forEach_1(points, function (point, index) {
-          var nextPoint = points[index + 1] || points[0];
+          var nextPoint = withClose ? points[index + 1] || points[0] : points[index + 1];
+
+          if (!nextPoint) {
+            return;
+          }
+
           var middlePoint = Util.MathUtil.getMiddlePoint(point, nextPoint);
 
           _this2.addDrawingPoint(middlePoint, {
@@ -13173,7 +13186,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.10' // 和npm-version保持一致
+    version: '5.0.11' // 和npm-version保持一致
 
   };
 

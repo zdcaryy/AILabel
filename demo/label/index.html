@@ -124,6 +124,12 @@
             gMap.setActiveFeature(feature);
             const markerId = feature.props.deleteMarkerId;
             const textId = feature.props.textId;
+
+            const mappedMarker = gMap.markerLayer.getMarkerById(markerId);
+            if (mappedMarker) {
+                return;
+            }
+
             // 添加delete-icon
             const gFirstMarker = new AILabel.Marker(
                 markerId, // id
