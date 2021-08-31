@@ -51,3 +51,10 @@
 # 5.0.11
 `2021-08-30`
 1、多段线选中bug修复
+
+# 5.0.12
+`2021-08-31`
+1、Layer.Feature增加getAllFeatures
+2、Layer.Marker增加getAllMarkers
+3、Layer.Text增加getAllTexts
+4、Layer.Mask增加getAllActions

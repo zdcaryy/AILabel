@@ -52,6 +52,11 @@ export default class MaskLayer extends CanvasLayer  {
         this.refresh();
     }
 
+    // 获取所有actions
+    getAllActions(): Action[] {
+        return this.actions;
+    }
+
     // 删除所有actions
     removeAllActions() {
         const newActions = _filter(this.actions, (action: Action) => {

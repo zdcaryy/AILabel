@@ -54,6 +54,11 @@ export default class FeatureLayer extends CanvasLayer  {
         return _find(this.features, ({id}) => (id === targetFeatureId));
     }
 
+    // 获取所有features
+    getAllFeatures(): Feature[] {
+        return this.features;
+    }
+
     // 删除所有features
     removeAllFeatures() {
         const newFeatures = _filter(this.features, (feature: Feature) => {

@@ -669,6 +669,17 @@ gFirstFeatureLayer.addFeature(polygonFeature);
 gFirstFeatureLayer.getFeatureById(polygonFeature.id);
 ```
 
+## getAllFeatures
+获取当前Layer.Feature上的所有features
+```javascript
+// define
+getAllFeatures(): Feature[]
+// demo
+const polygonFeature = new AILabel.Feature.Polygon(...);
+gFirstFeatureLayer.addFeature(polygonFeature);
+const allFeatures = gFirstFeatureLayer.getAllFeatures();
+```
+
 ## removeAllFeatures
 移出当前featureLayer上所有features
 ```javascript
@@ -744,6 +755,16 @@ getMarkerById(targetMarkerId: string)
 const marker = new AILabel.Marker(...);
 gMap.markerLayer.addMarker(marker);
 gMap.markerLayer.getMarkerById(marker.id);
+```
+## getAllMarkers
+获取Layer.Marker上的所有markers
+```javascript
+// define
+getAllMarkers(): Marker[]
+// demo
+const marker = new AILabel.Marker(...);
+gMap.markerLayer.addMarker(marker);
+const allMarkers = gMap.markerLayer.getAllMarkers();
 ```
 
 ## removeAllMarkers
@@ -831,6 +852,17 @@ gFirstTextLayer.addText(text);
 gFirstTextLayer.getTextById(text.id);
 ```
 
+## getAllTexts
+获取Layer.Text上的所有texts对象
+```javascript
+// define
+getAllTexts(): Text[]
+// demo
+const text = new AILabel.Text(...);
+gFirstTextLayer.addText(text);
+const allTexts = gFirstTextLayer.getAllTexts();
+```
+
 ## removeAllTexts
 移除所有texts
 ```javascript
@@ -916,6 +948,17 @@ removeAllActions()
 const drawAction = new AILabel.Action.Draw(...);
 gFirstMaskLayer.addAction(drawAction);
 gFirstMaskLayer.removeAllActions();
+```
+
+## getAllActions
+获取Layer.Mask上的所有actions
+```javascript
+// define
+getAllActions(): Action[]
+// demo (AILabel.Action见下文)
+const drawAction = new AILabel.Action.Draw(...);
+gFirstMaskLayer.addAction(drawAction);
+const allActions = gFirstMaskLayer.getAllActions();
 ```
 
 ## getRleData

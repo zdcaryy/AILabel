@@ -50,6 +50,11 @@ export default class TextLayer extends CanvasLayer  {
         return _find(this.texts, ({id}) => (id === targetTextId));
     }
 
+    // 获取所有texts
+    getAllTexts(): Text[] {
+        return this.texts;
+    }
+
     // 删除所有texts
     removeAllTexts() {
         const newTexts = _filter(this.texts, (text: Text) => {

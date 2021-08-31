@@ -17,7 +17,7 @@ const AILabel = {
     Text,
     Marker,
     Util,
-    version: '5.0.11' // 和npm-version保持一致
+    version: '5.0.12' // 和npm-version保持一致
 };
 
 export default AILabel;

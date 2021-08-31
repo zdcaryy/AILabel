@@ -1378,6 +1378,15 @@ const polygonFeature = new AILabel.Feature.Polygon(...);
 gFirstFeatureLayer.addFeature(polygonFeature);
 gFirstFeatureLayer.getFeatureById(polygonFeature.id);
 </code></pre>
+<h2 id="getallfeatures">getAllFeatures</h2>
+<p>获取当前Layer.Feature上的所有features</p>
+<pre><code class="lang-javascript">// define
+getAllFeatures(): Feature[]
+// demo
+const polygonFeature = new AILabel.Feature.Polygon(...);
+gFirstFeatureLayer.addFeature(polygonFeature);
+const allFeatures = gFirstFeatureLayer.getAllFeatures();
+</code></pre>
 <h2 id="removeallfeatures">removeAllFeatures</h2>
 <p>移出当前featureLayer上所有features</p>
 <pre><code class="lang-javascript">// define
@@ -1494,6 +1503,15 @@ getMarkerById(targetMarkerId: string)
 const marker = new AILabel.Marker(...);
 gMap.markerLayer.addMarker(marker);
 gMap.markerLayer.getMarkerById(marker.id);
+</code></pre>
+<h2 id="getallmarkers">getAllMarkers</h2>
+<p>获取Layer.Marker上的所有markers</p>
+<pre><code class="lang-javascript">// define
+getAllMarkers(): Marker[]
+// demo
+const marker = new AILabel.Marker(...);
+gMap.markerLayer.addMarker(marker);
+const allMarkers = gMap.markerLayer.getAllMarkers();
 </code></pre>
 <h2 id="removeallmarkers">removeAllMarkers</h2>
 <p>移除所有markers</p>
@@ -1647,6 +1665,15 @@ getTextById(targetTextId: string)
 const text = new AILabel.Text(...);
 gFirstTextLayer.addText(text);
 gFirstTextLayer.getTextById(text.id);
+</code></pre>
+<h2 id="getalltexts">getAllTexts</h2>
+<p>获取Layer.Text上的所有texts对象</p>
+<pre><code class="lang-javascript">// define
+getAllTexts(): Text[]
+// demo
+const text = new AILabel.Text(...);
+gFirstTextLayer.addText(text);
+const allTexts = gFirstTextLayer.getAllTexts();
 </code></pre>
 <h2 id="removealltexts">removeAllTexts</h2>
 <p>移除所有texts</p>
@@ -1806,6 +1833,15 @@ removeAllActions()
 const drawAction = new AILabel.Action.Draw(...);
 gFirstMaskLayer.addAction(drawAction);
 gFirstMaskLayer.removeAllActions();
+</code></pre>
+<h2 id="getallactions">getAllActions</h2>
+<p>获取Layer.Mask上的所有actions</p>
+<pre><code class="lang-javascript">// define
+getAllActions(): Action[]
+// demo (AILabel.Action见下文)
+const drawAction = new AILabel.Action.Draw(...);
+gFirstMaskLayer.addAction(drawAction);
+const allActions = gFirstMaskLayer.getAllActions();
 </code></pre>
 <h2 id="getrledata">getRleData</h2>
 <p>根据分类获取分类分类rle数据, 截取某个范围的rle数据</p>

@@ -9968,6 +9968,12 @@
           var id = _ref.id;
           return id === targetMarkerId;
         });
+      } // 获取所有markers
+
+    }, {
+      key: "getAllMarkers",
+      value: function getAllMarkers() {
+        return this.markers;
       } // 删除所有markers
 
     }, {
@@ -11041,6 +11047,12 @@
           var id = _ref2.id;
           return id === targetFeatureId;
         });
+      } // 获取所有features
+
+    }, {
+      key: "getAllFeatures",
+      value: function getAllFeatures() {
+        return this.features;
       } // 删除所有features
 
     }, {
@@ -12289,6 +12301,12 @@
         this.actions = newActions; // 执行重绘刷新
 
         this.refresh();
+      } // 获取所有actions
+
+    }, {
+      key: "getAllActions",
+      value: function getAllActions() {
+        return this.actions;
       } // 删除所有actions
 
     }, {
@@ -12483,6 +12501,12 @@
           var id = _ref2.id;
           return id === targetTextId;
         });
+      } // 获取所有texts
+
+    }, {
+      key: "getAllTexts",
+      value: function getAllTexts() {
+        return this.texts;
       } // 删除所有texts
 
     }, {
@@ -13186,7 +13210,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.11' // 和npm-version保持一致
+    version: '5.0.12' // 和npm-version保持一致
 
   };
 

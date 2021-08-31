@@ -44,6 +44,11 @@ export default class MarkerLayer extends Layer  {
         return _find(this.markers, ({id}) => (id === targetMarkerId));
     }
 
+    // 获取所有markers
+    getAllMarkers(): Marker[] {
+        return this.markers;
+    }
+
     // 删除所有markers
     removeAllMarkers() {
         const newMarkers = _filter(this.markers, (marker: Marker) => {
