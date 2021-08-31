@@ -74,6 +74,7 @@
         <button class="btn btn-default" onclick="setMode('CIRCLE');">圆</button>
         <button class="btn btn-default" onclick="setMode('RECT');">矩形</button>
         <button class="btn btn-default" onclick="setMode('POLYGON');">多边形</button>
+        <button class="btn btn-default" onclick="getFeatures();">获取标注数据</button>
         &nbsp;&nbsp;
         <button class="btn btn-default" onclick="setMode('DRAWMASK');">涂抹</button>
         <button class="btn btn-default" onclick="setMode('CLEARMASK');">擦除</button>
@@ -442,6 +443,17 @@
                 default:
                     break;
             }
+        }
+
+        // 获取所有features
+        function getFeatures() {
+            const allFeatures = gFirstFeatureLayer.getAllFeatures();
+            console.log('--allFeatures--', allFeatures);
+        }
+
+        // 实例销毁
+        function destroy() {
+            gMap.destroy();
         }
 
         window.onresize = function() {

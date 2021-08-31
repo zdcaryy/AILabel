@@ -413,6 +413,12 @@ const screenPoint = gMap.transformGlobalToScreen({x, y});
 |---|---|---|---|---|
 |globalPoint|待转换实际坐标|是|--|IPoint|
 
+## destroy
+AILabel.Map实例销毁【如果在切换实例时最好要将上一次实例进行destroy】
+```javascript
+gMap && gMap.destroy();
+```
+
 ## events
 事件监听
 ```javascript
