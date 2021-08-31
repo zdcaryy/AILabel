@@ -58,3 +58,7 @@
 2、Layer.Marker增加getAllMarkers
 3、Layer.Text增加getAllTexts
 4、Layer.Mask增加getAllActions
+
+# 5.0.13
+`2021-08-31`
+1、Map增加destroy方法

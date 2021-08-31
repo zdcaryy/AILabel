@@ -10049,7 +10049,8 @@
       });
 
       this.wrapperDomId = domId;
-      this.wrapperDom = document.getElementById(domId); // 在dom容器创建map主容器
+      this.wrapperDom = document.getElementById(domId); // 首先判断是否已经被实例化过
+      // 在dom容器创建map主容器
 
       this.createMainDom(); // 相关参数初始化
 
@@ -10720,9 +10721,16 @@
       } // 用户事件添加
 
     }, {
+      key: "destroy",
+      value: // gMap实例销毁
+      function destroy() {
+        // 移除当前事件
+        this.dom.remove();
+      } // 打印测试输出
+
+    }, {
       key: "printInfo",
-      value: // 打印测试输出
-      function printInfo() {}
+      value: function printInfo() {}
     }]);
 
     return Map;
@@ -13210,7 +13218,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.12' // 和npm-version保持一致
+    version: '5.0.13' // 和npm-version保持一致
 
   };
 

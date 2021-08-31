@@ -115,6 +115,10 @@ export default class Map {
     constructor(domId: string, mapOptions?: IMapOptions) {
         this.wrapperDomId = domId;
         this.wrapperDom = document.getElementById(domId);
+
+        // 首先判断是否已经被实例化过
+
+
         // 在dom容器创建map主容器
         this.createMainDom();
 
@@ -651,6 +655,12 @@ export default class Map {
         on: (eventType: EEventType, callback: Function) => {
             this.eventsObServer.on(eventType, callback);
         }
+    }
+
+    // gMap实例销毁
+    public destroy() {
+        // 移除当前事件
+        this.dom.remove();
     }
 
     // 打印测试输出
