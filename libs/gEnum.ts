@@ -61,5 +61,6 @@ export enum ECursorType {
     NWSE_Resize = "nwse-resize"
 };
 export enum EUrlCursorType{
-
+    DrawMask = "crosshair",
+    ClearMask = "crosshair"
 };

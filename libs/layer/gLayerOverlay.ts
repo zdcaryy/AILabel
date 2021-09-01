@@ -132,6 +132,7 @@ export default class OverlayLayer extends CanvasLayer  {
             (style || this.map.drawingStyle), // style
             {active}
         );
+
         this.addFeatureActionText(feature, {clear});
 
         // 节点绘制

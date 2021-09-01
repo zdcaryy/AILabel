@@ -21,6 +21,7 @@ import MarkerLayer from './layer/gLayerMarker';
 import {IFeatureStyle, IRectShape} from './feature/gInterface';
 import Feature from './feature/gFeature';
 import {ELayerType } from './layer/gEnum';
+import { EFeatureType } from './feature/gEnum';
 
 export default class Map {
     // 用户侧传入的dom
@@ -94,6 +95,8 @@ export default class Map {
     public overlayLayer: OverlayLayer
     // 当前map上的tipLayer: 文字提示等
     public tipLayer: OverlayLayer
+    // 当前map上的cursorLayer: 比如涂抹时绘制圆圈大小鼠标样式
+    public cursorLayer: OverlayLayer
     // 当前map上的markerLayer: 注记层，内部使用
     public markerLayer: MarkerLayer
 
@@ -145,6 +148,8 @@ export default class Map {
         this.addOverlayLayer();
         // 添加tipLayer至当前map，最终会被添加至platform层
         this.addTipLayer();
+        // 添加cursorLayer至当前map，最终会被添加至platform层
+        this.addCursorLayer();
         // 添加eventLayer至当前map，最终会被添加至platform层
         this.addEventLayer();
         // 添加markerLayer至当前map，最终会被添加至platform层
@@ -596,6 +601,16 @@ export default class Map {
         this.tipLayer.onAdd(this);
     }
 
+    // 添加cursorLayer至当前map
+    addCursorLayer() {
+        // 实例化cursorLayer
+        this.cursorLayer = new OverlayLayer(`cursor-${_uniqueId()}`, {}, {zIndex: 3});
+
+        // 首先将layer-dom-append到容器中
+        this.platformDom.appendChild(this.cursorLayer.dom);
+        this.cursorLayer.onAdd(this);
+    }
+
     // 添加markerLayer至当前map
     addMarkerLayer() {
         // 实例化markerLayer
@@ -615,13 +630,37 @@ export default class Map {
     }
 
     // setCursor
-    setCursor(cursor: ECursorType): Map {
+    setCursor(cursor: ECursorType | EUrlCursorType, option: IObject = {}): Map {
+        // 鼠标矢量样式层清空
+        this.cursorLayer.removeAllFeatureActionText();
+        // 设置mouse:cursor
         this.platformDom.style.cursor = cursor;
+
+        // 然后判断是否需要绘制矢量鼠标样式
+        this.setCursorFeature(option);
+
         return this;
     }
     // setUrlCursor
     setUrlCursor(cursor: EUrlCursorType): Map {
         return this;
+    }
+    // 设置矢量cursor
+    setCursorFeature(option: IObject = {}) {
+        const {type, shape} = option;
+        // 涂抹/擦除
+        if (type === EFeatureType.Circle) {
+            this.cursorLayer.addCircleFeature(
+                shape,
+                {style: {
+                    lineWidth: 1,
+                    strokeStyle: '#aaa',
+                    fillStyle: '#ffffffb3',
+                    stroke: true,
+                    fill: true
+                }}
+            );
+        }
     }
 
     // map-dragging时调用，在平移时调用

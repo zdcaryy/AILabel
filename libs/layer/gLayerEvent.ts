@@ -17,7 +17,7 @@ import {IBasePoint, IObject, IPoint} from '../gInterface';
 import {ILayerStyle} from './gInterface';
 import Layer from './gLayer';
 import {ELayerType} from './gEnum';
-import {ECursorType, EEventType, EMapMode, EXAxisDirection, EYAxisDirection} from '../gEnum';
+import {ECursorType, EEventType, EMapMode, EUrlCursorType, EXAxisDirection, EYAxisDirection} from '../gEnum';
 import {EFeatureCircleSubtype, EFeatureType} from '../feature/gEnum';
 import Util from '../gUtil';
 import {ICircleShape, IFeatureShape, ILineShape, IPointShape, IPolygonShape, IPolylineShape, IRectShape} from '../feature/gInterface';
@@ -1136,8 +1136,25 @@ export default class MaskLayer extends Layer  {
             this.map.setCursor(ECursorType.Crosshair);
             this.handlePolygonMove(e);
         }
-        else if ((mapMode === EMapMode.DrawMask || mapMode === EMapMode.ClearMask) && !dragging) {
-            this.map.setCursor(ECursorType.Crosshair);
+        else if (mapMode === EMapMode.DrawMask) {
+            const lineWidth = _get(this.map.drawingStyle, 'lineWidth', 1);
+            this.map.setCursor(
+                EUrlCursorType.DrawMask,
+                {
+                    type: EFeatureType.Circle,
+                    shape: {sr: lineWidth / 2, cx: global.x, cy: global.y}
+                }
+            );
+        }
+        else if (mapMode === EMapMode.ClearMask) {
+            const lineWidth = _get(this.map.drawingStyle, 'lineWidth', 1);
+            this.map.setCursor(
+                EUrlCursorType.ClearMask,
+                {
+                    type: EFeatureType.Circle,
+                    shape: {sr: lineWidth / 2, cx: global.x, cy: global.y}
+                }
+            );
         }
 
         // 首先判断是否是取消选中
@@ -1305,6 +1322,8 @@ export default class MaskLayer extends Layer  {
         e.preventDefault();
         // 清空文字提示层
         this.map.tipLayer.removeAllFeatureActionText();
+        // 清空鼠标矢量
+        this.map.cursorLayer.removeAllFeatureActionText();
         // 如果在绘制过程中，此时需要判断是否需要自动平移视野
         this.handlePanWhenDrawing(e);
 

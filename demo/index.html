@@ -281,9 +281,9 @@
 
         const gFirstFeatureCircle = new AILabel.Feature.Circle(
             'first-feature-circle', // id
-            {cx: 100, cy: 100, sr: 20, stroke: true, fill: false}, // shape
+            {cx: 100, cy: 100, sr: 20}, // shape
             {name: '第一个矢量图层'}, // props
-            {fillStyle: '#F4A460', strokeStyle: '#00f', lineWidth: 1} // style
+            {fillStyle: '#F4A460', strokeStyle: '#00f', lineWidth: 1, stroke: true, fill: false} // style
         );
         gFirstFeatureLayer.addFeature(gFirstFeatureCircle);
 
@@ -431,12 +431,12 @@
                     break;
                 }
                 case 'DRAWMASK': {
-                    drawingStyle = {strokeStyle: 'rgba(255, 0, 0, .5)', fillStyle: '#00f', lineWidth: 20}
+                    drawingStyle = {strokeStyle: 'rgba(255, 0, 0, .5)', fillStyle: '#00f', lineWidth: 50}
                     gMap.setDrawingStyle(drawingStyle);
                     break;
                 }
                 case 'CLEARMASK': {
-                    drawingStyle = {fillStyle: '#00f', lineWidth: 20}
+                    drawingStyle = {fillStyle: '#00f', lineWidth: 30}
                     gMap.setDrawingStyle(drawingStyle);
                     break;
                 }

@@ -5281,6 +5281,12 @@
     ECursorType["NESW_Resize"] = "nesw-resize";
     ECursorType["NWSE_Resize"] = "nwse-resize";
   })(ECursorType || (ECursorType = {}));
+  var EUrlCursorType;
+
+  (function (EUrlCursorType) {
+    EUrlCursorType["DrawMask"] = "crosshair";
+    EUrlCursorType["ClearMask"] = "crosshair";
+  })(EUrlCursorType || (EUrlCursorType = {}));
 
   var baseEach = _baseEach,
       isArrayLike$3 = isArrayLike_1;
@@ -8232,8 +8238,28 @@
         } else if (mapMode === EMapMode.Polygon && !dragging) {
           this.map.setCursor(ECursorType.Crosshair);
           this.handlePolygonMove(e);
-        } else if ((mapMode === EMapMode.DrawMask || mapMode === EMapMode.ClearMask) && !dragging) {
-          this.map.setCursor(ECursorType.Crosshair);
+        } else if (mapMode === EMapMode.DrawMask) {
+          var lineWidth = get_1(this.map.drawingStyle, 'lineWidth', 1);
+
+          this.map.setCursor(EUrlCursorType.DrawMask, {
+            type: EFeatureType.Circle,
+            shape: {
+              sr: lineWidth / 2,
+              cx: global.x,
+              cy: global.y
+            }
+          });
+        } else if (mapMode === EMapMode.ClearMask) {
+          var _lineWidth = get_1(this.map.drawingStyle, 'lineWidth', 1);
+
+          this.map.setCursor(EUrlCursorType.ClearMask, {
+            type: EFeatureType.Circle,
+            shape: {
+              sr: _lineWidth / 2,
+              cx: global.x,
+              cy: global.y
+            }
+          });
         } // 首先判断是否是取消选中
 
 
@@ -8406,7 +8432,9 @@
       value: function onMouseOut(e) {
         e.preventDefault(); // 清空文字提示层
 
-        this.map.tipLayer.removeAllFeatureActionText(); // 如果在绘制过程中，此时需要判断是否需要自动平移视野
+        this.map.tipLayer.removeAllFeatureActionText(); // 清空鼠标矢量
+
+        this.map.cursorLayer.removeAllFeatureActionText(); // 如果在绘制过程中，此时需要判断是否需要自动平移视野
 
         this.handlePanWhenDrawing(e); // 对外暴露事件执行
 
@@ -9161,13 +9189,7 @@
       value: function refresh() {
         var _this2 = this;
 
-        var isGlobalSubtype = this.getSubType() === EFeatureCircleSubtype.Global; // 执行坐标转换
-
-        var _ref4 = this.shape,
-            _ref4$stroke = _ref4.stroke,
-            stroke = _ref4$stroke === void 0 ? true : _ref4$stroke,
-            _ref4$fill = _ref4.fill,
-            fill = _ref4$fill === void 0 ? false : _ref4$fill;
+        var isGlobalSubtype = this.getSubType() === EFeatureCircleSubtype.Global;
         var dpr = CanvasLayer.dpr;
         var scale = this.layer.map.getScale();
         Graphic.drawCircle(this.layer.canvasContext, this.shape, this.style, // style
@@ -9191,9 +9213,7 @@
               cy: globalY * dpr,
               r: screenWidth * dpr
             };
-          },
-          stroke: stroke,
-          fill: fill
+          }
         });
       }
     }]);
@@ -10083,7 +10103,9 @@
 
       this.addOverlayLayer(); // 添加tipLayer至当前map，最终会被添加至platform层
 
-      this.addTipLayer(); // 添加eventLayer至当前map，最终会被添加至platform层
+      this.addTipLayer(); // 添加cursorLayer至当前map，最终会被添加至platform层
+
+      this.addCursorLayer(); // 添加eventLayer至当前map，最终会被添加至platform层
 
       this.addEventLayer(); // 添加markerLayer至当前map，最终会被添加至platform层
 
@@ -10656,6 +10678,18 @@
 
         this.platformDom.appendChild(this.tipLayer.dom);
         this.tipLayer.onAdd(this);
+      } // 添加cursorLayer至当前map
+
+    }, {
+      key: "addCursorLayer",
+      value: function addCursorLayer() {
+        // 实例化cursorLayer
+        this.cursorLayer = new OverlayLayer("cursor-".concat(uniqueId_1()), {}, {
+          zIndex: 3
+        }); // 首先将layer-dom-append到容器中
+
+        this.platformDom.appendChild(this.cursorLayer.dom);
+        this.cursorLayer.onAdd(this);
       } // 添加markerLayer至当前map
 
     }, {
@@ -10684,7 +10718,13 @@
     }, {
       key: "setCursor",
       value: function setCursor(cursor) {
-        this.platformDom.style.cursor = cursor;
+        var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        // 鼠标矢量样式层清空
+        this.cursorLayer.removeAllFeatureActionText(); // 设置mouse:cursor
+
+        this.platformDom.style.cursor = cursor; // 然后判断是否需要绘制矢量鼠标样式
+
+        this.setCursorFeature(option);
         return this;
       } // setUrlCursor
 
@@ -10692,6 +10732,26 @@
       key: "setUrlCursor",
       value: function setUrlCursor(cursor) {
         return this;
+      } // 设置矢量cursor
+
+    }, {
+      key: "setCursorFeature",
+      value: function setCursorFeature() {
+        var option = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        var type = option.type,
+            shape = option.shape; // 涂抹/擦除
+
+        if (type === EFeatureType.Circle) {
+          this.cursorLayer.addCircleFeature(shape, {
+            style: {
+              lineWidth: 1,
+              strokeStyle: '#aaa',
+              fillStyle: '#ffffffb3',
+              stroke: true,
+              fill: true
+            }
+          });
+        }
       } // map-dragging时调用，在平移时调用
 
     }, {
@@ -13218,7 +13278,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.13' // 和npm-version保持一致
+    version: '5.0.14' // 和npm-version保持一致
 
   };
 

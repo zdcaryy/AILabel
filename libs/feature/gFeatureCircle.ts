@@ -133,9 +133,6 @@ export default class CircleFeature extends Feature {
     refresh() {
         const isGlobalSubtype = this.getSubType() === EFeatureCircleSubtype.Global;
 
-        // 执行坐标转换
-        const {stroke = true, fill = false} = this.shape as ICircleShape;
-
         const dpr = CanvasLayer.dpr;
         const scale = this.layer.map.getScale();
 
@@ -155,9 +152,7 @@ export default class CircleFeature extends Feature {
                         cy: globalY * dpr,
                         r: screenWidth * dpr
                     };
-                },
-                stroke,
-                fill
+                }
             }
         );
     }
