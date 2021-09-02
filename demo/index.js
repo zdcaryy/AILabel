@@ -9214,7 +9214,47 @@
               r: screenWidth * dpr
             };
           }
-        });
+        }); // 说明是选中态，需要绘制边界节点
+
+        if (this.option.active) {
+          var edgePoints = this.getEdgePoints();
+
+          forEach_1(edgePoints, function (point) {
+            var cx = point.x,
+                cy = point.y;
+            Graphic.drawCircle(_this2.layer.canvasContext, {
+              sr: 3.5,
+              cx: cx,
+              cy: cy
+            }, {
+              strokeStyle: '#666',
+              fillStyle: '#fff',
+              stroke: true,
+              fill: true,
+              lineWidth: 1
+            }, {
+              format: function format(shape) {
+                var cx = shape.cx,
+                    cy = shape.cy,
+                    sr = shape.sr;
+                var screenWidth = sr;
+
+                var _this2$layer$map$tran2 = _this2.layer.map.transformGlobalToScreen({
+                  x: cx,
+                  y: cy
+                }),
+                    globalX = _this2$layer$map$tran2.x,
+                    globalY = _this2$layer$map$tran2.y;
+
+                return {
+                  cx: globalX * dpr,
+                  cy: globalY * dpr,
+                  r: screenWidth * dpr
+                };
+              }
+            });
+          });
+        }
       }
     }]);
 
@@ -9568,9 +9608,7 @@
             clear = _ref3$clear === void 0 ? true : _ref3$clear,
             style = _ref3.style,
             _ref3$active = _ref3.active,
-            active = _ref3$active === void 0 ? false : _ref3$active,
-            _ref3$withPoints = _ref3.withPoints,
-            withPoints = _ref3$withPoints === void 0 ? false : _ref3$withPoints;
+            active = _ref3$active === void 0 ? false : _ref3$active;
 
         var feature = new CircleFeature("".concat(+new Date()), // id
         shape, // shape
@@ -9581,12 +9619,7 @@
         });
         this.addFeatureActionText(feature, {
           clear: clear
-        }); // 节点绘制
-
-        if (withPoints) {
-          var edgePoints = feature.getEdgePoints();
-          this.addDrawingPoints(edgePoints);
-        }
+        });
       } // 添加涂抹action
 
     }, {
@@ -9699,7 +9732,7 @@
             {
               this.addCircleFeature(shape, {
                 style: style,
-                withPoints: true
+                active: true
               });
               break;
             }
@@ -13278,7 +13311,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.14' // 和npm-version保持一致
+    version: '5.0.15' // 和npm-version保持一致
 
   };
 

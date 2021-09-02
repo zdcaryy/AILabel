@@ -1,5 +1,6 @@
 import _isNumber from 'lodash/isNumber';
 import _assign from 'lodash/assign';
+import _forEach from 'lodash/forEach';
 
 import {IObject, IPoint} from '../gInterface';
 import {IFeatureStyle, ICircleShape, IRectShape} from './gInterface';
@@ -8,7 +9,7 @@ import Feature from './gFeature';
 import Graphic from '../gGraphic';
 import CanvasLayer from '../layer/gLayerCanvas';
 import Util from '../gUtil';
-import { EXAxisDirection, EYAxisDirection } from '../gEnum';
+import {EXAxisDirection, EYAxisDirection} from '../gEnum';
 
 export default class CircleFeature extends Feature {
     static defaultOption: IObject = {
@@ -155,5 +156,30 @@ export default class CircleFeature extends Feature {
                 }
             }
         );
+
+        // 说明是选中态，需要绘制边界节点
+        if (this.option.active) {
+            const edgePoints = this.getEdgePoints();
+            _forEach(edgePoints, (point: IPoint) => {
+                const {x: cx, y: cy} = point;
+                Graphic.drawCircle(
+                    this.layer.canvasContext,
+                    {sr: 3.5, cx, cy},
+                    {strokeStyle: '#666', fillStyle: '#fff', stroke: true, fill: true, lineWidth: 1},
+                    {
+                        format: (shape: ICircleShape) => {
+                            const {cx, cy, sr} = shape;
+                            const screenWidth = sr;
+                            const {x: globalX, y: globalY} = this.layer.map.transformGlobalToScreen({x: cx, y: cy});
+                            return {
+                                cx: globalX * dpr,
+                                cy: globalY * dpr,
+                                r: screenWidth * dpr
+                            };
+                        }
+                    }
+                );
+            });
+        }
     }
 }

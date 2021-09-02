@@ -123,7 +123,7 @@ export default class OverlayLayer extends CanvasLayer  {
 
     // 添加circle
     addCircleFeature(shape: ICircleShape, option?: IObject) {
-        const {clear = true, style,  active = false, withPoints = false} = option || {};
+        const {clear = true, style,  active = false} = option || {};
 
         const feature = new Circle(
             `${+new Date()}`, // id
@@ -134,12 +134,6 @@ export default class OverlayLayer extends CanvasLayer  {
         );
 
         this.addFeatureActionText(feature, {clear});
-
-        // 节点绘制
-        if (withPoints) {
-            const edgePoints = feature.getEdgePoints();
-            this.addDrawingPoints(edgePoints);
-        }
     }
 
     // 添加涂抹action
@@ -211,7 +205,7 @@ export default class OverlayLayer extends CanvasLayer  {
                 break;
             }
             case EFeatureType.Circle: {
-                this.addCircleFeature(shape, {style, withPoints: true});
+                this.addCircleFeature(shape, {style, active: true});
                 break;
             }
         }
