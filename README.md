@@ -5,7 +5,7 @@ AILabel类库是一款集打点、线段、多段线、矩形、多边形、圆�
 
 ## 文档
 
-源代码：https://github.com/dingyang9642/AILabel<br/>
+源代码：https://github.com/dingyang9642/AILabel（star点起来）<br/>
 API文档：http://ailabel.com.cn/public/ailabel/api/index.html<br/>
 Demo文档：http://ailabel.com.cn/public/ailabel/demo/index.html<br/>
 Demo1文档：http://ailabel.com.cn/public/ailabel/demo/label/index.html<br/>
