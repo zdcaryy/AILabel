@@ -109,6 +109,17 @@ canvas样式：比如lineWidth/strokeStyle/fillStyle等
 |自定义：fill|是否填充|否|false|boolean|
 |其他配置|--|否|--|--|
 
+## enableDrawingTip
+AILabel.Map设置绘制过程中提示文字开启【默认开启】
+```javascript
+gMap.enableDrawingTip();
+```
+
+## disableDrawingTip
+AILabel.Map设置绘制过程中提示文字关闭
+```javascript
+gMap.disableDrawingTip();
+```
 
 ## getSize
 获取传入容器的大小

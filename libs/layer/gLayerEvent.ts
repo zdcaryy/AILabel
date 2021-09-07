@@ -25,6 +25,7 @@ import Feature from '../feature/gFeature';
 import CircleFeature from '../feature/gFeatureCircle';
 import RectFeature from '../feature/gFeatureRect';
 import {EMarkerType} from '../marker/gEnum';
+import { ITextInfo } from '../text/gInterface';
 
 
 export default class MaskLayer extends Layer  {
@@ -222,7 +223,7 @@ export default class MaskLayer extends Layer  {
         document.onmouseup =  e => this.handleCircleEnd(e);
 
         const global = this.startPoint.global;
-        this.map.tipLayer.addText({text: '移动开始绘制', position: global});
+        this.setTip({text: '移动开始绘制', position: global});
     }
     handleCircleMove(e: MouseEvent) {
         const global = this.startPoint.global;
@@ -239,7 +240,7 @@ export default class MaskLayer extends Layer  {
 
         const circleShape = {cx: global.x, cy: global.y, sr: screenDlt};
         this.map.overlayLayer.addCircleFeature(circleShape);
-        this.map.tipLayer.addText({text: '抬起完成绘制', position: moveGlobal});
+        this.setTip({text: '抬起完成绘制', position: moveGlobal});
     }
     handleCircleEnd(e: MouseEvent) {
         this.dragging = false; // 鼠标抬起
@@ -277,7 +278,7 @@ export default class MaskLayer extends Layer  {
             this.clearDownTimer();
             this.downTimer = window.setTimeout(() => {
                 this.tmpPointsStore.push(this.startPoint);
-                this.map.tipLayer.addText({text: '移动开始绘制', position: this.startPoint.global});
+                this.setTip({text: '移动开始绘制', position: this.startPoint.global});
             }, 300);
         }
         else if (this.tmpPointsStore.length === 1) {
@@ -302,13 +303,13 @@ export default class MaskLayer extends Layer  {
 
         const pointsLength = this.tmpPointsStore.length;
         if (pointsLength === 0) {
-            this.map.tipLayer.addText({text: '单击确定起点', position: global});
+            this.setTip({text: '单击确定起点', position: global});
         }
         else if (pointsLength === 1) {
             const start = this.tmpPointsStore[0].global;
             const end = this.map.transformScreenToGlobal({x: offsetX, y: offsetY});
             this.map.overlayLayer.addLineFeature({start, end});
-            this.map.tipLayer.addText({text: '单击确定终点', position: global});
+            this.setTip({text: '单击确定终点', position: global});
         }
     }
 
@@ -321,12 +322,12 @@ export default class MaskLayer extends Layer  {
             this.clearDownTimer();
             this.downTimer = window.setTimeout(() => {
                 this.tmpPointsStore.push(this.startPoint);
-                this.map.tipLayer.addText({text: '移动开始绘制', position: this.startPoint.global});
+                this.setTip({text: '移动开始绘制', position: this.startPoint.global});
             }, 300);
         }
         else {
             this.tmpPointsStore.push(this.startPoint);
-            this.map.tipLayer.addText({text: 'ctrl+z撤销', position: this.startPoint.global});
+            this.setTip({text: 'ctrl+z撤销', position: this.startPoint.global});
         }
     }
     handlePolylineMove(e: MouseEvent) {
@@ -338,11 +339,11 @@ export default class MaskLayer extends Layer  {
 
         if (drawingGlobalPoints.length === 1) {
             // 说明刚开始绘制
-            this.map.tipLayer.addText({text: '单击确定起点', position: moveGlobalPoint});
+            this.setTip({text: '单击确定起点', position: moveGlobalPoint});
         }
         else if (drawingGlobalPoints.length > 1) {
             this.map.overlayLayer.addPolylineFeature({points: drawingGlobalPoints});
-            this.map.tipLayer.addText({text: '单击绘制/双击结束', position: moveGlobalPoint});
+            this.setTip({text: '单击绘制/双击结束', position: moveGlobalPoint});
         }
     }
     handlePolylineEnd(e: MouseEvent) {
@@ -367,7 +368,7 @@ export default class MaskLayer extends Layer  {
         document.onmouseup =  e => this.handleRectEnd(e);
 
         const global = this.startPoint.global;
-        this.map.tipLayer.addText({text: '移动开始绘制', position: global});
+        this.setTip({text: '移动开始绘制', position: global});
     }
     handleRectMove(e: MouseEvent) {
         const {x, y} = this.startPoint.global;
@@ -387,7 +388,7 @@ export default class MaskLayer extends Layer  {
         const rectShape = {x: ltx, y: lty, width: Math.abs(width), height: Math.abs(height)};
         this.map.overlayLayer.addRectFeature(rectShape);
 
-        this.map.tipLayer.addText({text: '抬起完成绘制', position: moveGlobal});
+        this.setTip({text: '抬起完成绘制', position: moveGlobal});
     }
     handleRectEnd(e: MouseEvent) {
         this.dragging = false; // 鼠标抬起
@@ -431,12 +432,12 @@ export default class MaskLayer extends Layer  {
             this.clearDownTimer();
             this.downTimer = window.setTimeout(() => {
                 this.tmpPointsStore.push(this.startPoint);
-                this.map.tipLayer.addText({text: '移动开始绘制', position: this.startPoint.global});
+                this.setTip({text: '移动开始绘制', position: this.startPoint.global});
             }, 300);
         }
         else {
             this.tmpPointsStore.push(this.startPoint);
-            this.map.tipLayer.addText({text: 'ctrl+z撤销', position: this.startPoint.global});
+            this.setTip({text: 'ctrl+z撤销', position: this.startPoint.global});
         }
     }
     handlePolygonMove(e: MouseEvent) {
@@ -449,13 +450,13 @@ export default class MaskLayer extends Layer  {
         const drawingPointsCount = drawingGlobalPoints.length;
         if (drawingPointsCount === 1) {
             // 说明刚开始绘制
-            this.map.tipLayer.addText({text: '单击确定起点', position: moveGlobalPoint});
+            this.setTip({text: '单击确定起点', position: moveGlobalPoint});
         }
         else if (drawingPointsCount > 1) {
             this.map.overlayLayer.addPolygonFeature({points: drawingGlobalPoints}, {node: true});
 
             const tipText = drawingPointsCount === 2 ? '单击绘制' : '单击绘制/双击结束';
-            this.map.tipLayer.addText({text: tipText, position: moveGlobalPoint});
+            this.setTip({text: tipText, position: moveGlobalPoint});
         }
     }
     handlePolygonEnd(e: MouseEvent) {
@@ -641,7 +642,7 @@ export default class MaskLayer extends Layer  {
                 if (activeFeature.captureWithPoint(currentGlobalPoint)) {
                     this.hoverFeature = activeFeature;
                     this.map.setCursor(ECursorType.Pointer);
-                    this.map.tipLayer.addText({text: '按下移动图形/右键删除', position: currentGlobalPoint});
+                    this.setTip({text: '按下移动图形/右键删除', position: currentGlobalPoint});
                 }
                 break;
             }
@@ -660,7 +661,7 @@ export default class MaskLayer extends Layer  {
                         this.hoverFeatureIndex = index;
                         const cursor = (index === 1 || index === 3) ? ECursorType.NESW_Resize : ECursorType.NWSE_Resize;
                         this.map.setCursor(cursor);
-                        this.map.tipLayer.addText({text: '按下拖动', position: currentGlobalPoint});
+                        this.setTip({text: '按下拖动', position: currentGlobalPoint});
                         return false;
                     }
                 });
@@ -668,7 +669,7 @@ export default class MaskLayer extends Layer  {
                 if (!_isNumber(this.hoverFeatureIndex) && activeFeature.captureWithPoint(currentGlobalPoint)) {
                     this.hoverFeature = activeFeature;
                     this.map.setCursor(ECursorType.Move);
-                    this.map.tipLayer.addText({text: '按下移动图形', position: currentGlobalPoint});
+                    this.setTip({text: '按下移动图形', position: currentGlobalPoint});
                 }
                 break;
             }
@@ -695,7 +696,7 @@ export default class MaskLayer extends Layer  {
                         this.map.setCursor(ECursorType.Pointer);
                         const minPointsCount = (isLine || isPolyline) ? 2 : 3;
                         const deleteTip = pointsLength > minPointsCount ? '/右键删除' : '';
-                        this.map.tipLayer.addText({text: `按下拖动${deleteTip}`, position: currentGlobalPoint});
+                        this.setTip({text: `按下拖动${deleteTip}`, position: currentGlobalPoint});
                         return false;
                     }
 
@@ -715,7 +716,7 @@ export default class MaskLayer extends Layer  {
                     if (distance2 <= 5) {
                         this.hoverFeatureIndex = index + 0.5;
                         this.map.setCursor(ECursorType.Pointer);
-                        this.map.tipLayer.addText({text: '按下拖动添加新节点', position: currentGlobalPoint});
+                        this.setTip({text: '按下拖动添加新节点', position: currentGlobalPoint});
                         return false;
                     }
                 });
@@ -723,7 +724,7 @@ export default class MaskLayer extends Layer  {
                 if (!_isNumber(this.hoverFeatureIndex) && activeFeature.captureWithPoint(currentGlobalPoint)) {
                     this.hoverFeature = activeFeature;
                     this.map.setCursor(ECursorType.Move);
-                    this.map.tipLayer.addText({text: '按下移动图形', position: currentGlobalPoint});
+                    this.setTip({text: '按下移动图形', position: currentGlobalPoint});
                 }
                 break;
             }
@@ -1114,11 +1115,11 @@ export default class MaskLayer extends Layer  {
         }
         else if (mapMode === EMapMode.Point && !dragging) {
             this.map.setCursor(ECursorType.Crosshair);
-            this.map.tipLayer.addText({text: '点击绘制点', position: global});
+            this.setTip({text: '点击绘制点', position: global});
         }
         else if (mapMode === EMapMode.Circle && !dragging) {
             this.map.setCursor(ECursorType.Crosshair);
-            this.map.tipLayer.addText({text: '按下确定圆心', position: global});
+            this.setTip({text: '按下确定圆心', position: global});
         }
         else if (mapMode === EMapMode.Line && !dragging) {
             this.map.setCursor(ECursorType.Crosshair);
@@ -1130,7 +1131,7 @@ export default class MaskLayer extends Layer  {
         }
         else if (mapMode === EMapMode.Rect && !dragging) {
             this.map.setCursor(ECursorType.Crosshair);
-            this.map.tipLayer.addText({text: '按下确定起点', position: global});
+            this.setTip({text: '按下确定起点', position: global});
         }
         else if (mapMode === EMapMode.Polygon && !dragging) {
             this.map.setCursor(ECursorType.Crosshair);
@@ -1159,7 +1160,7 @@ export default class MaskLayer extends Layer  {
 
         // 首先判断是否是取消选中
         if (this.map.activeFeature && !dragging) {
-            this.map.tipLayer.addText({text: '单击取消选中', position: global});
+            this.setTip({text: '单击取消选中', position: global});
         }
 
         // 编辑态，平移捕捉
@@ -1359,6 +1360,16 @@ export default class MaskLayer extends Layer  {
 
         const mouseMoveEvent = this.mouseMoveEvent;
         mouseMoveEvent && this.onMouseMove(mouseMoveEvent);
+    }
+
+    // 设置文字提示
+    setTip(textInfo: ITextInfo, option: IObject = {}) {
+        if (this.map.drawingTip) {
+            this.map.tipLayer.addText(textInfo, option);
+        }
+        else {
+            this.map.tipLayer.removeAllFeatureActionText();
+        }
     }
 
     // 重置drawing过程中产生的临时数据&清空临时绘制层

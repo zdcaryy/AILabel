@@ -6916,7 +6916,7 @@
         };
 
         var global = this.startPoint.global;
-        this.map.tipLayer.addText({
+        this.setTip({
           text: '移动开始绘制',
           position: global
         });
@@ -6953,7 +6953,7 @@
           sr: screenDlt
         };
         this.map.overlayLayer.addCircleFeature(circleShape);
-        this.map.tipLayer.addText({
+        this.setTip({
           text: '抬起完成绘制',
           position: moveGlobal
         });
@@ -7022,7 +7022,7 @@
           this.downTimer = window.setTimeout(function () {
             _this6.tmpPointsStore.push(_this6.startPoint);
 
-            _this6.map.tipLayer.addText({
+            _this6.setTip({
               text: '移动开始绘制',
               position: _this6.startPoint.global
             });
@@ -7051,7 +7051,7 @@
         var pointsLength = this.tmpPointsStore.length;
 
         if (pointsLength === 0) {
-          this.map.tipLayer.addText({
+          this.setTip({
             text: '单击确定起点',
             position: global
           });
@@ -7065,7 +7065,7 @@
             start: start,
             end: end
           });
-          this.map.tipLayer.addText({
+          this.setTip({
             text: '单击确定终点',
             position: global
           });
@@ -7087,14 +7087,14 @@
           this.downTimer = window.setTimeout(function () {
             _this7.tmpPointsStore.push(_this7.startPoint);
 
-            _this7.map.tipLayer.addText({
+            _this7.setTip({
               text: '移动开始绘制',
               position: _this7.startPoint.global
             });
           }, 300);
         } else {
           this.tmpPointsStore.push(this.startPoint);
-          this.map.tipLayer.addText({
+          this.setTip({
             text: 'ctrl+z撤销',
             position: this.startPoint.global
           });
@@ -7119,7 +7119,7 @@
 
         if (drawingGlobalPoints.length === 1) {
           // 说明刚开始绘制
-          this.map.tipLayer.addText({
+          this.setTip({
             text: '单击确定起点',
             position: moveGlobalPoint
           });
@@ -7127,7 +7127,7 @@
           this.map.overlayLayer.addPolylineFeature({
             points: drawingGlobalPoints
           });
-          this.map.tipLayer.addText({
+          this.setTip({
             text: '单击绘制/双击结束',
             position: moveGlobalPoint
           });
@@ -7169,7 +7169,7 @@
         };
 
         var global = this.startPoint.global;
-        this.map.tipLayer.addText({
+        this.setTip({
           text: '移动开始绘制',
           position: global
         });
@@ -7202,7 +7202,7 @@
           height: Math.abs(height)
         };
         this.map.overlayLayer.addRectFeature(rectShape);
-        this.map.tipLayer.addText({
+        this.setTip({
           text: '抬起完成绘制',
           position: moveGlobal
         });
@@ -7267,14 +7267,14 @@
           this.downTimer = window.setTimeout(function () {
             _this9.tmpPointsStore.push(_this9.startPoint);
 
-            _this9.map.tipLayer.addText({
+            _this9.setTip({
               text: '移动开始绘制',
               position: _this9.startPoint.global
             });
           }, 300);
         } else {
           this.tmpPointsStore.push(this.startPoint);
-          this.map.tipLayer.addText({
+          this.setTip({
             text: 'ctrl+z撤销',
             position: this.startPoint.global
           });
@@ -7300,7 +7300,7 @@
 
         if (drawingPointsCount === 1) {
           // 说明刚开始绘制
-          this.map.tipLayer.addText({
+          this.setTip({
             text: '单击确定起点',
             position: moveGlobalPoint
           });
@@ -7311,7 +7311,7 @@
             node: true
           });
           var tipText = drawingPointsCount === 2 ? '单击绘制' : '单击绘制/双击结束';
-          this.map.tipLayer.addText({
+          this.setTip({
             text: tipText,
             position: moveGlobalPoint
           });
@@ -7593,7 +7593,7 @@
               if (activeFeature.captureWithPoint(currentGlobalPoint)) {
                 this.hoverFeature = activeFeature;
                 this.map.setCursor(ECursorType.Pointer);
-                this.map.tipLayer.addText({
+                this.setTip({
                   text: '按下移动图形/右键删除',
                   position: currentGlobalPoint
                 });
@@ -7621,7 +7621,7 @@
 
                   _this11.map.setCursor(cursor);
 
-                  _this11.map.tipLayer.addText({
+                  _this11.setTip({
                     text: '按下拖动',
                     position: currentGlobalPoint
                   });
@@ -7634,7 +7634,7 @@
               if (!isNumber_1(this.hoverFeatureIndex) && activeFeature.captureWithPoint(currentGlobalPoint)) {
                 this.hoverFeature = activeFeature;
                 this.map.setCursor(ECursorType.Move);
-                this.map.tipLayer.addText({
+                this.setTip({
                   text: '按下移动图形',
                   position: currentGlobalPoint
                 });
@@ -7675,7 +7675,7 @@
                   var minPointsCount = isLine || isPolyline ? 2 : 3;
                   var deleteTip = pointsLength > minPointsCount ? '/右键删除' : '';
 
-                  _this11.map.tipLayer.addText({
+                  _this11.setTip({
                     text: "\u6309\u4E0B\u62D6\u52A8".concat(deleteTip),
                     position: currentGlobalPoint
                   });
@@ -7706,7 +7706,7 @@
 
                   _this11.map.setCursor(ECursorType.Pointer);
 
-                  _this11.map.tipLayer.addText({
+                  _this11.setTip({
                     text: '按下拖动添加新节点',
                     position: currentGlobalPoint
                   });
@@ -7719,7 +7719,7 @@
               if (!isNumber_1(this.hoverFeatureIndex) && activeFeature.captureWithPoint(currentGlobalPoint)) {
                 this.hoverFeature = activeFeature;
                 this.map.setCursor(ECursorType.Move);
-                this.map.tipLayer.addText({
+                this.setTip({
                   text: '按下移动图形',
                   position: currentGlobalPoint
                 });
@@ -8213,13 +8213,13 @@
           this.map.setCursor(ECursorType.Crosshair);
         } else if (mapMode === EMapMode.Point && !dragging) {
           this.map.setCursor(ECursorType.Crosshair);
-          this.map.tipLayer.addText({
+          this.setTip({
             text: '点击绘制点',
             position: global
           });
         } else if (mapMode === EMapMode.Circle && !dragging) {
           this.map.setCursor(ECursorType.Crosshair);
-          this.map.tipLayer.addText({
+          this.setTip({
             text: '按下确定圆心',
             position: global
           });
@@ -8231,7 +8231,7 @@
           this.handlePolylineMove(e);
         } else if (mapMode === EMapMode.Rect && !dragging) {
           this.map.setCursor(ECursorType.Crosshair);
-          this.map.tipLayer.addText({
+          this.setTip({
             text: '按下确定起点',
             position: global
           });
@@ -8264,7 +8264,7 @@
 
 
         if (this.map.activeFeature && !dragging) {
-          this.map.tipLayer.addText({
+          this.setTip({
             text: '单击取消选中',
             position: global
           });
@@ -8463,6 +8463,18 @@
         this.tmpPointsStore.pop();
         var mouseMoveEvent = this.mouseMoveEvent;
         mouseMoveEvent && this.onMouseMove(mouseMoveEvent);
+      } // 设置文字提示
+
+    }, {
+      key: "setTip",
+      value: function setTip(textInfo) {
+        var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+        if (this.map.drawingTip) {
+          this.map.tipLayer.addText(textInfo, option);
+        } else {
+          this.map.tipLayer.removeAllFeatureActionText();
+        }
       } // 重置drawing过程中产生的临时数据&清空临时绘制层
 
     }, {
@@ -10080,6 +10092,7 @@
     // 当前map中包含的controls
     // 当前map中包含的layers
     // 绘制状态下相关样式设置
+    // 绘制状态下鼠标旁提示文案开关[默认开启]
     // 当前选中的激活feature对象
     // function: constructor
     function Map(domId, mapOptions) {
@@ -10092,6 +10105,8 @@
       _defineProperty$1(this, "layers", []);
 
       _defineProperty$1(this, "drawingStyle", {});
+
+      _defineProperty$1(this, "drawingTip", true);
 
       _defineProperty$1(this, "activeFeature", null);
 
@@ -10179,6 +10194,18 @@
       key: "setDrawingStyle",
       value: function setDrawingStyle(drawingStyle) {
         this.drawingStyle = drawingStyle;
+      } // 开启绘制过程中的tip提示文案
+
+    }, {
+      key: "enableDrawingTip",
+      value: function enableDrawingTip() {
+        this.drawingTip = true;
+      } // 关闭绘制过程中的tip提示文案
+
+    }, {
+      key: "disableDrawingTip",
+      value: function disableDrawingTip() {
+        this.drawingTip = false;
       } // 获取dom宽高（width/height）
 
     }, {
@@ -13311,7 +13338,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.15' // 和npm-version保持一致
+    version: '5.0.16' // 和npm-version保持一致
 
   };
 

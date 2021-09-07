@@ -105,6 +105,8 @@ export default class Map {
 
     // 绘制状态下相关样式设置
     public drawingStyle: IFeatureStyle = {}
+    // 绘制状态下鼠标旁提示文案开关[默认开启]
+    public drawingTip: boolean = true
 
     // events
     public eventsObServer: events.EventEmitter
@@ -186,6 +188,15 @@ export default class Map {
     // 设置当前map绘制状态样式
     setDrawingStyle(drawingStyle: IFeatureStyle) {
         this.drawingStyle = drawingStyle;
+    }
+
+    // 开启绘制过程中的tip提示文案
+    enableDrawingTip() {
+        this.drawingTip = true;
+    }
+    // 关闭绘制过程中的tip提示文案
+    disableDrawingTip() {
+        this.drawingTip = false;
     }
 
     // 获取dom宽高（width/height）
