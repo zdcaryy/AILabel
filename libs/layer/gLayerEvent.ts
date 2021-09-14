@@ -1326,6 +1326,15 @@ export default class MaskLayer extends Layer  {
         // 清空鼠标矢量
         this.map.cursorLayer.removeAllFeatureActionText();
         // 如果在绘制过程中，此时需要判断是否需要自动平移视野
+
+        // 如果平移到marker上，做忽略处理
+        if (e.toElement) {
+            const eleDataType = (e.toElement as HTMLElement).getAttribute('data-type');
+            if (eleDataType === EMarkerType.Marker) {
+                return;
+            }
+        }
+
         this.handlePanWhenDrawing(e);
 
         // 对外暴露事件执行

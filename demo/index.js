@@ -6663,6 +6663,26 @@
     }
   });
 
+  var EMarkerType; // marker事件监听
+
+  (function (EMarkerType) {
+    EMarkerType["Marker"] = "MARKER";
+  })(EMarkerType || (EMarkerType = {}));
+
+  var EMarkerEventType;
+
+  (function (EMarkerEventType) {
+    EMarkerEventType["Click"] = "click";
+    EMarkerEventType["MouseDown"] = "mouseDown";
+    EMarkerEventType["MouseUp"] = "mouseUp";
+    EMarkerEventType["MouseOver"] = "mouseOver";
+    EMarkerEventType["MouseOut"] = "mouseOut";
+    EMarkerEventType["DragStart"] = "dragStart";
+    EMarkerEventType["Dragging"] = "dragging";
+    EMarkerEventType["DragEnd"] = "dragEnd";
+    EMarkerEventType["RightClick"] = "rightClick";
+  })(EMarkerEventType || (EMarkerEventType = {}));
+
   var MaskLayer$1 = /*#__PURE__*/function (_Layer) {
     _inherits(MaskLayer, _Layer);
 
@@ -8435,6 +8455,15 @@
         this.map.tipLayer.removeAllFeatureActionText(); // 清空鼠标矢量
 
         this.map.cursorLayer.removeAllFeatureActionText(); // 如果在绘制过程中，此时需要判断是否需要自动平移视野
+        // 如果平移到marker上，做忽略处理
+
+        if (e.toElement) {
+          var eleDataType = e.toElement.getAttribute('data-type');
+
+          if (eleDataType === EMarkerType.Marker) {
+            return;
+          }
+        }
 
         this.handlePanWhenDrawing(e); // 对外暴露事件执行
 
@@ -13024,26 +13053,6 @@
     Grid: GridControl
   };
 
-  var EMarkerType; // marker事件监听
-
-  (function (EMarkerType) {
-    EMarkerType["Marker"] = "MARKER";
-  })(EMarkerType || (EMarkerType = {}));
-
-  var EMarkerEventType;
-
-  (function (EMarkerEventType) {
-    EMarkerEventType["Click"] = "click";
-    EMarkerEventType["MouseDown"] = "mouseDown";
-    EMarkerEventType["MouseUp"] = "mouseUp";
-    EMarkerEventType["MouseOver"] = "mouseOver";
-    EMarkerEventType["MouseOut"] = "mouseOut";
-    EMarkerEventType["DragStart"] = "dragStart";
-    EMarkerEventType["Dragging"] = "dragging";
-    EMarkerEventType["DragEnd"] = "dragEnd";
-    EMarkerEventType["RightClick"] = "rightClick";
-  })(EMarkerEventType || (EMarkerEventType = {}));
-
   var Marker = /*#__PURE__*/function () {
     // markerId
     // markerType
@@ -13121,6 +13130,7 @@
         if (this.markerInfo.src) {
           this.image = new Image();
           this.image.id = this.id;
+          this.image.setAttribute('data-type', this.type);
           this.image.style.position = 'absolute';
           this.image.style.cursor = 'pointer';
           this.image.style.userSelect = 'none';
@@ -13338,7 +13348,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.16' // 和npm-version保持一致
+    version: '5.0.17' // 和npm-version保持一致
 
   };
 

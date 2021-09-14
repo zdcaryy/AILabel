@@ -88,6 +88,7 @@ export default class Marker {
         if (this.markerInfo.src) {
             this.image = new Image();
             this.image.id = this.id;
+            this.image.setAttribute('data-type', this.type);
             this.image.style.position = 'absolute';
             this.image.style.cursor = 'pointer';
             this.image.style.userSelect = 'none';
