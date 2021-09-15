@@ -107,6 +107,8 @@ export default class Map {
     public drawingStyle: IFeatureStyle = {}
     // 绘制状态下鼠标旁提示文案开关[默认开启]
     public drawingTip: boolean = true
+    // 编辑时临时feature的颜色
+    public editingColor: string = '#FF0000'
 
     // events
     public eventsObServer: events.EventEmitter
@@ -188,6 +190,11 @@ export default class Map {
     // 设置当前map绘制状态样式
     setDrawingStyle(drawingStyle: IFeatureStyle) {
         this.drawingStyle = drawingStyle;
+    }
+
+    // 设置编辑时临时feature的颜色
+    setEditingColor(color: string) {
+        this.editingColor = color;
     }
 
     // 开启绘制过程中的tip提示文案
@@ -393,10 +400,12 @@ export default class Map {
 
         // resize-layer
         _forEach(this.layers, (layer: Layer) => layer.resizeAndRefresh());
-        // 内置图层markerLayer/overlayLayer/tipLayer执行resize
+        // 内置图层markerLayer/overlayLayer/tipLayer/eventLayer执行resize
         this.markerLayer.resizeAndRefresh();
         this.overlayLayer.resizeAndRefresh();
         this.tipLayer.resizeAndRefresh();
+        this.eventLayer.resizeAndRefresh();
+
     }
 
     // 设置当前active的feature

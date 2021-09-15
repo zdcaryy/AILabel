@@ -21,13 +21,12 @@ import Action from '../mask/gAction';
 import {EFeatureType} from '../feature/gEnum';
 import Util from '../gUtil';
 import {ITextInfo} from '../text/gInterface';
-import Graphic from '../gGraphic';
 
 export default class OverlayLayer extends CanvasLayer  {
     public featureActionTexts: Array<Feature | Action | Text> = [] // 当前featureLayer中所有的features
 
     // 默认active的样式
-    defaultActiveFeatureStyle: IFeatureStyle = {
+    static defaultActiveFeatureStyle: IFeatureStyle = {
         strokeStyle: '#FF0000',
         fillStyle: '#FF0000',
         lineWidth: 1
@@ -177,7 +176,7 @@ export default class OverlayLayer extends CanvasLayer  {
         }
 
         // 高亮的样式
-        const style = this.defaultActiveFeatureStyle;
+        const style = OverlayLayer.defaultActiveFeatureStyle;
         // 做一下深度克隆，避免原有feature被污染[暂时不做克隆，效率太低]
         // const activeFeature = _cloneDeep(feature);
         const {type, shape} = feature;

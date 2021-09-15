@@ -1,3 +1,8 @@
+
+# 5.0.18
+`2021-09-15`
+1. gMap增加setEditingColor()改变编辑时拖拽feature颜色
+
 # 5.0.17
 `2021-09-14`
 1. 绘制过程中mouseOut遇到marker自动平移bug修复

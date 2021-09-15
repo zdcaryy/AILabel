@@ -28,7 +28,7 @@ import {EMarkerType} from '../marker/gEnum';
 import { ITextInfo } from '../text/gInterface';
 
 
-export default class MaskLayer extends Layer  {
+export default class EventLayer extends Layer  {
     public eventDom: HTMLDivElement
 
     // 实时记录鼠标的位置
@@ -772,7 +772,7 @@ export default class MaskLayer extends Layer  {
                 this.map.overlayLayer.addActiveFeature(activeFeature);
                 this.map.overlayLayer.addPointFeature(
                     this.toUpdateShape,
-                    {clear: false, style: {...style, fillStyle: '#FF0000'}}
+                    {clear: false, style: {...style, fillStyle: this.map?.editingColor}}
                 );
                 break;
             }
@@ -809,7 +809,7 @@ export default class MaskLayer extends Layer  {
                 this.map.overlayLayer.addActiveFeature(activeFeature);
                 this.map.overlayLayer.addCircleFeature(
                     this.toUpdateShape as ICircleShape,
-                    {clear: false, style: {...style, lineWidth: 1, strokeStyle: '#FF0000'}}
+                    {clear: false, style: {...style, lineWidth: 1, strokeStyle: this.map?.editingColor}}
                 );
                 break;
             }
@@ -850,7 +850,7 @@ export default class MaskLayer extends Layer  {
                 this.map.overlayLayer.addActiveFeature(activeFeature);
                 this.map.overlayLayer.addRectFeature(
                     this.toUpdateShape as IRectShape,
-                    {clear: false, style: {...style, lineWidth: 1, strokeStyle: '#FF0000'}}
+                    {clear: false, style: {...style, lineWidth: 1, strokeStyle: this.map?.editingColor}}
                 );
                 break;
             }
@@ -908,17 +908,17 @@ export default class MaskLayer extends Layer  {
                 // 线段绘制
                 isLine && this.map.overlayLayer.addLineFeature(
                     this.toUpdateShape as ILineShape,
-                    {clear: false, style: {...style, strokeStyle: '#FF0000'}}
+                    {clear: false, style: {...style, strokeStyle: this.map?.editingColor}}
                 );
                 // 多段线绘制
                 isPolyline && this.map.overlayLayer.addPolylineFeature(
                     this.toUpdateShape as IPolylineShape,
-                    {clear: false, style: {...style, strokeStyle: '#FF0000'}}
+                    {clear: false, style: {...style, strokeStyle: this.map?.editingColor}}
                 );
                 // 多边形绘制
                 isPolygon && this.map.overlayLayer.addPolygonFeature(
                     this.toUpdateShape as IPolygonShape,
-                    {clear: false, style: {...style, lineWidth: 1, strokeStyle: '#FF0000'}}
+                    {clear: false, style: {...style, lineWidth: 1, strokeStyle: this.map?.editingColor}}
                 );
                 break;
             }

@@ -6683,10 +6683,10 @@
     EMarkerEventType["RightClick"] = "rightClick";
   })(EMarkerEventType || (EMarkerEventType = {}));
 
-  var MaskLayer$1 = /*#__PURE__*/function (_Layer) {
-    _inherits(MaskLayer, _Layer);
+  var EventLayer = /*#__PURE__*/function (_Layer) {
+    _inherits(EventLayer, _Layer);
 
-    var _super = _createSuper(MaskLayer);
+    var _super = _createSuper(EventLayer);
 
     // 实时记录鼠标的位置
     // mouseDown坐标{screen:IPoint: 相对容器左上角坐标, globalPoint}
@@ -6697,13 +6697,13 @@
     // 当存在activeFeature时，鼠标move过程中捕捉到的feature节点index
     // 0 0.5 1 1.5 ：存在x.5时，代表的是x & x+1 的中间节点
     // function: constructor
-    function MaskLayer(id) {
+    function EventLayer(id) {
       var _this;
 
       var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var style = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-      _classCallCheck(this, MaskLayer);
+      _classCallCheck(this, EventLayer);
 
       _this = _super.call(this, id, ELayerType.Event, props, style);
 
@@ -6726,10 +6726,10 @@
       return _this;
     }
 
-    _createClass(MaskLayer, [{
+    _createClass(EventLayer, [{
       key: "onAdd",
       value: function onAdd(map) {
-        _get(_getPrototypeOf(MaskLayer.prototype), "onAdd", this).call(this, map);
+        _get(_getPrototypeOf(EventLayer.prototype), "onAdd", this).call(this, map);
 
         this.createEventDom();
         this.dom.appendChild(this.eventDom); // 事件绑定
@@ -7810,6 +7810,8 @@
         switch (type) {
           case EFeatureType.Point:
             {
+              var _this$map;
+
               var _ref13 = shape,
                   x = _ref13.x,
                   y = _ref13.y;
@@ -7822,7 +7824,7 @@
               this.map.overlayLayer.addPointFeature(this.toUpdateShape, {
                 clear: false,
                 style: _objectSpread2(_objectSpread2({}, style), {}, {
-                  fillStyle: '#FF0000'
+                  fillStyle: (_this$map = this.map) === null || _this$map === void 0 ? void 0 : _this$map.editingColor
                 })
               });
               break;
@@ -7830,6 +7832,8 @@
 
           case EFeatureType.Circle:
             {
+              var _this$map2;
+
               var _ref14 = shape,
                   cx = _ref14.cx,
                   cy = _ref14.cy,
@@ -7865,7 +7869,7 @@
                 clear: false,
                 style: _objectSpread2(_objectSpread2({}, style), {}, {
                   lineWidth: 1,
-                  strokeStyle: '#FF0000'
+                  strokeStyle: (_this$map2 = this.map) === null || _this$map2 === void 0 ? void 0 : _this$map2.editingColor
                 })
               });
               break;
@@ -7873,6 +7877,8 @@
 
           case EFeatureType.Rect:
             {
+              var _this$map3;
+
               var _ref15 = shape,
                   _x = _ref15.x,
                   _y = _ref15.y,
@@ -7920,7 +7926,7 @@
                 clear: false,
                 style: _objectSpread2(_objectSpread2({}, style), {}, {
                   lineWidth: 1,
-                  strokeStyle: '#FF0000'
+                  strokeStyle: (_this$map3 = this.map) === null || _this$map3 === void 0 ? void 0 : _this$map3.editingColor
                 })
               });
               break;
@@ -7930,6 +7936,8 @@
           case EFeatureType.Polyline:
           case EFeatureType.Polygon:
             {
+              var _this$map4, _this$map5, _this$map6;
+
               var isLine = type === EFeatureType.Line;
               var isPolyline = type === EFeatureType.Polyline;
               var isPolygon = type === EFeatureType.Polygon;
@@ -8015,14 +8023,14 @@
               isLine && this.map.overlayLayer.addLineFeature(this.toUpdateShape, {
                 clear: false,
                 style: _objectSpread2(_objectSpread2({}, style), {}, {
-                  strokeStyle: '#FF0000'
+                  strokeStyle: (_this$map4 = this.map) === null || _this$map4 === void 0 ? void 0 : _this$map4.editingColor
                 })
               }); // 多段线绘制
 
               isPolyline && this.map.overlayLayer.addPolylineFeature(this.toUpdateShape, {
                 clear: false,
                 style: _objectSpread2(_objectSpread2({}, style), {}, {
-                  strokeStyle: '#FF0000'
+                  strokeStyle: (_this$map5 = this.map) === null || _this$map5 === void 0 ? void 0 : _this$map5.editingColor
                 })
               }); // 多边形绘制
 
@@ -8030,7 +8038,7 @@
                 clear: false,
                 style: _objectSpread2(_objectSpread2({}, style), {}, {
                   lineWidth: 1,
-                  strokeStyle: '#FF0000'
+                  strokeStyle: (_this$map6 = this.map) === null || _this$map6 === void 0 ? void 0 : _this$map6.editingColor
                 })
               });
               break;
@@ -8520,11 +8528,11 @@
     }, {
       key: "refresh",
       value: function refresh() {
-        _get(_getPrototypeOf(MaskLayer.prototype), "refresh", this).call(this);
+        _get(_getPrototypeOf(EventLayer.prototype), "refresh", this).call(this);
       }
     }]);
 
-    return MaskLayer;
+    return EventLayer;
   }(Layer$1);
 
   var Feature$1 = /*#__PURE__*/function () {
@@ -9522,12 +9530,6 @@
 
       _defineProperty$1(_assertThisInitialized(_this), "featureActionTexts", []);
 
-      _defineProperty$1(_assertThisInitialized(_this), "defaultActiveFeatureStyle", {
-        strokeStyle: '#FF0000',
-        fillStyle: '#FF0000',
-        lineWidth: 1
-      });
-
       return _this;
     } // 添加feature至当前FeatureLayer中
 
@@ -9715,7 +9717,7 @@
         } // 高亮的样式
 
 
-        var style = this.defaultActiveFeatureStyle; // 做一下深度克隆，避免原有feature被污染[暂时不做克隆，效率太低]
+        var style = OverlayLayer.defaultActiveFeatureStyle; // 做一下深度克隆，避免原有feature被污染[暂时不做克隆，效率太低]
         // const activeFeature = _cloneDeep(feature);
 
         var type = feature.type,
@@ -9880,6 +9882,12 @@
 
     return OverlayLayer;
   }(CanvasLayer);
+
+  _defineProperty$1(OverlayLayer, "defaultActiveFeatureStyle", {
+    strokeStyle: '#FF0000',
+    fillStyle: '#FF0000',
+    lineWidth: 1
+  });
 
   var baseIteratee$1 = _baseIteratee,
       isArrayLike$1 = isArrayLike_1,
@@ -10122,6 +10130,7 @@
     // 当前map中包含的layers
     // 绘制状态下相关样式设置
     // 绘制状态下鼠标旁提示文案开关[默认开启]
+    // 编辑时临时feature的颜色
     // 当前选中的激活feature对象
     // function: constructor
     function Map(domId, mapOptions) {
@@ -10136,6 +10145,8 @@
       _defineProperty$1(this, "drawingStyle", {});
 
       _defineProperty$1(this, "drawingTip", true);
+
+      _defineProperty$1(this, "editingColor", '#FF0000');
 
       _defineProperty$1(this, "activeFeature", null);
 
@@ -10223,6 +10234,12 @@
       key: "setDrawingStyle",
       value: function setDrawingStyle(drawingStyle) {
         this.drawingStyle = drawingStyle;
+      } // 设置编辑时临时feature的颜色
+
+    }, {
+      key: "setEditingColor",
+      value: function setEditingColor(color) {
+        this.editingColor = color;
       } // 开启绘制过程中的tip提示文案
 
     }, {
@@ -10500,12 +10517,13 @@
 
         forEach_1(this.layers, function (layer) {
           return layer.resizeAndRefresh();
-        }); // 内置图层markerLayer/overlayLayer/tipLayer执行resize
+        }); // 内置图层markerLayer/overlayLayer/tipLayer/eventLayer执行resize
 
 
         this.markerLayer.resizeAndRefresh();
         this.overlayLayer.resizeAndRefresh();
         this.tipLayer.resizeAndRefresh();
+        this.eventLayer.resizeAndRefresh();
       } // 设置当前active的feature
 
     }, {
@@ -10737,7 +10755,7 @@
       key: "addEventLayer",
       value: function addEventLayer() {
         // 实例化eventLayer
-        this.eventLayer = new MaskLayer$1("event-".concat(uniqueId_1()), {}, {
+        this.eventLayer = new EventLayer("event-".concat(uniqueId_1()), {}, {
           zIndex: 5
         }); // 首先将layer-dom-append到容器中
 
@@ -13348,7 +13366,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.17' // 和npm-version保持一致
+    version: '5.0.18' // 和npm-version保持一致
 
   };
 

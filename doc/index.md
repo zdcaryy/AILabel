@@ -109,6 +109,12 @@ canvas样式：比如lineWidth/strokeStyle/fillStyle等
 |自定义：fill|是否填充|否|false|boolean|
 |其他配置|--|否|--|--|
 
+## setEditingColor
+AILabel.Map设置编辑时拖拽对象的绘制颜色
+```javascript
+gMap.setEditingColor('#000');
+```
+
 ## enableDrawingTip
 AILabel.Map设置绘制过程中提示文字开启【默认开启】
 ```javascript
