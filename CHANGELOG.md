@@ -1,3 +1,7 @@
+# 5.0.20
+`2021-09-15`
+1. overlayLayer的defaultActiveFeatureStyle改回非静态属性方式
+
 # 5.0.19
 `2021-09-15`
 1. 屏幕放大缩小关于text对象展示问题修复

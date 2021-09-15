@@ -9530,6 +9530,12 @@
 
       _defineProperty$1(_assertThisInitialized(_this), "featureActionTexts", []);
 
+      _defineProperty$1(_assertThisInitialized(_this), "defaultActiveFeatureStyle", {
+        strokeStyle: '#FF0000',
+        fillStyle: '#FF0000',
+        lineWidth: 1
+      });
+
       return _this;
     } // 添加feature至当前FeatureLayer中
 
@@ -9717,7 +9723,7 @@
         } // 高亮的样式
 
 
-        var style = OverlayLayer.defaultActiveFeatureStyle; // 做一下深度克隆，避免原有feature被污染[暂时不做克隆，效率太低]
+        var style = this.defaultActiveFeatureStyle; // 做一下深度克隆，避免原有feature被污染[暂时不做克隆，效率太低]
         // const activeFeature = _cloneDeep(feature);
 
         var type = feature.type,
@@ -9882,12 +9888,6 @@
 
     return OverlayLayer;
   }(CanvasLayer);
-
-  _defineProperty$1(OverlayLayer, "defaultActiveFeatureStyle", {
-    strokeStyle: '#FF0000',
-    fillStyle: '#FF0000',
-    lineWidth: 1
-  });
 
   var baseIteratee$1 = _baseIteratee,
       isArrayLike$1 = isArrayLike_1,
@@ -13366,7 +13366,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.19' // 和npm-version保持一致
+    version: '5.0.20' // 和npm-version保持一致
 
   };
 
