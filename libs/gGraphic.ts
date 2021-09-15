@@ -34,7 +34,7 @@ export default class Graphic {
     static formatStyle: IObject = {
         'lineWidth': (value: number) => value * CanvasLayer.dpr,
         'font': (value: string) => {
-            const fontSize = value.replace(/[^0-9]/ig, '');
+            const fontSize = value.replace(/[^0-9.]/ig, '');
             const newFontSize = parseInt(fontSize, 10) * CanvasLayer.dpr;
             const reg = new RegExp(`${fontSize}`, 'g');
             const newValue = value.replace(reg, `${newFontSize}`);
@@ -208,7 +208,7 @@ export default class Graphic {
         if (withBackground) {
             // 绘制容器矩形
             const textWidth = ctx.measureText(text).width;
-            const fontSize = parseInt(ctx.font.replace(/[^0-9]/ig, ''), 10);
+            const fontSize = parseInt(ctx.font.replace(/[^0-9.]/ig, ''), 10);
             const width = textWidth + paddingHorizontal * 2;
             const height = fontSize + paddingVertical * 2;
 

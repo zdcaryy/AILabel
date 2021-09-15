@@ -6323,7 +6323,7 @@
         if (withBackground) {
           // 绘制容器矩形
           var textWidth = ctx.measureText(text).width;
-          var fontSize = parseInt(ctx.font.replace(/[^0-9]/ig, ''), 10);
+          var fontSize = parseInt(ctx.font.replace(/[^0-9.]/ig, ''), 10);
           var width = textWidth + paddingHorizontal * 2;
           var height = fontSize + paddingVertical * 2;
           var rectLTY = position.y;
@@ -6386,7 +6386,7 @@
       return value * CanvasLayer.dpr;
     },
     'font': function font(value) {
-      var fontSize = value.replace(/[^0-9]/ig, '');
+      var fontSize = value.replace(/[^0-9.]/ig, '');
       var newFontSize = parseInt(fontSize, 10) * CanvasLayer.dpr;
       var reg = new RegExp("".concat(fontSize), 'g');
       var newValue = value.replace(reg, "".concat(newFontSize));
@@ -13366,7 +13366,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.18' // 和npm-version保持一致
+    version: '5.0.19' // 和npm-version保持一致
 
   };
 
