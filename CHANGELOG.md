@@ -1,3 +1,7 @@
+# 5.0.22
+`2021-09-16`
+1. Map增加slots插槽事件拦截器（新增'drawActivePoint' | 'drawActiveMiddlePoint'两处拦截位置）
+
 # 5.0.20
 `2021-09-15`
 1. overlayLayer的defaultActiveFeatureStyle改回非静态属性方式

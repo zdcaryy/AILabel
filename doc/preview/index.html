@@ -1034,6 +1034,77 @@ gMap.events.on(&#39;click&#39;, callback);
 </tr>
 </tbody>
 </table>
+<h2 id="slots">slots</h2>
+<p>事件拦截器：callback返回值false，会阻断后端系统流程</p>
+<pre><code class="lang-javascript">// define
+slots.on(eventType: EEventSlotType, callback: Function);
+// demo
+// 此示例为双击选中feature对象时阻止系统默认的高亮点样式，改为自定义样式
+// gMap.slots.on(&#39;drawActivePoint&#39;, (point, overLayerInstance) =&gt; {
+gMap.slots.on(&#39;drawActiveMiddlePoint&#39;, (point, overLayerInstance) =&gt; {
+    overLayerInstance.addCircleFeature(
+        {sr: 3.5, cx: point.x, cy: point.y},
+        {
+            clear: false,
+            style: {strokeStyle: &#39;#00f&#39;, fillStyle: &#39;#00f&#39;, stroke: true, fill: true, lineWidth: 1}
+        }
+    );
+    return false;
+});
+</code></pre>
+<p><strong>params</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>是否必填</th>
+<th>默认</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>eventType</td>
+<td>时间枚举类型</td>
+<td>是</td>
+<td>--</td>
+<td>EEventSlotType</td>
+</tr>
+<tr>
+<td>callback</td>
+<td>回调函数</td>
+<td>是</td>
+<td>--</td>
+<td>Function</td>
+</tr>
+</tbody>
+</table>
+<p><strong>EEventSlotType</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>类型</th>
+<th>callback</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>drawActivePoint</td>
+<td>绘制高亮节点触发</td>
+<td>string</td>
+<td>DrawActivePoint</td>
+</tr>
+<tr>
+<td>drawActiveMiddlePoint</td>
+<td>绘制高亮节点中间待添加节点触发</td>
+<td>string</td>
+<td>DrawActiveMiddlePoint</td>
+</tr>
+</tbody>
+</table>
 <h1 id="ailabel-layer-image">AILabel.Layer.Image</h1>
 <p>图片图层</p>
 <h2 id="-">实例化</h2>

@@ -1,5 +1,6 @@
 import _forEach from 'lodash/forEach';
 import _cloneDeep from 'lodash/cloneDeep';
+import _isFunction from 'lodash/isFunction';
 
 import Point from '../feature/gFeaturePoint';
 import Line from '../feature/gFeatureLine';
@@ -21,6 +22,7 @@ import Action from '../mask/gAction';
 import {EFeatureType} from '../feature/gEnum';
 import Util from '../gUtil';
 import {ITextInfo} from '../text/gInterface';
+import { EEventSlotType } from '../gEnum';
 
 export default class OverlayLayer extends CanvasLayer  {
     public featureActionTexts: Array<Feature | Action | Text> = [] // 当前featureLayer中所有的features
@@ -135,6 +137,7 @@ export default class OverlayLayer extends CanvasLayer  {
         this.addFeatureActionText(feature, {clear});
     }
 
+
     // 添加涂抹action
     addDrawAction(shape: IDrawActionShape) {
         const action = new DrawAction(
@@ -219,7 +222,7 @@ export default class OverlayLayer extends CanvasLayer  {
                 return;
             }
             const middlePoint = Util.MathUtil.getMiddlePoint(point, nextPoint);
-            this.addDrawingPoint(middlePoint, {strokeStyle: '#228B22', withAddIcon: true});
+            this.addDrawingPoint(middlePoint, {strokeStyle: '#228B22', withAddIcon: true, isMiddlePoint: true});
         });
     }
 
@@ -236,10 +239,30 @@ export default class OverlayLayer extends CanvasLayer  {
             strokeStyle = '#666',
             fillStyle = '#fff',
             withAddIcon = false,
-            iconColor = '#228B22'
+            iconColor = '#228B22',
+            isMiddlePoint = false // 是否是中间节点
         } = option;
 
         const {x: cx, y: cy} = point;
+
+        // EEventSlotType.DrawActivePoint 插槽拦截处理
+        const onDrawActivePoint = this.map?.slotsObServer[EEventSlotType.DrawActivePoint];
+        if (!isMiddlePoint && _isFunction(onDrawActivePoint)) {
+            const res = onDrawActivePoint(point, this);
+            if (res === false) {
+                return;
+            }
+        };
+
+        // EEventSlotType.DrawActiveMiddlePoint 插槽拦截处理
+        const onDrawActiveMiddlePoint = this.map?.slotsObServer[EEventSlotType.DrawActiveMiddlePoint];
+        if (isMiddlePoint && _isFunction(onDrawActiveMiddlePoint)) {
+            const res = onDrawActiveMiddlePoint(point, this);
+            if (res === false) {
+                return;
+            }
+        };
+
         this.addCircleFeature(
             {sr: 3.5, cx, cy},
             {
@@ -247,7 +270,6 @@ export default class OverlayLayer extends CanvasLayer  {
                 style: {strokeStyle, fillStyle, stroke: true, fill: true, lineWidth: 1}
             }
         );
-
         // 绘制+号
         if (withAddIcon) {
             this.addCircleFeature(

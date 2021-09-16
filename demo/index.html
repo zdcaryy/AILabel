@@ -105,6 +105,17 @@
             panWhenDrawing: true
         });
 
+        // gMap.slots.on('drawActivePoint', (point, instance) => {
+        //     instance.addCircleFeature(
+        //         {sr: 3.5, cx: point.x, cy: point.y},
+        //         {
+        //             clear: false,
+        //             style: {strokeStyle: '#00f', fillStyle: '#00f', stroke: true, fill: true, lineWidth: 1}
+        //         }
+        //     );
+        //     return false;
+        // });
+
         // click单击事件
         gMap.events.on('click', point => {
             // console.log('--click--', point);
@@ -214,6 +225,7 @@
         });
         gMap.events.on('boundsChanged', data => {
             // console.log('--map boundsChanged--');
+            return 2222;
         });
         gMap.events.on('featureSelected', feature => {
             // console.log('--map featureSelected--', feature);

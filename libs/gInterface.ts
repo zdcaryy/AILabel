@@ -1,10 +1,21 @@
 /***/
 
-import {EMapMode, EXAxisDirection, EYAxisDirection} from "./gEnum";
+import {EMapMode, EXAxisDirection, EYAxisDirection, EEventSlotType} from "./gEnum";
+import OverlayLayer from "./layer/gLayerOverlay";
 
 // 基本json对象定义
 export interface IObject {
     [other: string]: any
+};
+
+// 插槽事件处理，可以将用户侧代码进行插入执行
+export interface IFunctionPoint {
+    (point: IPoint, overlayLayer: OverlayLayer): any
+}
+export type IFunctionSlot = IFunctionPoint;
+export interface IEventSlotType extends IObject {
+    [EEventSlotType.DrawActivePoint]?: IFunctionPoint,
+    [EEventSlotType.DrawActiveMiddlePoint]?: IFunctionPoint
 };
 
 // Size: interface

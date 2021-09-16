@@ -50,6 +50,12 @@ export enum EEventType {
     MouseOut = "mouseOut",
 };
 
+// 插槽事件处理，可以将用户侧代码进行插入执行
+export enum EEventSlotType {
+    DrawActivePoint = "drawActivePoint",
+    DrawActiveMiddlePoint = "drawActiveMiddlePoint"
+};
+
 // 手势类型
 export enum ECursorType {
     Grab = "-webkit-grab",

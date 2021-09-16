@@ -5270,6 +5270,13 @@
     EEventType["MouseOut"] = "mouseOut";
   })(EEventType || (EEventType = {}));
 
+  var EEventSlotType;
+
+  (function (EEventSlotType) {
+    EEventSlotType["DrawActivePoint"] = "drawActivePoint";
+    EEventSlotType["DrawActiveMiddlePoint"] = "drawActiveMiddlePoint";
+  })(EEventSlotType || (EEventSlotType = {}));
+
   var ECursorType;
 
   (function (ECursorType) {
@@ -9808,7 +9815,8 @@
 
           _this2.addDrawingPoint(middlePoint, {
             strokeStyle: '#228B22',
-            withAddIcon: true
+            withAddIcon: true,
+            isMiddlePoint: true
           });
         });
       } // 绘制过程中节点
@@ -9826,6 +9834,8 @@
     }, {
       key: "addDrawingPoint",
       value: function addDrawingPoint(point) {
+        var _this$map, _this$map2;
+
         var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
         var _option$strokeStyle = option.strokeStyle,
             strokeStyle = _option$strokeStyle === void 0 ? '#666' : _option$strokeStyle,
@@ -9834,9 +9844,31 @@
             _option$withAddIcon = option.withAddIcon,
             withAddIcon = _option$withAddIcon === void 0 ? false : _option$withAddIcon,
             _option$iconColor = option.iconColor,
-            iconColor = _option$iconColor === void 0 ? '#228B22' : _option$iconColor;
+            iconColor = _option$iconColor === void 0 ? '#228B22' : _option$iconColor,
+            _option$isMiddlePoint = option.isMiddlePoint,
+            isMiddlePoint = _option$isMiddlePoint === void 0 ? false : _option$isMiddlePoint;
         var cx = point.x,
-            cy = point.y;
+            cy = point.y; // EEventSlotType.DrawActivePoint 插槽拦截处理
+
+        var onDrawActivePoint = (_this$map = this.map) === null || _this$map === void 0 ? void 0 : _this$map.slotsObServer[EEventSlotType.DrawActivePoint];
+
+        if (!isMiddlePoint && isFunction_1(onDrawActivePoint)) {
+          var res = onDrawActivePoint(point, this);
+
+          if (res === false) {
+            return;
+          }
+        }
+
+        var onDrawActiveMiddlePoint = (_this$map2 = this.map) === null || _this$map2 === void 0 ? void 0 : _this$map2.slotsObServer[EEventSlotType.DrawActiveMiddlePoint];
+
+        if (isMiddlePoint && isFunction_1(onDrawActiveMiddlePoint)) {
+          var _res = onDrawActiveMiddlePoint(point, this);
+
+          if (_res === false) {
+            return;
+          }
+        }
         this.addCircleFeature({
           sr: 3.5,
           cx: cx,
@@ -10131,6 +10163,7 @@
     // 绘制状态下相关样式设置
     // 绘制状态下鼠标旁提示文案开关[默认开启]
     // 编辑时临时feature的颜色
+    // slots[暂时采用事件覆盖形式]
     // 当前选中的激活feature对象
     // function: constructor
     function Map(domId, mapOptions) {
@@ -10148,11 +10181,19 @@
 
       _defineProperty$1(this, "editingColor", '#FF0000');
 
+      _defineProperty$1(this, "slotsObServer", {});
+
       _defineProperty$1(this, "activeFeature", null);
 
       _defineProperty$1(this, "events", {
         on: function on(eventType, callback) {
           _this.eventsObServer.on(eventType, callback);
+        }
+      });
+
+      _defineProperty$1(this, "slots", {
+        on: function on(eventType, callback) {
+          _this.slotsObServer[eventType] = callback;
         }
       });
 
@@ -13366,7 +13407,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.21' // 和npm-version保持一致
+    version: '5.0.22' // 和npm-version保持一致
 
   };
 

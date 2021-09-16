@@ -9,7 +9,9 @@ AILabel类库是一款集打点、线段、多段线、矩形、多边形、圆�
 API文档：http://ailabel.com.cn/public/ailabel/api/index.html<br/>
 Demo文档：http://ailabel.com.cn/public/ailabel/demo/index.html<br/>
 Demo1文档：http://ailabel.com.cn/public/ailabel/demo/label/index.html<br/>
-npm地址：https://www.npmjs.com/package/ailabel
+npm地址：https://www.npmjs.com/package/ailabel<br/><br/>
+
+老版API文档（小于v5.0.0）：https://dingyang9642.github.io/AILabel/old_version_docs/#/<br/>
 
 ## 目录结构
 - libs: AILabel源码

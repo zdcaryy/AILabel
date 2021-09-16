@@ -533,6 +533,40 @@ gMap.events.on('click', callback);
 |screen|屏幕坐标|IPoint|
 |global|实际坐标|IPoint|
 
+## slots
+事件拦截器：callback返回值false，会阻断后端系统流程
+```javascript
+// define
+slots.on(eventType: EEventSlotType, callback: Function);
+// demo
+// 此示例为双击选中feature对象时阻止系统默认的高亮点样式，改为自定义样式
+// gMap.slots.on('drawActivePoint', (point, overLayerInstance) => {
+gMap.slots.on('drawActiveMiddlePoint', (point, overLayerInstance) => {
+    overLayerInstance.addCircleFeature(
+        {sr: 3.5, cx: point.x, cy: point.y},
+        {
+            clear: false,
+            style: {strokeStyle: '#00f', fillStyle: '#00f', stroke: true, fill: true, lineWidth: 1}
+        }
+    );
+    return false;
+});
+```
+
+**params**
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|eventType|时间枚举类型|是|--|EEventSlotType|
+|callback|回调函数|是|--|Function|
+
+**EEventSlotType**
+
+|参数|说明|类型|callback|
+|---|---|---|---|
+|drawActivePoint|绘制高亮节点触发|string|DrawActivePoint|
+|drawActiveMiddlePoint|绘制高亮节点中间待添加节点触发|string|DrawActiveMiddlePoint|
+
 # AILabel.Layer.Image
 图片图层
 ## 实例化

@@ -10,8 +10,8 @@ import _isNumber from 'lodash/isNumber';
 import _cloneDeep from 'lodash/cloneDeep';
 import _filter from 'lodash/filter';
 
-import {EMapMode, ECursorType, EEventType, EUrlCursorType, EXAxisDirection, EYAxisDirection} from './gEnum';
-import {IMapOptions, ISize, IPoint, ICenterAndZoom, ITransPointOption, IObject, IAxisOption} from './gInterface';
+import {EMapMode, ECursorType, EEventType, EUrlCursorType, EXAxisDirection, EYAxisDirection, EEventSlotType} from './gEnum';
+import {IMapOptions, ISize, IPoint, ICenterAndZoom, ITransPointOption, IObject, IAxisOption, IEventSlotType, IFunctionSlot} from './gInterface';
 import Layer from './layer/gLayer';
 import Control from './control/gControl';
 import EventLayer from './layer/gLayerEvent';
@@ -109,6 +109,9 @@ export default class Map {
     public drawingTip: boolean = true
     // 编辑时临时feature的颜色
     public editingColor: string = '#FF0000'
+
+    // slots[暂时采用事件覆盖形式]
+    public slotsObServer: IEventSlotType = {}
 
     // events
     public eventsObServer: events.EventEmitter
@@ -713,6 +716,13 @@ export default class Map {
     public events: IObject = {
         on: (eventType: EEventType, callback: Function) => {
             this.eventsObServer.on(eventType, callback);
+        }
+    }
+
+    // 插槽事件添加
+    public slots: IObject = {
+        on: (eventType: EEventSlotType, callback: IFunctionSlot) => {
+            this.slotsObServer[eventType] = callback;
         }
     }
 
