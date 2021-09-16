@@ -13366,7 +13366,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.20' // 和npm-version保持一致
+    version: '5.0.21' // 和npm-version保持一致
 
   };
 
