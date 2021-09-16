@@ -534,7 +534,7 @@ gMap.events.on('click', callback);
 |global|实际坐标|IPoint|
 
 ## slots
-事件拦截器：callback返回值false，会阻断后端系统流程
+事件拦截器：callback返回值false，会阻断后续流程
 ```javascript
 // define
 slots.on(eventType: EEventSlotType, callback: Function);
