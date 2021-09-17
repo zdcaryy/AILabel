@@ -208,6 +208,10 @@ export default class Marker {
     }
     // 鼠标滑过事件
     handleMouseOver(e: MouseEvent) {
+        // 清空tipLayer文字提示
+        this.layer.map.eventLayer.breakFeatureCapture = true;
+        this.layer?.map?.tipLayer.removeAllFeatureActionText();
+        // 触发事件回调
         this.eventsObServer.emit(
             EMarkerEventType.MouseOver,
             this

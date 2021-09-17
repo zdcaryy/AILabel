@@ -42,6 +42,9 @@ export default class EventLayer extends Layer  {
     // 标记是否处于dragging拖拽状态
     public dragging: boolean = false
 
+    // mousemove过程中因为涉及到防抖逻辑，在setTimeOut需要判断是否会后续逻辑打断
+    public breakFeatureCapture: boolean = false
+
     // 多边形绘制时临时保存points：IBasePoint[]
     public tmpPointsStore: IBasePoint[] = []
 
@@ -50,6 +53,9 @@ export default class EventLayer extends Layer  {
 
     // 绘制点的timer延迟，避免和dblClick事件冲突
     public downTimer: number | null | undefined
+
+    // mousemove过程中进行防抖处理
+    public mousemoveTimer: number | null | undefined
 
     // 当存在activeFeature时，鼠标move过程中捕捉到的feature
     public hoverFeature: Feature | null = null
@@ -642,6 +648,8 @@ export default class EventLayer extends Layer  {
                 if (activeFeature.captureWithPoint(currentGlobalPoint)) {
                     this.hoverFeature = activeFeature;
                     this.map.setCursor(ECursorType.Pointer);
+
+                    this.map.eventLayer.breakFeatureCapture = true;
                     this.setTip({text: '按下移动图形/右键删除', position: currentGlobalPoint});
                 }
                 break;
@@ -661,6 +669,8 @@ export default class EventLayer extends Layer  {
                         this.hoverFeatureIndex = index;
                         const cursor = (index === 1 || index === 3) ? ECursorType.NESW_Resize : ECursorType.NWSE_Resize;
                         this.map.setCursor(cursor);
+
+                        this.map.eventLayer.breakFeatureCapture = true;
                         this.setTip({text: '按下拖动', position: currentGlobalPoint});
                         return false;
                     }
@@ -669,6 +679,8 @@ export default class EventLayer extends Layer  {
                 if (!_isNumber(this.hoverFeatureIndex) && activeFeature.captureWithPoint(currentGlobalPoint)) {
                     this.hoverFeature = activeFeature;
                     this.map.setCursor(ECursorType.Move);
+
+                    this.map.eventLayer.breakFeatureCapture = true;
                     this.setTip({text: '按下移动图形', position: currentGlobalPoint});
                 }
                 break;
@@ -696,6 +708,8 @@ export default class EventLayer extends Layer  {
                         this.map.setCursor(ECursorType.Pointer);
                         const minPointsCount = (isLine || isPolyline) ? 2 : 3;
                         const deleteTip = pointsLength > minPointsCount ? '/右键删除' : '';
+
+                        this.map.eventLayer.breakFeatureCapture = true;
                         this.setTip({text: `按下拖动${deleteTip}`, position: currentGlobalPoint});
                         return false;
                     }
@@ -716,6 +730,8 @@ export default class EventLayer extends Layer  {
                     if (distance2 <= 5) {
                         this.hoverFeatureIndex = index + 0.5;
                         this.map.setCursor(ECursorType.Pointer);
+
+                        this.map.eventLayer.breakFeatureCapture = true;
                         this.setTip({text: '按下拖动添加新节点', position: currentGlobalPoint});
                         return false;
                     }
@@ -724,6 +740,8 @@ export default class EventLayer extends Layer  {
                 if (!_isNumber(this.hoverFeatureIndex) && activeFeature.captureWithPoint(currentGlobalPoint)) {
                     this.hoverFeature = activeFeature;
                     this.map.setCursor(ECursorType.Move);
+
+                    this.map.eventLayer.breakFeatureCapture = true;
                     this.setTip({text: '按下移动图形', position: currentGlobalPoint});
                 }
                 break;
@@ -1002,6 +1020,50 @@ export default class EventLayer extends Layer  {
         }
     }
 
+    /*****************************************************/
+    /********* mousemove过程中进行捕捉feature判断[临时方案，耗性能] ***********/
+    /*****************************************************/
+    handleFeatureCapture(point: IPoint, option: IObject = {}) {
+        const {extraTip = ''} = option;
+
+        // 首先判断用户是否开启捕捉
+        if (!this.map.featureCaptureWhenMove) {
+            return;
+        }
+
+        // 进行捕捉判断
+        const targetFeature = this.map.getTargetFeatureWithPoint(point);
+        // 如果捕捉到，则触发事件回调
+        targetFeature && this.setTip({
+            text: (extraTip ? extraTip + '/' : '') + '双击选中',
+            position: point
+        });
+
+        // // 清楚timeout-timer
+        // this.clearMousemoveTimer();
+        // // 重置breakFeatureCapture为非打断状态
+        // this.breakFeatureCapture = false;
+        // this.mousemoveTimer = window.setTimeout(() => {
+        //     // 如果已被后续逻辑重置打断，则直接返回
+        //     if (this.breakFeatureCapture) {
+        //         return;
+        //     }
+        //     // 进行捕捉判断
+        //     const targetFeature = this.map.getTargetFeatureWithPoint(point);
+        //     // 如果捕捉到，则触发事件回调
+        //     targetFeature && this.setTip({
+        //         text: (extraTip ? extraTip + '/' : '') + '双击选中',
+        //         position: point
+        //     });
+        // }, 200);
+    }
+    // 清除mousemove过程捕捉feature的防抖timer
+    clearMousemoveTimer() {
+        if (this.mousemoveTimer) {
+            window.clearTimeout(this.mousemoveTimer);
+            this.mousemoveTimer = null;
+        }
+    }
 
     // 获取mouse事件point
     getMouseEventPoint(e: MouseEvent): IBasePoint {
@@ -1116,26 +1178,32 @@ export default class EventLayer extends Layer  {
         else if (mapMode === EMapMode.Point && !dragging) {
             this.map.setCursor(ECursorType.Crosshair);
             this.setTip({text: '点击绘制点', position: global});
+            this.handleFeatureCapture(global);
         }
         else if (mapMode === EMapMode.Circle && !dragging) {
             this.map.setCursor(ECursorType.Crosshair);
             this.setTip({text: '按下确定圆心', position: global});
+            this.handleFeatureCapture(global);
         }
         else if (mapMode === EMapMode.Line && !dragging) {
             this.map.setCursor(ECursorType.Crosshair);
             this.handleLineMove(e);
+            this.handleFeatureCapture(global);
         }
         else if (mapMode === EMapMode.Polyline && !dragging) {
             this.map.setCursor(ECursorType.Crosshair);
             this.handlePolylineMove(e);
+            this.handleFeatureCapture(global);
         }
         else if (mapMode === EMapMode.Rect && !dragging) {
             this.map.setCursor(ECursorType.Crosshair);
             this.setTip({text: '按下确定起点', position: global});
+            this.handleFeatureCapture(global);
         }
         else if (mapMode === EMapMode.Polygon && !dragging) {
             this.map.setCursor(ECursorType.Crosshair);
             this.handlePolygonMove(e);
+            this.handleFeatureCapture(global);
         }
         else if (mapMode === EMapMode.DrawMask) {
             const lineWidth = _get(this.map.drawingStyle, 'lineWidth', 1);
