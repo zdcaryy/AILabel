@@ -1313,6 +1313,76 @@ updateGrid(gridInfo: IGridInfo)
 // demo
 gFirstImageLayer.updateGrid({columns: [{color: &#39;#333&#39;}], rows: [{color: &#39;#666&#39;}]});
 </code></pre>
+<h2 id="events">events</h2>
+<p>事件监听</p>
+<pre><code class="lang-javascript">// define
+events.on(eventType: ELayerImageEventType, callback: Function);
+// demo
+gFirstImageLayer.events.on(&#39;loadStart&#39;, (url, instance) =&gt; {
+   console.log(&#39;--loadStart--&#39;);
+});
+gFirstImageLayer.events.on(&#39;loadEnd&#39;, (url, instance) =&gt; {
+   console.log(&#39;--loadEnd--&#39;);
+});
+gFirstImageLayer.events.on(&#39;loadError&#39;, (url, instance) =&gt; {
+   console.log(&#39;--loadError--&#39;);
+});
+</code></pre>
+<p><strong>params</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>是否必填</th>
+<th>默认</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>eventType</td>
+<td>时间枚举类型</td>
+<td>是</td>
+<td>--</td>
+<td>ELayerImageEventType</td>
+</tr>
+<tr>
+<td>callback</td>
+<td>回调函数</td>
+<td>是</td>
+<td>--</td>
+<td>Function</td>
+</tr>
+</tbody>
+</table>
+<p><strong>ELayerImageEventType</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>loadStart</td>
+<td>图片开始加载</td>
+<td>LoadStart</td>
+</tr>
+<tr>
+<td>loadEnd</td>
+<td>加载成功</td>
+<td>LoadEnd</td>
+</tr>
+<tr>
+<td>loadError</td>
+<td>加载失败</td>
+<td>LoadError</td>
+</tr>
+</tbody>
+</table>
 <h1 id="ailabel-layer-feature">AILabel.Layer.Feature</h1>
 <p>矢量图层（用于承载Feature.Point, Feature.Line, Feature.Polyline, Feature.Polygon, Feature.Rect, Feature.Circle等矢量要素的展示）</p>
 <h2 id="-">实例化</h2>

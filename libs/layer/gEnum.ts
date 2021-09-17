@@ -9,3 +9,10 @@ export enum ELayerType {
     Marker = "MARKER",
     Overlay = "OVERLAY"
 };
+
+// 图片层事件类型
+export enum ELayerImageEventType {
+    LoadStart = "loadStart",
+    LoadEnd = "loadEnd",
+    LoadError = "loadError"
+};

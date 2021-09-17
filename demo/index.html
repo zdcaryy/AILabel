@@ -328,7 +328,7 @@
         const gFirstImageLayer = new AILabel.Layer.Image(
             'first-layer-image', // id
             {
-                src: 'https://img2.baidu.com/it/u=2053804264,1341330775&fm=26&fmt=auto&gp=0.jpg',
+                src: 'https://img2.baidu.com/it/u=2053804264,1341330775&fm=26&fmt=auto&gp=01.jpg',
                 width: 500,
                 height: 354,
                 position: { // 左上角相对中心点偏移量
@@ -343,6 +343,17 @@
             {name: '第一个图片图层'}, // props
             {zIndex: 5} // style
         );
+        // 图片层相关事件监听
+        gFirstImageLayer.events.on('loadStart', (a, b) => {
+            console.log('--loadStart--', a, b);
+        });
+        gFirstImageLayer.events.on('loadEnd', (a, b) => {
+            console.log('--loadEnd--', a, b);
+        });
+        gFirstImageLayer.events.on('loadError', (a, b) => {
+            console.log('--loadError--', a, b);
+        });
+        // 添加到gMap对象
         gMap.addLayer(gFirstImageLayer);
 
         const gFirstMarker = new AILabel.Marker(

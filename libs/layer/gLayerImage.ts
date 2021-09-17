@@ -1,3 +1,4 @@
+import events from 'events/events';
 import _forEach from 'lodash/forEach';
 import _assign from 'lodash/assign';
 import _get from 'lodash/get';
@@ -8,7 +9,7 @@ import Graphic from '../gGraphic';
 
 import {ILayerStyle, IImageInfo, IGridInfo, IGridItemInfo} from './gInterface';
 import CanvasLayer from './gLayerCanvas';
-import {ELayerType} from './gEnum';
+import {ELayerImageEventType, ELayerType} from './gEnum';
 import {EXAxisDirection, EYAxisDirection} from '../gEnum';
 
 export default class ImageLayer extends CanvasLayer  {
@@ -29,19 +30,26 @@ export default class ImageLayer extends CanvasLayer  {
     }
     public imageInfo: IImageInfo
     public image: HTMLImageElement
+    public imageSuccess: boolean = false // 标识图片是否是有效图片
 
     public position: IPoint // 图片当前的位置
 
     public grid: IGridInfo // 图片网格
 
+    // events
+    public eventsObServer: events.EventEmitter
+
     // function: constructor
     constructor(id: string, image: IImageInfo, props: IObject = {}, style: ILayerStyle = {}) {
         super(id, ELayerType.Image, props, style);
 
+        // 事件监听实例添加
+        this.eventsObServer = new events.EventEmitter();
+
         this.imageInfo = _assign({}, ImageLayer.defaultImageInfo, image);
         this.position = this.imageInfo.position;
         this.grid = this.imageInfo.grid;
-        this.updateImage();
+        // this.updateImage();
     }
 
     // 更新图片信息
@@ -55,10 +63,32 @@ export default class ImageLayer extends CanvasLayer  {
     // 更新image对象
     updateImage() {
         if (this.imageInfo.src) {
+            this.imageSuccess = false;
+            // 首先执行loadStart回调
+            this.eventsObServer.emit(
+                ELayerImageEventType.LoadStart,
+                this.imageInfo.src,
+                this
+            );
             this.image = new Image();
             this.image.src = this.imageInfo.src;
             this.image.onload = () => {
+                this.imageSuccess = true;
                 this.map && this.refresh();
+                this.eventsObServer.emit(
+                    ELayerImageEventType.LoadEnd,
+                    this.imageInfo.src,
+                    this
+                );
+            };
+            this.image.onerror = () => {
+                this.imageSuccess = false;
+                console.error('image src: ' + this.imageInfo.src + ' load error');
+                this.eventsObServer.emit(
+                    ELayerImageEventType.LoadError,
+                    this.imageInfo.src,
+                    this
+                );
             }
         }
     }
@@ -66,12 +96,15 @@ export default class ImageLayer extends CanvasLayer  {
     // 更新grid网格
     updateGrid(gridInfo: IGridInfo) {
         this.grid = gridInfo;
+
         this.refresh();
     }
 
     // @override
     onAdd(map: Map) {
         super.onAdd(map);
+
+        this.updateImage();
         this.refresh();
     }
 
@@ -86,7 +119,7 @@ export default class ImageLayer extends CanvasLayer  {
         const screenWidth = width * scale;
         const screenHeight = height * scale;
 
-        Graphic.drawImage(
+        (this.image && this.imageSuccess) && Graphic.drawImage(
             this.canvasContext,
             {
                 image: this.image,
@@ -166,6 +199,13 @@ export default class ImageLayer extends CanvasLayer  {
                 }
             );
         });
+    }
+
+    // 用户事件添加
+    public events: IObject = {
+        on: (eventType: ELayerImageEventType, callback: Function) => {
+            this.eventsObServer.on(eventType, callback);
+        }
     }
 
     // @override

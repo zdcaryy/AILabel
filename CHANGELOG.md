@@ -1,3 +1,7 @@
+# 5.0.23
+`2021-09-17`
+1. Layer.Image新增events事件监听（loadStart/loadEnd/loadError）
+
 # 5.0.22
 `2021-09-16`
 1. Map增加slots插槽事件拦截器（新增'drawActivePoint' | 'drawActiveMiddlePoint'两处拦截位置）

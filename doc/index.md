@@ -644,6 +644,38 @@ updateGrid(gridInfo: IGridInfo)
 gFirstImageLayer.updateGrid({columns: [{color: '#333'}], rows: [{color: '#666'}]});
 ```
 
+## events
+事件监听
+```javascript
+// define
+events.on(eventType: ELayerImageEventType, callback: Function);
+// demo
+gFirstImageLayer.events.on('loadStart', (url, instance) => {
+   console.log('--loadStart--');
+});
+gFirstImageLayer.events.on('loadEnd', (url, instance) => {
+   console.log('--loadEnd--');
+});
+gFirstImageLayer.events.on('loadError', (url, instance) => {
+   console.log('--loadError--');
+});
+```
+
+**params**
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|eventType|时间枚举类型|是|--|ELayerImageEventType|
+|callback|回调函数|是|--|Function|
+
+**ELayerImageEventType**
+
+|参数|说明|类型|
+|---|---|---|
+|loadStart|图片开始加载|LoadStart|
+|loadEnd|加载成功|LoadEnd|
+|loadError|加载失败|LoadError|
+
 # AILabel.Layer.Feature
 矢量图层（用于承载Feature.Point, Feature.Line, Feature.Polyline, Feature.Polygon, Feature.Rect, Feature.Circle等矢量要素的展示）
 ## 实例化

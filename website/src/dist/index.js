@@ -6477,6 +6477,14 @@
     ELayerType["Overlay"] = "OVERLAY";
   })(ELayerType || (ELayerType = {}));
 
+  var ELayerImageEventType;
+
+  (function (ELayerImageEventType) {
+    ELayerImageEventType["LoadStart"] = "loadStart";
+    ELayerImageEventType["LoadEnd"] = "loadEnd";
+    ELayerImageEventType["LoadError"] = "loadError";
+  })(ELayerImageEventType || (ELayerImageEventType = {}));
+
   // Feature对象类型
   var EFeatureType;
 
@@ -10982,7 +10990,6 @@
      * defaultImageInfo: 默认配置项
      * image: userImage merge defaultImageInfo
     */
-    // 图片网格
     // function: constructor
     function ImageLayer(id, image) {
       var _this;
@@ -10992,12 +10999,20 @@
 
       _classCallCheck(this, ImageLayer);
 
-      _this = _super.call(this, id, ELayerType.Image, props, style);
+      _this = _super.call(this, id, ELayerType.Image, props, style); // 事件监听实例添加
+
+      _defineProperty$1(_assertThisInitialized(_this), "imageSuccess", false);
+
+      _defineProperty$1(_assertThisInitialized(_this), "events", {
+        on: function on(eventType, callback) {
+          _this.eventsObServer.on(eventType, callback);
+        }
+      });
+
+      _this.eventsObServer = new events.EventEmitter();
       _this.imageInfo = assign_1({}, ImageLayer.defaultImageInfo, image);
       _this.position = _this.imageInfo.position;
-      _this.grid = _this.imageInfo.grid;
-
-      _this.updateImage();
+      _this.grid = _this.imageInfo.grid; // this.updateImage();
 
       return _this;
     } // 更新图片信息
@@ -11018,11 +11033,24 @@
         var _this2 = this;
 
         if (this.imageInfo.src) {
+          this.imageSuccess = false; // 首先执行loadStart回调
+
+          this.eventsObServer.emit(ELayerImageEventType.LoadStart, this.imageInfo.src, this);
           this.image = new Image();
           this.image.src = this.imageInfo.src;
 
           this.image.onload = function () {
+            _this2.imageSuccess = true;
             _this2.map && _this2.refresh();
+
+            _this2.eventsObServer.emit(ELayerImageEventType.LoadEnd, _this2.imageInfo.src, _this2);
+          };
+
+          this.image.onerror = function () {
+            _this2.imageSuccess = false;
+            console.error('image src: ' + _this2.imageInfo.src + ' load error');
+
+            _this2.eventsObServer.emit(ELayerImageEventType.LoadError, _this2.imageInfo.src, _this2);
           };
         }
       } // 更新grid网格
@@ -11039,6 +11067,7 @@
       value: function onAdd(map) {
         _get(_getPrototypeOf(ImageLayer.prototype), "onAdd", this).call(this, map);
 
+        this.updateImage();
         this.refresh();
       } // 绘制image信息
 
@@ -11057,7 +11086,7 @@
             height = _this$imageInfo.height;
         var screenWidth = width * scale;
         var screenHeight = height * scale;
-        Graphic.drawImage(this.canvasContext, {
+        this.image && this.imageSuccess && Graphic.drawImage(this.canvasContext, {
           image: this.image,
           x: screenX * dpr,
           y: screenY * dpr,
@@ -11168,11 +11197,12 @@
             globalAlpha: .8
           });
         });
-      } // @override
+      } // 用户事件添加
 
     }, {
       key: "refresh",
-      value: function refresh() {
+      value: // @override
+      function refresh() {
         _get(_getPrototypeOf(ImageLayer.prototype), "refresh", this).call(this);
 
         this.drawImage();
