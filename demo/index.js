@@ -3850,55 +3850,6 @@
 
   var isNumber_1 = isNumber;
 
-  /**
-   * A specialized version of `_.filter` for arrays without support for
-   * iteratee shorthands.
-   *
-   * @private
-   * @param {Array} [array] The array to iterate over.
-   * @param {Function} predicate The function invoked per iteration.
-   * @returns {Array} Returns the new filtered array.
-   */
-
-  function arrayFilter$2(array, predicate) {
-    var index = -1,
-        length = array == null ? 0 : array.length,
-        resIndex = 0,
-        result = [];
-
-    while (++index < length) {
-      var value = array[index];
-      if (predicate(value, index, array)) {
-        result[resIndex++] = value;
-      }
-    }
-    return result;
-  }
-
-  var _arrayFilter = arrayFilter$2;
-
-  var baseEach$1 = _baseEach;
-
-  /**
-   * The base implementation of `_.filter` without support for iteratee shorthands.
-   *
-   * @private
-   * @param {Array|Object} collection The collection to iterate over.
-   * @param {Function} predicate The function invoked per iteration.
-   * @returns {Array} Returns the new filtered array.
-   */
-  function baseFilter$1(collection, predicate) {
-    var result = [];
-    baseEach$1(collection, function(value, index, collection) {
-      if (predicate(value, index, collection)) {
-        result.push(value);
-      }
-    });
-    return result;
-  }
-
-  var _baseFilter = baseFilter$1;
-
   var ListCache$2 = _ListCache;
 
   /**
@@ -4029,6 +3980,1077 @@
   Stack$3.prototype.set = stackSet;
 
   var _Stack = Stack$3;
+
+  var copyObject$3 = _copyObject,
+      keys$5 = keys_1;
+
+  /**
+   * The base implementation of `_.assign` without support for multiple sources
+   * or `customizer` functions.
+   *
+   * @private
+   * @param {Object} object The destination object.
+   * @param {Object} source The source object.
+   * @returns {Object} Returns `object`.
+   */
+  function baseAssign$1(object, source) {
+    return object && copyObject$3(source, keys$5(source), object);
+  }
+
+  var _baseAssign = baseAssign$1;
+
+  /**
+   * This function is like
+   * [`Object.keys`](http://ecma-international.org/ecma-262/7.0/#sec-object.keys)
+   * except that it includes inherited enumerable properties.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @returns {Array} Returns the array of property names.
+   */
+
+  function nativeKeysIn$1(object) {
+    var result = [];
+    if (object != null) {
+      for (var key in Object(object)) {
+        result.push(key);
+      }
+    }
+    return result;
+  }
+
+  var _nativeKeysIn = nativeKeysIn$1;
+
+  var isObject$4 = isObject_1,
+      isPrototype$1 = _isPrototype,
+      nativeKeysIn = _nativeKeysIn;
+
+  /** Used for built-in method references. */
+  var objectProto$4 = Object.prototype;
+
+  /** Used to check objects for own properties. */
+  var hasOwnProperty$3 = objectProto$4.hasOwnProperty;
+
+  /**
+   * The base implementation of `_.keysIn` which doesn't treat sparse arrays as dense.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @returns {Array} Returns the array of property names.
+   */
+  function baseKeysIn$1(object) {
+    if (!isObject$4(object)) {
+      return nativeKeysIn(object);
+    }
+    var isProto = isPrototype$1(object),
+        result = [];
+
+    for (var key in object) {
+      if (!(key == 'constructor' && (isProto || !hasOwnProperty$3.call(object, key)))) {
+        result.push(key);
+      }
+    }
+    return result;
+  }
+
+  var _baseKeysIn = baseKeysIn$1;
+
+  var arrayLikeKeys = _arrayLikeKeys,
+      baseKeysIn = _baseKeysIn,
+      isArrayLike$3 = isArrayLike_1;
+
+  /**
+   * Creates an array of the own and inherited enumerable property names of `object`.
+   *
+   * **Note:** Non-object values are coerced to objects.
+   *
+   * @static
+   * @memberOf _
+   * @since 3.0.0
+   * @category Object
+   * @param {Object} object The object to query.
+   * @returns {Array} Returns the array of property names.
+   * @example
+   *
+   * function Foo() {
+   *   this.a = 1;
+   *   this.b = 2;
+   * }
+   *
+   * Foo.prototype.c = 3;
+   *
+   * _.keysIn(new Foo);
+   * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
+   */
+  function keysIn$3(object) {
+    return isArrayLike$3(object) ? arrayLikeKeys(object, true) : baseKeysIn(object);
+  }
+
+  var keysIn_1 = keysIn$3;
+
+  var copyObject$2 = _copyObject,
+      keysIn$2 = keysIn_1;
+
+  /**
+   * The base implementation of `_.assignIn` without support for multiple sources
+   * or `customizer` functions.
+   *
+   * @private
+   * @param {Object} object The destination object.
+   * @param {Object} source The source object.
+   * @returns {Object} Returns `object`.
+   */
+  function baseAssignIn$1(object, source) {
+    return object && copyObject$2(source, keysIn$2(source), object);
+  }
+
+  var _baseAssignIn = baseAssignIn$1;
+
+  var _cloneBuffer = {exports: {}};
+
+  (function (module, exports) {
+  var root = _root;
+
+  /** Detect free variable `exports`. */
+  var freeExports = exports && !exports.nodeType && exports;
+
+  /** Detect free variable `module`. */
+  var freeModule = freeExports && 'object' == 'object' && module && !module.nodeType && module;
+
+  /** Detect the popular CommonJS extension `module.exports`. */
+  var moduleExports = freeModule && freeModule.exports === freeExports;
+
+  /** Built-in value references. */
+  var Buffer = moduleExports ? root.Buffer : undefined,
+      allocUnsafe = Buffer ? Buffer.allocUnsafe : undefined;
+
+  /**
+   * Creates a clone of  `buffer`.
+   *
+   * @private
+   * @param {Buffer} buffer The buffer to clone.
+   * @param {boolean} [isDeep] Specify a deep clone.
+   * @returns {Buffer} Returns the cloned buffer.
+   */
+  function cloneBuffer(buffer, isDeep) {
+    if (isDeep) {
+      return buffer.slice();
+    }
+    var length = buffer.length,
+        result = allocUnsafe ? allocUnsafe(length) : new buffer.constructor(length);
+
+    buffer.copy(result);
+    return result;
+  }
+
+  module.exports = cloneBuffer;
+  }(_cloneBuffer, _cloneBuffer.exports));
+
+  /**
+   * Copies the values of `source` to `array`.
+   *
+   * @private
+   * @param {Array} source The array to copy values from.
+   * @param {Array} [array=[]] The array to copy values to.
+   * @returns {Array} Returns `array`.
+   */
+
+  function copyArray$1(source, array) {
+    var index = -1,
+        length = source.length;
+
+    array || (array = Array(length));
+    while (++index < length) {
+      array[index] = source[index];
+    }
+    return array;
+  }
+
+  var _copyArray = copyArray$1;
+
+  /**
+   * A specialized version of `_.filter` for arrays without support for
+   * iteratee shorthands.
+   *
+   * @private
+   * @param {Array} [array] The array to iterate over.
+   * @param {Function} predicate The function invoked per iteration.
+   * @returns {Array} Returns the new filtered array.
+   */
+
+  function arrayFilter$2(array, predicate) {
+    var index = -1,
+        length = array == null ? 0 : array.length,
+        resIndex = 0,
+        result = [];
+
+    while (++index < length) {
+      var value = array[index];
+      if (predicate(value, index, array)) {
+        result[resIndex++] = value;
+      }
+    }
+    return result;
+  }
+
+  var _arrayFilter = arrayFilter$2;
+
+  /**
+   * This method returns a new empty array.
+   *
+   * @static
+   * @memberOf _
+   * @since 4.13.0
+   * @category Util
+   * @returns {Array} Returns the new empty array.
+   * @example
+   *
+   * var arrays = _.times(2, _.stubArray);
+   *
+   * console.log(arrays);
+   * // => [[], []]
+   *
+   * console.log(arrays[0] === arrays[1]);
+   * // => false
+   */
+
+  function stubArray$2() {
+    return [];
+  }
+
+  var stubArray_1 = stubArray$2;
+
+  var arrayFilter$1 = _arrayFilter,
+      stubArray$1 = stubArray_1;
+
+  /** Used for built-in method references. */
+  var objectProto$3 = Object.prototype;
+
+  /** Built-in value references. */
+  var propertyIsEnumerable = objectProto$3.propertyIsEnumerable;
+
+  /* Built-in method references for those with the same name as other `lodash` methods. */
+  var nativeGetSymbols$1 = Object.getOwnPropertySymbols;
+
+  /**
+   * Creates an array of the own enumerable symbols of `object`.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @returns {Array} Returns the array of symbols.
+   */
+  var getSymbols$3 = !nativeGetSymbols$1 ? stubArray$1 : function(object) {
+    if (object == null) {
+      return [];
+    }
+    object = Object(object);
+    return arrayFilter$1(nativeGetSymbols$1(object), function(symbol) {
+      return propertyIsEnumerable.call(object, symbol);
+    });
+  };
+
+  var _getSymbols = getSymbols$3;
+
+  var copyObject$1 = _copyObject,
+      getSymbols$2 = _getSymbols;
+
+  /**
+   * Copies own symbols of `source` to `object`.
+   *
+   * @private
+   * @param {Object} source The object to copy symbols from.
+   * @param {Object} [object={}] The object to copy symbols to.
+   * @returns {Object} Returns `object`.
+   */
+  function copySymbols$1(source, object) {
+    return copyObject$1(source, getSymbols$2(source), object);
+  }
+
+  var _copySymbols = copySymbols$1;
+
+  /**
+   * Appends the elements of `values` to `array`.
+   *
+   * @private
+   * @param {Array} array The array to modify.
+   * @param {Array} values The values to append.
+   * @returns {Array} Returns `array`.
+   */
+
+  function arrayPush$2(array, values) {
+    var index = -1,
+        length = values.length,
+        offset = array.length;
+
+    while (++index < length) {
+      array[offset + index] = values[index];
+    }
+    return array;
+  }
+
+  var _arrayPush = arrayPush$2;
+
+  var overArg = _overArg;
+
+  /** Built-in value references. */
+  var getPrototype$2 = overArg(Object.getPrototypeOf, Object);
+
+  var _getPrototype = getPrototype$2;
+
+  var arrayPush$1 = _arrayPush,
+      getPrototype$1 = _getPrototype,
+      getSymbols$1 = _getSymbols,
+      stubArray = stubArray_1;
+
+  /* Built-in method references for those with the same name as other `lodash` methods. */
+  var nativeGetSymbols = Object.getOwnPropertySymbols;
+
+  /**
+   * Creates an array of the own and inherited enumerable symbols of `object`.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @returns {Array} Returns the array of symbols.
+   */
+  var getSymbolsIn$2 = !nativeGetSymbols ? stubArray : function(object) {
+    var result = [];
+    while (object) {
+      arrayPush$1(result, getSymbols$1(object));
+      object = getPrototype$1(object);
+    }
+    return result;
+  };
+
+  var _getSymbolsIn = getSymbolsIn$2;
+
+  var copyObject = _copyObject,
+      getSymbolsIn$1 = _getSymbolsIn;
+
+  /**
+   * Copies own and inherited symbols of `source` to `object`.
+   *
+   * @private
+   * @param {Object} source The object to copy symbols from.
+   * @param {Object} [object={}] The object to copy symbols to.
+   * @returns {Object} Returns `object`.
+   */
+  function copySymbolsIn$1(source, object) {
+    return copyObject(source, getSymbolsIn$1(source), object);
+  }
+
+  var _copySymbolsIn = copySymbolsIn$1;
+
+  var arrayPush = _arrayPush,
+      isArray$7 = isArray_1;
+
+  /**
+   * The base implementation of `getAllKeys` and `getAllKeysIn` which uses
+   * `keysFunc` and `symbolsFunc` to get the enumerable property names and
+   * symbols of `object`.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @param {Function} keysFunc The function to get the keys of `object`.
+   * @param {Function} symbolsFunc The function to get the symbols of `object`.
+   * @returns {Array} Returns the array of property names and symbols.
+   */
+  function baseGetAllKeys$2(object, keysFunc, symbolsFunc) {
+    var result = keysFunc(object);
+    return isArray$7(object) ? result : arrayPush(result, symbolsFunc(object));
+  }
+
+  var _baseGetAllKeys = baseGetAllKeys$2;
+
+  var baseGetAllKeys$1 = _baseGetAllKeys,
+      getSymbols = _getSymbols,
+      keys$4 = keys_1;
+
+  /**
+   * Creates an array of own enumerable property names and symbols of `object`.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @returns {Array} Returns the array of property names and symbols.
+   */
+  function getAllKeys$2(object) {
+    return baseGetAllKeys$1(object, keys$4, getSymbols);
+  }
+
+  var _getAllKeys = getAllKeys$2;
+
+  var baseGetAllKeys = _baseGetAllKeys,
+      getSymbolsIn = _getSymbolsIn,
+      keysIn$1 = keysIn_1;
+
+  /**
+   * Creates an array of own and inherited enumerable property names and
+   * symbols of `object`.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @returns {Array} Returns the array of property names and symbols.
+   */
+  function getAllKeysIn$1(object) {
+    return baseGetAllKeys(object, keysIn$1, getSymbolsIn);
+  }
+
+  var _getAllKeysIn = getAllKeysIn$1;
+
+  var getNative$3 = _getNative,
+      root$4 = _root;
+
+  /* Built-in method references that are verified to be native. */
+  var DataView$1 = getNative$3(root$4, 'DataView');
+
+  var _DataView = DataView$1;
+
+  var getNative$2 = _getNative,
+      root$3 = _root;
+
+  /* Built-in method references that are verified to be native. */
+  var Promise$2 = getNative$2(root$3, 'Promise');
+
+  var _Promise = Promise$2;
+
+  var getNative$1 = _getNative,
+      root$2 = _root;
+
+  /* Built-in method references that are verified to be native. */
+  var Set$2 = getNative$1(root$2, 'Set');
+
+  var _Set = Set$2;
+
+  var getNative = _getNative,
+      root$1 = _root;
+
+  /* Built-in method references that are verified to be native. */
+  var WeakMap$1 = getNative(root$1, 'WeakMap');
+
+  var _WeakMap = WeakMap$1;
+
+  var DataView = _DataView,
+      Map$1 = _Map,
+      Promise$1 = _Promise,
+      Set$1 = _Set,
+      WeakMap = _WeakMap,
+      baseGetTag$2 = _baseGetTag,
+      toSource = _toSource;
+
+  /** `Object#toString` result references. */
+  var mapTag$4 = '[object Map]',
+      objectTag$2 = '[object Object]',
+      promiseTag = '[object Promise]',
+      setTag$4 = '[object Set]',
+      weakMapTag$1 = '[object WeakMap]';
+
+  var dataViewTag$3 = '[object DataView]';
+
+  /** Used to detect maps, sets, and weakmaps. */
+  var dataViewCtorString = toSource(DataView),
+      mapCtorString = toSource(Map$1),
+      promiseCtorString = toSource(Promise$1),
+      setCtorString = toSource(Set$1),
+      weakMapCtorString = toSource(WeakMap);
+
+  /**
+   * Gets the `toStringTag` of `value`.
+   *
+   * @private
+   * @param {*} value The value to query.
+   * @returns {string} Returns the `toStringTag`.
+   */
+  var getTag$4 = baseGetTag$2;
+
+  // Fallback for data views, maps, sets, and weak maps in IE 11 and promises in Node.js < 6.
+  if ((DataView && getTag$4(new DataView(new ArrayBuffer(1))) != dataViewTag$3) ||
+      (Map$1 && getTag$4(new Map$1) != mapTag$4) ||
+      (Promise$1 && getTag$4(Promise$1.resolve()) != promiseTag) ||
+      (Set$1 && getTag$4(new Set$1) != setTag$4) ||
+      (WeakMap && getTag$4(new WeakMap) != weakMapTag$1)) {
+    getTag$4 = function(value) {
+      var result = baseGetTag$2(value),
+          Ctor = result == objectTag$2 ? value.constructor : undefined,
+          ctorString = Ctor ? toSource(Ctor) : '';
+
+      if (ctorString) {
+        switch (ctorString) {
+          case dataViewCtorString: return dataViewTag$3;
+          case mapCtorString: return mapTag$4;
+          case promiseCtorString: return promiseTag;
+          case setCtorString: return setTag$4;
+          case weakMapCtorString: return weakMapTag$1;
+        }
+      }
+      return result;
+    };
+  }
+
+  var _getTag = getTag$4;
+
+  /** Used for built-in method references. */
+
+  var objectProto$2 = Object.prototype;
+
+  /** Used to check objects for own properties. */
+  var hasOwnProperty$2 = objectProto$2.hasOwnProperty;
+
+  /**
+   * Initializes an array clone.
+   *
+   * @private
+   * @param {Array} array The array to clone.
+   * @returns {Array} Returns the initialized clone.
+   */
+  function initCloneArray$1(array) {
+    var length = array.length,
+        result = new array.constructor(length);
+
+    // Add properties assigned by `RegExp#exec`.
+    if (length && typeof array[0] == 'string' && hasOwnProperty$2.call(array, 'index')) {
+      result.index = array.index;
+      result.input = array.input;
+    }
+    return result;
+  }
+
+  var _initCloneArray = initCloneArray$1;
+
+  var root = _root;
+
+  /** Built-in value references. */
+  var Uint8Array$2 = root.Uint8Array;
+
+  var _Uint8Array = Uint8Array$2;
+
+  var Uint8Array$1 = _Uint8Array;
+
+  /**
+   * Creates a clone of `arrayBuffer`.
+   *
+   * @private
+   * @param {ArrayBuffer} arrayBuffer The array buffer to clone.
+   * @returns {ArrayBuffer} Returns the cloned array buffer.
+   */
+  function cloneArrayBuffer$3(arrayBuffer) {
+    var result = new arrayBuffer.constructor(arrayBuffer.byteLength);
+    new Uint8Array$1(result).set(new Uint8Array$1(arrayBuffer));
+    return result;
+  }
+
+  var _cloneArrayBuffer = cloneArrayBuffer$3;
+
+  var cloneArrayBuffer$2 = _cloneArrayBuffer;
+
+  /**
+   * Creates a clone of `dataView`.
+   *
+   * @private
+   * @param {Object} dataView The data view to clone.
+   * @param {boolean} [isDeep] Specify a deep clone.
+   * @returns {Object} Returns the cloned data view.
+   */
+  function cloneDataView$1(dataView, isDeep) {
+    var buffer = isDeep ? cloneArrayBuffer$2(dataView.buffer) : dataView.buffer;
+    return new dataView.constructor(buffer, dataView.byteOffset, dataView.byteLength);
+  }
+
+  var _cloneDataView = cloneDataView$1;
+
+  /** Used to match `RegExp` flags from their coerced string values. */
+
+  var reFlags = /\w*$/;
+
+  /**
+   * Creates a clone of `regexp`.
+   *
+   * @private
+   * @param {Object} regexp The regexp to clone.
+   * @returns {Object} Returns the cloned regexp.
+   */
+  function cloneRegExp$1(regexp) {
+    var result = new regexp.constructor(regexp.source, reFlags.exec(regexp));
+    result.lastIndex = regexp.lastIndex;
+    return result;
+  }
+
+  var _cloneRegExp = cloneRegExp$1;
+
+  var Symbol$2 = _Symbol;
+
+  /** Used to convert symbols to primitives and strings. */
+  var symbolProto$1 = Symbol$2 ? Symbol$2.prototype : undefined,
+      symbolValueOf$1 = symbolProto$1 ? symbolProto$1.valueOf : undefined;
+
+  /**
+   * Creates a clone of the `symbol` object.
+   *
+   * @private
+   * @param {Object} symbol The symbol object to clone.
+   * @returns {Object} Returns the cloned symbol object.
+   */
+  function cloneSymbol$1(symbol) {
+    return symbolValueOf$1 ? Object(symbolValueOf$1.call(symbol)) : {};
+  }
+
+  var _cloneSymbol = cloneSymbol$1;
+
+  var cloneArrayBuffer$1 = _cloneArrayBuffer;
+
+  /**
+   * Creates a clone of `typedArray`.
+   *
+   * @private
+   * @param {Object} typedArray The typed array to clone.
+   * @param {boolean} [isDeep] Specify a deep clone.
+   * @returns {Object} Returns the cloned typed array.
+   */
+  function cloneTypedArray$1(typedArray, isDeep) {
+    var buffer = isDeep ? cloneArrayBuffer$1(typedArray.buffer) : typedArray.buffer;
+    return new typedArray.constructor(buffer, typedArray.byteOffset, typedArray.length);
+  }
+
+  var _cloneTypedArray = cloneTypedArray$1;
+
+  var cloneArrayBuffer = _cloneArrayBuffer,
+      cloneDataView = _cloneDataView,
+      cloneRegExp = _cloneRegExp,
+      cloneSymbol = _cloneSymbol,
+      cloneTypedArray = _cloneTypedArray;
+
+  /** `Object#toString` result references. */
+  var boolTag$3 = '[object Boolean]',
+      dateTag$2 = '[object Date]',
+      mapTag$3 = '[object Map]',
+      numberTag$2 = '[object Number]',
+      regexpTag$2 = '[object RegExp]',
+      setTag$3 = '[object Set]',
+      stringTag$3 = '[object String]',
+      symbolTag$2 = '[object Symbol]';
+
+  var arrayBufferTag$2 = '[object ArrayBuffer]',
+      dataViewTag$2 = '[object DataView]',
+      float32Tag$1 = '[object Float32Array]',
+      float64Tag$1 = '[object Float64Array]',
+      int8Tag$1 = '[object Int8Array]',
+      int16Tag$1 = '[object Int16Array]',
+      int32Tag$1 = '[object Int32Array]',
+      uint8Tag$1 = '[object Uint8Array]',
+      uint8ClampedTag$1 = '[object Uint8ClampedArray]',
+      uint16Tag$1 = '[object Uint16Array]',
+      uint32Tag$1 = '[object Uint32Array]';
+
+  /**
+   * Initializes an object clone based on its `toStringTag`.
+   *
+   * **Note:** This function only supports cloning values with tags of
+   * `Boolean`, `Date`, `Error`, `Map`, `Number`, `RegExp`, `Set`, or `String`.
+   *
+   * @private
+   * @param {Object} object The object to clone.
+   * @param {string} tag The `toStringTag` of the object to clone.
+   * @param {boolean} [isDeep] Specify a deep clone.
+   * @returns {Object} Returns the initialized clone.
+   */
+  function initCloneByTag$1(object, tag, isDeep) {
+    var Ctor = object.constructor;
+    switch (tag) {
+      case arrayBufferTag$2:
+        return cloneArrayBuffer(object);
+
+      case boolTag$3:
+      case dateTag$2:
+        return new Ctor(+object);
+
+      case dataViewTag$2:
+        return cloneDataView(object, isDeep);
+
+      case float32Tag$1: case float64Tag$1:
+      case int8Tag$1: case int16Tag$1: case int32Tag$1:
+      case uint8Tag$1: case uint8ClampedTag$1: case uint16Tag$1: case uint32Tag$1:
+        return cloneTypedArray(object, isDeep);
+
+      case mapTag$3:
+        return new Ctor;
+
+      case numberTag$2:
+      case stringTag$3:
+        return new Ctor(object);
+
+      case regexpTag$2:
+        return cloneRegExp(object);
+
+      case setTag$3:
+        return new Ctor;
+
+      case symbolTag$2:
+        return cloneSymbol(object);
+    }
+  }
+
+  var _initCloneByTag = initCloneByTag$1;
+
+  var isObject$3 = isObject_1;
+
+  /** Built-in value references. */
+  var objectCreate = Object.create;
+
+  /**
+   * The base implementation of `_.create` without support for assigning
+   * properties to the created object.
+   *
+   * @private
+   * @param {Object} proto The object to inherit from.
+   * @returns {Object} Returns the new object.
+   */
+  var baseCreate$1 = (function() {
+    function object() {}
+    return function(proto) {
+      if (!isObject$3(proto)) {
+        return {};
+      }
+      if (objectCreate) {
+        return objectCreate(proto);
+      }
+      object.prototype = proto;
+      var result = new object;
+      object.prototype = undefined;
+      return result;
+    };
+  }());
+
+  var _baseCreate = baseCreate$1;
+
+  var baseCreate = _baseCreate,
+      getPrototype = _getPrototype,
+      isPrototype = _isPrototype;
+
+  /**
+   * Initializes an object clone.
+   *
+   * @private
+   * @param {Object} object The object to clone.
+   * @returns {Object} Returns the initialized clone.
+   */
+  function initCloneObject$1(object) {
+    return (typeof object.constructor == 'function' && !isPrototype(object))
+      ? baseCreate(getPrototype(object))
+      : {};
+  }
+
+  var _initCloneObject = initCloneObject$1;
+
+  var getTag$3 = _getTag,
+      isObjectLike$4 = isObjectLike_1;
+
+  /** `Object#toString` result references. */
+  var mapTag$2 = '[object Map]';
+
+  /**
+   * The base implementation of `_.isMap` without Node.js optimizations.
+   *
+   * @private
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is a map, else `false`.
+   */
+  function baseIsMap$1(value) {
+    return isObjectLike$4(value) && getTag$3(value) == mapTag$2;
+  }
+
+  var _baseIsMap = baseIsMap$1;
+
+  var baseIsMap = _baseIsMap,
+      baseUnary$1 = _baseUnary,
+      nodeUtil$1 = _nodeUtil.exports;
+
+  /* Node.js helper references. */
+  var nodeIsMap = nodeUtil$1 && nodeUtil$1.isMap;
+
+  /**
+   * Checks if `value` is classified as a `Map` object.
+   *
+   * @static
+   * @memberOf _
+   * @since 4.3.0
+   * @category Lang
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is a map, else `false`.
+   * @example
+   *
+   * _.isMap(new Map);
+   * // => true
+   *
+   * _.isMap(new WeakMap);
+   * // => false
+   */
+  var isMap$1 = nodeIsMap ? baseUnary$1(nodeIsMap) : baseIsMap;
+
+  var isMap_1 = isMap$1;
+
+  var getTag$2 = _getTag,
+      isObjectLike$3 = isObjectLike_1;
+
+  /** `Object#toString` result references. */
+  var setTag$2 = '[object Set]';
+
+  /**
+   * The base implementation of `_.isSet` without Node.js optimizations.
+   *
+   * @private
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is a set, else `false`.
+   */
+  function baseIsSet$1(value) {
+    return isObjectLike$3(value) && getTag$2(value) == setTag$2;
+  }
+
+  var _baseIsSet = baseIsSet$1;
+
+  var baseIsSet = _baseIsSet,
+      baseUnary = _baseUnary,
+      nodeUtil = _nodeUtil.exports;
+
+  /* Node.js helper references. */
+  var nodeIsSet = nodeUtil && nodeUtil.isSet;
+
+  /**
+   * Checks if `value` is classified as a `Set` object.
+   *
+   * @static
+   * @memberOf _
+   * @since 4.3.0
+   * @category Lang
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is a set, else `false`.
+   * @example
+   *
+   * _.isSet(new Set);
+   * // => true
+   *
+   * _.isSet(new WeakSet);
+   * // => false
+   */
+  var isSet$1 = nodeIsSet ? baseUnary(nodeIsSet) : baseIsSet;
+
+  var isSet_1 = isSet$1;
+
+  var Stack$2 = _Stack,
+      arrayEach = _arrayEach,
+      assignValue = _assignValue,
+      baseAssign = _baseAssign,
+      baseAssignIn = _baseAssignIn,
+      cloneBuffer = _cloneBuffer.exports,
+      copyArray = _copyArray,
+      copySymbols = _copySymbols,
+      copySymbolsIn = _copySymbolsIn,
+      getAllKeys$1 = _getAllKeys,
+      getAllKeysIn = _getAllKeysIn,
+      getTag$1 = _getTag,
+      initCloneArray = _initCloneArray,
+      initCloneByTag = _initCloneByTag,
+      initCloneObject = _initCloneObject,
+      isArray$6 = isArray_1,
+      isBuffer$1 = isBuffer$3.exports,
+      isMap = isMap_1,
+      isObject$2 = isObject_1,
+      isSet = isSet_1,
+      keys$3 = keys_1,
+      keysIn = keysIn_1;
+
+  /** Used to compose bitmasks for cloning. */
+  var CLONE_DEEP_FLAG$1 = 1,
+      CLONE_FLAT_FLAG = 2,
+      CLONE_SYMBOLS_FLAG$1 = 4;
+
+  /** `Object#toString` result references. */
+  var argsTag$1 = '[object Arguments]',
+      arrayTag$1 = '[object Array]',
+      boolTag$2 = '[object Boolean]',
+      dateTag$1 = '[object Date]',
+      errorTag$1 = '[object Error]',
+      funcTag = '[object Function]',
+      genTag = '[object GeneratorFunction]',
+      mapTag$1 = '[object Map]',
+      numberTag$1 = '[object Number]',
+      objectTag$1 = '[object Object]',
+      regexpTag$1 = '[object RegExp]',
+      setTag$1 = '[object Set]',
+      stringTag$2 = '[object String]',
+      symbolTag$1 = '[object Symbol]',
+      weakMapTag = '[object WeakMap]';
+
+  var arrayBufferTag$1 = '[object ArrayBuffer]',
+      dataViewTag$1 = '[object DataView]',
+      float32Tag = '[object Float32Array]',
+      float64Tag = '[object Float64Array]',
+      int8Tag = '[object Int8Array]',
+      int16Tag = '[object Int16Array]',
+      int32Tag = '[object Int32Array]',
+      uint8Tag = '[object Uint8Array]',
+      uint8ClampedTag = '[object Uint8ClampedArray]',
+      uint16Tag = '[object Uint16Array]',
+      uint32Tag = '[object Uint32Array]';
+
+  /** Used to identify `toStringTag` values supported by `_.clone`. */
+  var cloneableTags = {};
+  cloneableTags[argsTag$1] = cloneableTags[arrayTag$1] =
+  cloneableTags[arrayBufferTag$1] = cloneableTags[dataViewTag$1] =
+  cloneableTags[boolTag$2] = cloneableTags[dateTag$1] =
+  cloneableTags[float32Tag] = cloneableTags[float64Tag] =
+  cloneableTags[int8Tag] = cloneableTags[int16Tag] =
+  cloneableTags[int32Tag] = cloneableTags[mapTag$1] =
+  cloneableTags[numberTag$1] = cloneableTags[objectTag$1] =
+  cloneableTags[regexpTag$1] = cloneableTags[setTag$1] =
+  cloneableTags[stringTag$2] = cloneableTags[symbolTag$1] =
+  cloneableTags[uint8Tag] = cloneableTags[uint8ClampedTag] =
+  cloneableTags[uint16Tag] = cloneableTags[uint32Tag] = true;
+  cloneableTags[errorTag$1] = cloneableTags[funcTag] =
+  cloneableTags[weakMapTag] = false;
+
+  /**
+   * The base implementation of `_.clone` and `_.cloneDeep` which tracks
+   * traversed objects.
+   *
+   * @private
+   * @param {*} value The value to clone.
+   * @param {boolean} bitmask The bitmask flags.
+   *  1 - Deep clone
+   *  2 - Flatten inherited properties
+   *  4 - Clone symbols
+   * @param {Function} [customizer] The function to customize cloning.
+   * @param {string} [key] The key of `value`.
+   * @param {Object} [object] The parent object of `value`.
+   * @param {Object} [stack] Tracks traversed objects and their clone counterparts.
+   * @returns {*} Returns the cloned value.
+   */
+  function baseClone$1(value, bitmask, customizer, key, object, stack) {
+    var result,
+        isDeep = bitmask & CLONE_DEEP_FLAG$1,
+        isFlat = bitmask & CLONE_FLAT_FLAG,
+        isFull = bitmask & CLONE_SYMBOLS_FLAG$1;
+
+    if (customizer) {
+      result = object ? customizer(value, key, object, stack) : customizer(value);
+    }
+    if (result !== undefined) {
+      return result;
+    }
+    if (!isObject$2(value)) {
+      return value;
+    }
+    var isArr = isArray$6(value);
+    if (isArr) {
+      result = initCloneArray(value);
+      if (!isDeep) {
+        return copyArray(value, result);
+      }
+    } else {
+      var tag = getTag$1(value),
+          isFunc = tag == funcTag || tag == genTag;
+
+      if (isBuffer$1(value)) {
+        return cloneBuffer(value, isDeep);
+      }
+      if (tag == objectTag$1 || tag == argsTag$1 || (isFunc && !object)) {
+        result = (isFlat || isFunc) ? {} : initCloneObject(value);
+        if (!isDeep) {
+          return isFlat
+            ? copySymbolsIn(value, baseAssignIn(result, value))
+            : copySymbols(value, baseAssign(result, value));
+        }
+      } else {
+        if (!cloneableTags[tag]) {
+          return object ? value : {};
+        }
+        result = initCloneByTag(value, tag, isDeep);
+      }
+    }
+    // Check for circular references and return its corresponding clone.
+    stack || (stack = new Stack$2);
+    var stacked = stack.get(value);
+    if (stacked) {
+      return stacked;
+    }
+    stack.set(value, result);
+
+    if (isSet(value)) {
+      value.forEach(function(subValue) {
+        result.add(baseClone$1(subValue, bitmask, customizer, subValue, value, stack));
+      });
+    } else if (isMap(value)) {
+      value.forEach(function(subValue, key) {
+        result.set(key, baseClone$1(subValue, bitmask, customizer, key, value, stack));
+      });
+    }
+
+    var keysFunc = isFull
+      ? (isFlat ? getAllKeysIn : getAllKeys$1)
+      : (isFlat ? keysIn : keys$3);
+
+    var props = isArr ? undefined : keysFunc(value);
+    arrayEach(props || value, function(subValue, key) {
+      if (props) {
+        key = subValue;
+        subValue = value[key];
+      }
+      // Recursively populate clone (susceptible to call stack limits).
+      assignValue(result, key, baseClone$1(subValue, bitmask, customizer, key, value, stack));
+    });
+    return result;
+  }
+
+  var _baseClone = baseClone$1;
+
+  var baseClone = _baseClone;
+
+  /** Used to compose bitmasks for cloning. */
+  var CLONE_DEEP_FLAG = 1,
+      CLONE_SYMBOLS_FLAG = 4;
+
+  /**
+   * This method is like `_.clone` except that it recursively clones `value`.
+   *
+   * @static
+   * @memberOf _
+   * @since 1.0.0
+   * @category Lang
+   * @param {*} value The value to recursively clone.
+   * @returns {*} Returns the deep cloned value.
+   * @see _.clone
+   * @example
+   *
+   * var objects = [{ 'a': 1 }, { 'b': 2 }];
+   *
+   * var deep = _.cloneDeep(objects);
+   * console.log(deep[0] === objects[0]);
+   * // => false
+   */
+  function cloneDeep(value) {
+    return baseClone(value, CLONE_DEEP_FLAG | CLONE_SYMBOLS_FLAG);
+  }
+
+  var cloneDeep_1 = cloneDeep;
+
+  var baseEach$1 = _baseEach;
+
+  /**
+   * The base implementation of `_.filter` without support for iteratee shorthands.
+   *
+   * @private
+   * @param {Array|Object} collection The collection to iterate over.
+   * @param {Function} predicate The function invoked per iteration.
+   * @returns {Array} Returns the new filtered array.
+   */
+  function baseFilter$1(collection, predicate) {
+    var result = [];
+    baseEach$1(collection, function(value, index, collection) {
+      if (predicate(value, index, collection)) {
+        result.push(value);
+      }
+    });
+    return result;
+  }
+
+  var _baseFilter = baseFilter$1;
 
   /** Used to stand-in for `undefined` hash values. */
 
@@ -4220,13 +5242,6 @@
 
   var _equalArrays = equalArrays$2;
 
-  var root$4 = _root;
-
-  /** Built-in value references. */
-  var Uint8Array$2 = root$4.Uint8Array;
-
-  var _Uint8Array = Uint8Array$2;
-
   /**
    * Converts `map` to its key-value pairs.
    *
@@ -4267,8 +5282,8 @@
 
   var _setToArray = setToArray$3;
 
-  var Symbol$2 = _Symbol,
-      Uint8Array$1 = _Uint8Array,
+  var Symbol$1 = _Symbol,
+      Uint8Array = _Uint8Array,
       eq = eq_1,
       equalArrays$1 = _equalArrays,
       mapToArray = _mapToArray,
@@ -4279,22 +5294,22 @@
       COMPARE_UNORDERED_FLAG$2 = 2;
 
   /** `Object#toString` result references. */
-  var boolTag$3 = '[object Boolean]',
-      dateTag$2 = '[object Date]',
-      errorTag$1 = '[object Error]',
-      mapTag$4 = '[object Map]',
-      numberTag$2 = '[object Number]',
-      regexpTag$2 = '[object RegExp]',
-      setTag$4 = '[object Set]',
-      stringTag$3 = '[object String]',
-      symbolTag$2 = '[object Symbol]';
+  var boolTag$1 = '[object Boolean]',
+      dateTag = '[object Date]',
+      errorTag = '[object Error]',
+      mapTag = '[object Map]',
+      numberTag = '[object Number]',
+      regexpTag = '[object RegExp]',
+      setTag = '[object Set]',
+      stringTag$1 = '[object String]',
+      symbolTag = '[object Symbol]';
 
-  var arrayBufferTag$2 = '[object ArrayBuffer]',
-      dataViewTag$3 = '[object DataView]';
+  var arrayBufferTag = '[object ArrayBuffer]',
+      dataViewTag = '[object DataView]';
 
   /** Used to convert symbols to primitives and strings. */
-  var symbolProto$1 = Symbol$2 ? Symbol$2.prototype : undefined,
-      symbolValueOf$1 = symbolProto$1 ? symbolProto$1.valueOf : undefined;
+  var symbolProto = Symbol$1 ? Symbol$1.prototype : undefined,
+      symbolValueOf = symbolProto ? symbolProto.valueOf : undefined;
 
   /**
    * A specialized version of `baseIsEqualDeep` for comparing objects of
@@ -4315,7 +5330,7 @@
    */
   function equalByTag$1(object, other, tag, bitmask, customizer, equalFunc, stack) {
     switch (tag) {
-      case dataViewTag$3:
+      case dataViewTag:
         if ((object.byteLength != other.byteLength) ||
             (object.byteOffset != other.byteOffset)) {
           return false;
@@ -4323,34 +5338,34 @@
         object = object.buffer;
         other = other.buffer;
 
-      case arrayBufferTag$2:
+      case arrayBufferTag:
         if ((object.byteLength != other.byteLength) ||
-            !equalFunc(new Uint8Array$1(object), new Uint8Array$1(other))) {
+            !equalFunc(new Uint8Array(object), new Uint8Array(other))) {
           return false;
         }
         return true;
 
-      case boolTag$3:
-      case dateTag$2:
-      case numberTag$2:
+      case boolTag$1:
+      case dateTag:
+      case numberTag:
         // Coerce booleans to `1` or `0` and dates to milliseconds.
         // Invalid dates are coerced to `NaN`.
         return eq(+object, +other);
 
-      case errorTag$1:
+      case errorTag:
         return object.name == other.name && object.message == other.message;
 
-      case regexpTag$2:
-      case stringTag$3:
+      case regexpTag:
+      case stringTag$1:
         // Coerce regexes to strings and treat strings, primitives and objects,
         // as equal. See http://www.ecma-international.org/ecma-262/7.0/#sec-regexp.prototype.tostring
         // for more details.
         return object == (other + '');
 
-      case mapTag$4:
+      case mapTag:
         var convert = mapToArray;
 
-      case setTag$4:
+      case setTag:
         var isPartial = bitmask & COMPARE_PARTIAL_FLAG$4;
         convert || (convert = setToArray$2);
 
@@ -4370,9 +5385,9 @@
         stack['delete'](object);
         return result;
 
-      case symbolTag$2:
-        if (symbolValueOf$1) {
-          return symbolValueOf$1.call(object) == symbolValueOf$1.call(other);
+      case symbolTag:
+        if (symbolValueOf) {
+          return symbolValueOf.call(object) == symbolValueOf.call(other);
         }
     }
     return false;
@@ -4380,132 +5395,16 @@
 
   var _equalByTag = equalByTag$1;
 
-  /**
-   * Appends the elements of `values` to `array`.
-   *
-   * @private
-   * @param {Array} array The array to modify.
-   * @param {Array} values The values to append.
-   * @returns {Array} Returns `array`.
-   */
-
-  function arrayPush$2(array, values) {
-    var index = -1,
-        length = values.length,
-        offset = array.length;
-
-    while (++index < length) {
-      array[offset + index] = values[index];
-    }
-    return array;
-  }
-
-  var _arrayPush = arrayPush$2;
-
-  var arrayPush$1 = _arrayPush,
-      isArray$7 = isArray_1;
-
-  /**
-   * The base implementation of `getAllKeys` and `getAllKeysIn` which uses
-   * `keysFunc` and `symbolsFunc` to get the enumerable property names and
-   * symbols of `object`.
-   *
-   * @private
-   * @param {Object} object The object to query.
-   * @param {Function} keysFunc The function to get the keys of `object`.
-   * @param {Function} symbolsFunc The function to get the symbols of `object`.
-   * @returns {Array} Returns the array of property names and symbols.
-   */
-  function baseGetAllKeys$2(object, keysFunc, symbolsFunc) {
-    var result = keysFunc(object);
-    return isArray$7(object) ? result : arrayPush$1(result, symbolsFunc(object));
-  }
-
-  var _baseGetAllKeys = baseGetAllKeys$2;
-
-  /**
-   * This method returns a new empty array.
-   *
-   * @static
-   * @memberOf _
-   * @since 4.13.0
-   * @category Util
-   * @returns {Array} Returns the new empty array.
-   * @example
-   *
-   * var arrays = _.times(2, _.stubArray);
-   *
-   * console.log(arrays);
-   * // => [[], []]
-   *
-   * console.log(arrays[0] === arrays[1]);
-   * // => false
-   */
-
-  function stubArray$2() {
-    return [];
-  }
-
-  var stubArray_1 = stubArray$2;
-
-  var arrayFilter$1 = _arrayFilter,
-      stubArray$1 = stubArray_1;
-
-  /** Used for built-in method references. */
-  var objectProto$4 = Object.prototype;
-
-  /** Built-in value references. */
-  var propertyIsEnumerable = objectProto$4.propertyIsEnumerable;
-
-  /* Built-in method references for those with the same name as other `lodash` methods. */
-  var nativeGetSymbols$1 = Object.getOwnPropertySymbols;
-
-  /**
-   * Creates an array of the own enumerable symbols of `object`.
-   *
-   * @private
-   * @param {Object} object The object to query.
-   * @returns {Array} Returns the array of symbols.
-   */
-  var getSymbols$3 = !nativeGetSymbols$1 ? stubArray$1 : function(object) {
-    if (object == null) {
-      return [];
-    }
-    object = Object(object);
-    return arrayFilter$1(nativeGetSymbols$1(object), function(symbol) {
-      return propertyIsEnumerable.call(object, symbol);
-    });
-  };
-
-  var _getSymbols = getSymbols$3;
-
-  var baseGetAllKeys$1 = _baseGetAllKeys,
-      getSymbols$2 = _getSymbols,
-      keys$5 = keys_1;
-
-  /**
-   * Creates an array of own enumerable property names and symbols of `object`.
-   *
-   * @private
-   * @param {Object} object The object to query.
-   * @returns {Array} Returns the array of property names and symbols.
-   */
-  function getAllKeys$2(object) {
-    return baseGetAllKeys$1(object, keys$5, getSymbols$2);
-  }
-
-  var _getAllKeys = getAllKeys$2;
-
-  var getAllKeys$1 = _getAllKeys;
+  var getAllKeys = _getAllKeys;
 
   /** Used to compose bitmasks for value comparisons. */
   var COMPARE_PARTIAL_FLAG$3 = 1;
 
   /** Used for built-in method references. */
-  var objectProto$3 = Object.prototype;
+  var objectProto$1 = Object.prototype;
 
   /** Used to check objects for own properties. */
-  var hasOwnProperty$3 = objectProto$3.hasOwnProperty;
+  var hasOwnProperty$1 = objectProto$1.hasOwnProperty;
 
   /**
    * A specialized version of `baseIsEqualDeep` for objects with support for
@@ -4522,9 +5421,9 @@
    */
   function equalObjects$1(object, other, bitmask, customizer, equalFunc, stack) {
     var isPartial = bitmask & COMPARE_PARTIAL_FLAG$3,
-        objProps = getAllKeys$1(object),
+        objProps = getAllKeys(object),
         objLength = objProps.length,
-        othProps = getAllKeys$1(other),
+        othProps = getAllKeys(other),
         othLength = othProps.length;
 
     if (objLength != othLength && !isPartial) {
@@ -4533,7 +5432,7 @@
     var index = objLength;
     while (index--) {
       var key = objProps[index];
-      if (!(isPartial ? key in other : hasOwnProperty$3.call(other, key))) {
+      if (!(isPartial ? key in other : hasOwnProperty$1.call(other, key))) {
         return false;
       }
     }
@@ -4587,119 +5486,28 @@
 
   var _equalObjects = equalObjects$1;
 
-  var getNative$3 = _getNative,
-      root$3 = _root;
-
-  /* Built-in method references that are verified to be native. */
-  var DataView$1 = getNative$3(root$3, 'DataView');
-
-  var _DataView = DataView$1;
-
-  var getNative$2 = _getNative,
-      root$2 = _root;
-
-  /* Built-in method references that are verified to be native. */
-  var Promise$2 = getNative$2(root$2, 'Promise');
-
-  var _Promise = Promise$2;
-
-  var getNative$1 = _getNative,
-      root$1 = _root;
-
-  /* Built-in method references that are verified to be native. */
-  var Set$2 = getNative$1(root$1, 'Set');
-
-  var _Set = Set$2;
-
-  var getNative = _getNative,
-      root = _root;
-
-  /* Built-in method references that are verified to be native. */
-  var WeakMap$1 = getNative(root, 'WeakMap');
-
-  var _WeakMap = WeakMap$1;
-
-  var DataView = _DataView,
-      Map$1 = _Map,
-      Promise$1 = _Promise,
-      Set$1 = _Set,
-      WeakMap = _WeakMap,
-      baseGetTag$2 = _baseGetTag,
-      toSource = _toSource;
-
-  /** `Object#toString` result references. */
-  var mapTag$3 = '[object Map]',
-      objectTag$2 = '[object Object]',
-      promiseTag = '[object Promise]',
-      setTag$3 = '[object Set]',
-      weakMapTag$1 = '[object WeakMap]';
-
-  var dataViewTag$2 = '[object DataView]';
-
-  /** Used to detect maps, sets, and weakmaps. */
-  var dataViewCtorString = toSource(DataView),
-      mapCtorString = toSource(Map$1),
-      promiseCtorString = toSource(Promise$1),
-      setCtorString = toSource(Set$1),
-      weakMapCtorString = toSource(WeakMap);
-
-  /**
-   * Gets the `toStringTag` of `value`.
-   *
-   * @private
-   * @param {*} value The value to query.
-   * @returns {string} Returns the `toStringTag`.
-   */
-  var getTag$4 = baseGetTag$2;
-
-  // Fallback for data views, maps, sets, and weak maps in IE 11 and promises in Node.js < 6.
-  if ((DataView && getTag$4(new DataView(new ArrayBuffer(1))) != dataViewTag$2) ||
-      (Map$1 && getTag$4(new Map$1) != mapTag$3) ||
-      (Promise$1 && getTag$4(Promise$1.resolve()) != promiseTag) ||
-      (Set$1 && getTag$4(new Set$1) != setTag$3) ||
-      (WeakMap && getTag$4(new WeakMap) != weakMapTag$1)) {
-    getTag$4 = function(value) {
-      var result = baseGetTag$2(value),
-          Ctor = result == objectTag$2 ? value.constructor : undefined,
-          ctorString = Ctor ? toSource(Ctor) : '';
-
-      if (ctorString) {
-        switch (ctorString) {
-          case dataViewCtorString: return dataViewTag$2;
-          case mapCtorString: return mapTag$3;
-          case promiseCtorString: return promiseTag;
-          case setCtorString: return setTag$3;
-          case weakMapCtorString: return weakMapTag$1;
-        }
-      }
-      return result;
-    };
-  }
-
-  var _getTag = getTag$4;
-
-  var Stack$2 = _Stack,
+  var Stack$1 = _Stack,
       equalArrays = _equalArrays,
       equalByTag = _equalByTag,
       equalObjects = _equalObjects,
-      getTag$3 = _getTag,
-      isArray$6 = isArray_1,
-      isBuffer$1 = isBuffer$3.exports,
+      getTag = _getTag,
+      isArray$5 = isArray_1,
+      isBuffer = isBuffer$3.exports,
       isTypedArray = isTypedArray_1;
 
   /** Used to compose bitmasks for value comparisons. */
   var COMPARE_PARTIAL_FLAG$2 = 1;
 
   /** `Object#toString` result references. */
-  var argsTag$1 = '[object Arguments]',
-      arrayTag$1 = '[object Array]',
-      objectTag$1 = '[object Object]';
+  var argsTag = '[object Arguments]',
+      arrayTag = '[object Array]',
+      objectTag = '[object Object]';
 
   /** Used for built-in method references. */
-  var objectProto$2 = Object.prototype;
+  var objectProto = Object.prototype;
 
   /** Used to check objects for own properties. */
-  var hasOwnProperty$2 = objectProto$2.hasOwnProperty;
+  var hasOwnProperty = objectProto.hasOwnProperty;
 
   /**
    * A specialized version of `baseIsEqual` for arrays and objects which performs
@@ -4716,54 +5524,54 @@
    * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
    */
   function baseIsEqualDeep$1(object, other, bitmask, customizer, equalFunc, stack) {
-    var objIsArr = isArray$6(object),
-        othIsArr = isArray$6(other),
-        objTag = objIsArr ? arrayTag$1 : getTag$3(object),
-        othTag = othIsArr ? arrayTag$1 : getTag$3(other);
+    var objIsArr = isArray$5(object),
+        othIsArr = isArray$5(other),
+        objTag = objIsArr ? arrayTag : getTag(object),
+        othTag = othIsArr ? arrayTag : getTag(other);
 
-    objTag = objTag == argsTag$1 ? objectTag$1 : objTag;
-    othTag = othTag == argsTag$1 ? objectTag$1 : othTag;
+    objTag = objTag == argsTag ? objectTag : objTag;
+    othTag = othTag == argsTag ? objectTag : othTag;
 
-    var objIsObj = objTag == objectTag$1,
-        othIsObj = othTag == objectTag$1,
+    var objIsObj = objTag == objectTag,
+        othIsObj = othTag == objectTag,
         isSameTag = objTag == othTag;
 
-    if (isSameTag && isBuffer$1(object)) {
-      if (!isBuffer$1(other)) {
+    if (isSameTag && isBuffer(object)) {
+      if (!isBuffer(other)) {
         return false;
       }
       objIsArr = true;
       objIsObj = false;
     }
     if (isSameTag && !objIsObj) {
-      stack || (stack = new Stack$2);
+      stack || (stack = new Stack$1);
       return (objIsArr || isTypedArray(object))
         ? equalArrays(object, other, bitmask, customizer, equalFunc, stack)
         : equalByTag(object, other, objTag, bitmask, customizer, equalFunc, stack);
     }
     if (!(bitmask & COMPARE_PARTIAL_FLAG$2)) {
-      var objIsWrapped = objIsObj && hasOwnProperty$2.call(object, '__wrapped__'),
-          othIsWrapped = othIsObj && hasOwnProperty$2.call(other, '__wrapped__');
+      var objIsWrapped = objIsObj && hasOwnProperty.call(object, '__wrapped__'),
+          othIsWrapped = othIsObj && hasOwnProperty.call(other, '__wrapped__');
 
       if (objIsWrapped || othIsWrapped) {
         var objUnwrapped = objIsWrapped ? object.value() : object,
             othUnwrapped = othIsWrapped ? other.value() : other;
 
-        stack || (stack = new Stack$2);
+        stack || (stack = new Stack$1);
         return equalFunc(objUnwrapped, othUnwrapped, bitmask, customizer, stack);
       }
     }
     if (!isSameTag) {
       return false;
     }
-    stack || (stack = new Stack$2);
+    stack || (stack = new Stack$1);
     return equalObjects(object, other, bitmask, customizer, equalFunc, stack);
   }
 
   var _baseIsEqualDeep = baseIsEqualDeep$1;
 
   var baseIsEqualDeep = _baseIsEqualDeep,
-      isObjectLike$4 = isObjectLike_1;
+      isObjectLike$2 = isObjectLike_1;
 
   /**
    * The base implementation of `_.isEqual` which supports partial comparisons
@@ -4783,7 +5591,7 @@
     if (value === other) {
       return true;
     }
-    if (value == null || other == null || (!isObjectLike$4(value) && !isObjectLike$4(other))) {
+    if (value == null || other == null || (!isObjectLike$2(value) && !isObjectLike$2(other))) {
       return value !== value && other !== other;
     }
     return baseIsEqualDeep(value, other, bitmask, customizer, baseIsEqual$2, stack);
@@ -4791,7 +5599,7 @@
 
   var _baseIsEqual = baseIsEqual$2;
 
-  var Stack$1 = _Stack,
+  var Stack = _Stack,
       baseIsEqual$1 = _baseIsEqual;
 
   /** Used to compose bitmasks for value comparisons. */
@@ -4837,7 +5645,7 @@
           return false;
         }
       } else {
-        var stack = new Stack$1;
+        var stack = new Stack;
         if (customizer) {
           var result = customizer(objValue, srcValue, key, object, source, stack);
         }
@@ -4854,7 +5662,7 @@
 
   var _baseIsMatch = baseIsMatch$1;
 
-  var isObject$4 = isObject_1;
+  var isObject$1 = isObject_1;
 
   /**
    * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
@@ -4865,13 +5673,13 @@
    *  equality comparisons, else `false`.
    */
   function isStrictComparable$2(value) {
-    return value === value && !isObject$4(value);
+    return value === value && !isObject$1(value);
   }
 
   var _isStrictComparable = isStrictComparable$2;
 
   var isStrictComparable$1 = _isStrictComparable,
-      keys$4 = keys_1;
+      keys$2 = keys_1;
 
   /**
    * Gets the property names, values, and compare flags of `object`.
@@ -4881,7 +5689,7 @@
    * @returns {Array} Returns the match data of `object`.
    */
   function getMatchData$1(object) {
-    var result = keys$4(object),
+    var result = keys$2(object),
         length = result.length;
 
     while (length--) {
@@ -4957,7 +5765,7 @@
 
   var castPath = _castPath,
       isArguments = isArguments_1,
-      isArray$5 = isArray_1,
+      isArray$4 = isArray_1,
       isIndex = _isIndex,
       isLength = isLength_1,
       toKey$2 = _toKey;
@@ -4990,7 +5798,7 @@
     }
     length = object == null ? 0 : object.length;
     return !!length && isLength(length) && isIndex(key, length) &&
-      (isArray$5(object) || isArguments(object));
+      (isArray$4(object) || isArguments(object));
   }
 
   var _hasPath = hasPath$1;
@@ -5133,7 +5941,7 @@
   var baseMatches = _baseMatches,
       baseMatchesProperty = _baseMatchesProperty,
       identity = identity_1,
-      isArray$4 = isArray_1,
+      isArray$3 = isArray_1,
       property = property_1;
 
   /**
@@ -5153,7 +5961,7 @@
       return identity;
     }
     if (typeof value == 'object') {
-      return isArray$4(value)
+      return isArray$3(value)
         ? baseMatchesProperty(value[0], value[1])
         : baseMatches(value);
     }
@@ -5165,7 +5973,7 @@
   var arrayFilter = _arrayFilter,
       baseFilter = _baseFilter,
       baseIteratee$3 = _baseIteratee,
-      isArray$3 = isArray_1;
+      isArray$2 = isArray_1;
 
   /**
    * Iterates over elements of `collection`, returning an array of all elements
@@ -5209,7 +6017,7 @@
    * // => objects for ['fred', 'barney']
    */
   function filter(collection, predicate) {
-    var func = isArray$3(collection) ? arrayFilter : baseFilter;
+    var func = isArray$2(collection) ? arrayFilter : baseFilter;
     return func(collection, baseIteratee$3(predicate));
   }
 
@@ -5296,7 +6104,7 @@
   })(EUrlCursorType || (EUrlCursorType = {}));
 
   var baseEach = _baseEach,
-      isArrayLike$3 = isArrayLike_1;
+      isArrayLike$2 = isArrayLike_1;
 
   /**
    * The base implementation of `_.map` without support for iteratee shorthands.
@@ -5308,7 +6116,7 @@
    */
   function baseMap$1(collection, iteratee) {
     var index = -1,
-        result = isArrayLike$3(collection) ? Array(collection.length) : [];
+        result = isArrayLike$2(collection) ? Array(collection.length) : [];
 
     baseEach(collection, function(value, key, collection) {
       result[++index] = iteratee(value, key, collection);
@@ -5321,7 +6129,7 @@
   var arrayMap$1 = _arrayMap,
       baseIteratee$2 = _baseIteratee,
       baseMap = _baseMap,
-      isArray$2 = isArray_1;
+      isArray$1 = isArray_1;
 
   /**
    * Creates an array of values by running each element in `collection` thru
@@ -5366,7 +6174,7 @@
    * // => ['barney', 'fred']
    */
   function map(collection, iteratee) {
-    var func = isArray$2(collection) ? arrayMap$1 : baseMap;
+    var func = isArray$1(collection) ? arrayMap$1 : baseMap;
     return func(collection, baseIteratee$2(iteratee));
   }
 
@@ -5481,11 +6289,11 @@
   var _baseIndexOf = baseIndexOf$2;
 
   var baseGetTag$1 = _baseGetTag,
-      isArray$1 = isArray_1,
-      isObjectLike$3 = isObjectLike_1;
+      isArray = isArray_1,
+      isObjectLike$1 = isObjectLike_1;
 
   /** `Object#toString` result references. */
-  var stringTag$2 = '[object String]';
+  var stringTag = '[object String]';
 
   /**
    * Checks if `value` is classified as a `String` primitive or object.
@@ -5506,7 +6314,7 @@
    */
   function isString$1(value) {
     return typeof value == 'string' ||
-      (!isArray$1(value) && isObjectLike$3(value) && baseGetTag$1(value) == stringTag$2);
+      (!isArray(value) && isObjectLike$1(value) && baseGetTag$1(value) == stringTag);
   }
 
   var isString_1 = isString$1;
@@ -5553,7 +6361,7 @@
   var _baseTrim = baseTrim$1;
 
   var baseTrim = _baseTrim,
-      isObject$3 = isObject_1,
+      isObject = isObject_1,
       isSymbol = isSymbol_1;
 
   /** Used as references for various `Number` constants. */
@@ -5601,9 +6409,9 @@
     if (isSymbol(value)) {
       return NAN;
     }
-    if (isObject$3(value)) {
+    if (isObject(value)) {
       var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
-      value = isObject$3(other) ? (other + '') : other;
+      value = isObject(other) ? (other + '') : other;
     }
     if (typeof value != 'string') {
       return value === 0 ? value : +value;
@@ -5718,7 +6526,7 @@
   var _baseValues = baseValues$1;
 
   var baseValues = _baseValues,
-      keys$3 = keys_1;
+      keys$1 = keys_1;
 
   /**
    * Creates an array of the own enumerable string keyed property values of `object`.
@@ -5747,13 +6555,13 @@
    * // => ['h', 'i']
    */
   function values$1(object) {
-    return object == null ? [] : baseValues(object, keys$3(object));
+    return object == null ? [] : baseValues(object, keys$1(object));
   }
 
   var values_1 = values$1;
 
   var baseIndexOf$1 = _baseIndexOf,
-      isArrayLike$2 = isArrayLike_1,
+      isArrayLike$1 = isArrayLike_1,
       isString = isString_1,
       toInteger$1 = toInteger_1,
       values = values_1;
@@ -5792,7 +6600,7 @@
    * // => true
    */
   function includes(collection, value, fromIndex, guard) {
-    collection = isArrayLike$2(collection) ? collection : values(collection);
+    collection = isArrayLike$1(collection) ? collection : values(collection);
     fromIndex = (fromIndex && !guard) ? toInteger$1(fromIndex) : 0;
 
     var length = collection.length;
@@ -5884,10 +6692,10 @@
   });
 
   var baseGetTag = _baseGetTag,
-      isObjectLike$2 = isObjectLike_1;
+      isObjectLike = isObjectLike_1;
 
   /** `Object#toString` result references. */
-  var boolTag$2 = '[object Boolean]';
+  var boolTag = '[object Boolean]';
 
   /**
    * Checks if `value` is classified as a boolean primitive or object.
@@ -5908,7 +6716,7 @@
    */
   function isBoolean(value) {
     return value === true || value === false ||
-      (isObjectLike$2(value) && baseGetTag(value) == boolTag$2);
+      (isObjectLike(value) && baseGetTag(value) == boolTag);
   }
 
   var isBoolean_1 = isBoolean;
@@ -8617,6 +9425,166 @@
     return EventLayer;
   }(Layer$1);
 
+  var ExportHelperLayer = /*#__PURE__*/function () {
+    // canvas大小
+    // public canvas: OffscreenCanvas
+    // public canvasContext: OffscreenCanvasRenderingContext2D
+    // 当前maskLayer中所有的actions
+    // 伪造map对象，给feature使用
+    // function: constructor
+    function ExportHelperLayer(bounds) {
+      _classCallCheck(this, ExportHelperLayer);
+
+      _defineProperty$1(this, "objects", []);
+
+      _defineProperty$1(this, "map", {
+        // 空属性/方法
+        activeFeature: null,
+        setActiveFeature: function setActiveFeature() {},
+        getScale: function getScale() {
+          return 1;
+        },
+        transformGlobalToScreen: function transformGlobalToScreen(point) {
+          var x = point.x,
+              y = point.y;
+          var _this$bounds = this.bounds,
+              startX = _this$bounds.x,
+              startY = _this$bounds.y;
+          return {
+            x: x - startX,
+            y: y - startY
+          };
+        }
+      });
+
+      this.bounds = bounds;
+      this.createRenderCanvas(); // 对象冒充运行环境
+
+      this.map.getScale = this.map.getScale.bind(this);
+      this.map.transformGlobalToScreen = this.map.transformGlobalToScreen.bind(this);
+    } // override 创建offscreenCanvas层
+
+
+    _createClass(ExportHelperLayer, [{
+      key: "createRenderCanvas",
+      value: function createRenderCanvas() {
+        // const {width, height} = this.bounds;
+        // this.canvas = new OffscreenCanvas(width, height);
+        // this.canvas.width = width * CanvasLayer.dpr;
+        // this.canvas.height = height * CanvasLayer.dpr;
+        // this.canvasContext = this.canvas.getContext('2d');
+        var _this$bounds2 = this.bounds,
+            width = _this$bounds2.width,
+            height = _this$bounds2.height;
+        this.canvas = document.createElement('canvas');
+        this.canvas.width = width * CanvasLayer.dpr;
+        this.canvas.height = height * CanvasLayer.dpr;
+        this.canvas.style.width = width + 'px';
+        this.canvas.style.height = height + 'px';
+        this.canvas.style.border = '1px solid red';
+        this.canvasContext = this.canvas.getContext('2d'); // document.body.appendChild(this.canvas);
+      } // 添加object至当前HelperLayer中
+
+    }, {
+      key: "addObject",
+      value: function addObject(object) {
+        object.onAdd(this);
+        this.objects.push(object);
+      } // 添加objects至当前HelperLayer中
+
+    }, {
+      key: "addObjects",
+      value: function addObjects(objects) {
+        var _this = this;
+
+        forEach_1(objects, function (object) {
+          return _this.addObject(object);
+        });
+      } // 添加图片
+
+    }, {
+      key: "addImageLayer",
+      value: function addImageLayer(imageLayer) {
+        // 执行坐标转换
+        var _this$map$transformGl = this.map.transformGlobalToScreen(imageLayer.position),
+            screenX = _this$map$transformGl.x,
+            screenY = _this$map$transformGl.y;
+
+        var dpr = CanvasLayer.dpr;
+        var scale = this.map.getScale();
+        var _imageLayer$imageInfo = imageLayer.imageInfo,
+            width = _imageLayer$imageInfo.width,
+            height = _imageLayer$imageInfo.height;
+        var screenWidth = width * scale;
+        var screenHeight = height * scale;
+        imageLayer.image && imageLayer.imageSuccess && Graphic.drawImage(this.canvasContext, {
+          image: imageLayer.image,
+          x: screenX * dpr,
+          y: screenY * dpr,
+          width: screenWidth * dpr,
+          height: screenHeight * dpr
+        }, {});
+      } // // Converts canvas to an image
+      // convertCanvasToBitmap() {
+      //     const bitmap = this.canvas.transferToImageBitmap();
+      //     return bitmap;
+      // }
+
+    }, {
+      key: "convertCanvasToImage",
+      value: function convertCanvasToImage() {
+        // 获取base64
+        var base64 = this.canvas.toDataURL('image/png'); // resize图片大小（因为dpr的存在，会导致大小变成dpr倍）
+
+        var _this$bounds3 = this.bounds,
+            width = _this$bounds3.width,
+            height = _this$bounds3.height;
+        return this.resizeImage(base64, {
+          width: width,
+          height: height
+        });
+      } // 重设图片大小
+
+    }, {
+      key: "resizeImage",
+      value: function resizeImage(base64, size) {
+        var image = new Image();
+        image.src = base64; // create an off-screen canvas
+
+        var width = size.width,
+            height = size.height;
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d'); // set its dimension to target size
+
+        canvas.width = width;
+        canvas.height = height;
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px'; // drawImage
+
+        ctx.drawImage(image, 0, 0, width, height);
+        var newBase64 = canvas.toDataURL('image/png');
+        return newBase64;
+      } // @override
+
+    }, {
+      key: "refresh",
+      value: function refresh() {
+        // 绘制objects中所有object对象
+        forEach_1(this.objects, function (object) {
+          return object.refresh();
+        });
+      } // 清空canvas画布
+
+    }, {
+      key: "clear",
+      value: function clear() {
+        this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      }
+    }]);
+
+    return ExportHelperLayer;
+  }();
+
   var Feature$1 = /*#__PURE__*/function () {
     // featureId
     // featureType
@@ -9997,8 +10965,8 @@
   }(CanvasLayer);
 
   var baseIteratee$1 = _baseIteratee,
-      isArrayLike$1 = isArrayLike_1,
-      keys$2 = keys_1;
+      isArrayLike = isArrayLike_1,
+      keys = keys_1;
 
   /**
    * Creates a `_.find` or `_.findLast` function.
@@ -10010,9 +10978,9 @@
   function createFind$1(findIndexFunc) {
     return function(collection, predicate, fromIndex) {
       var iterable = Object(collection);
-      if (!isArrayLike$1(collection)) {
+      if (!isArrayLike(collection)) {
         var iteratee = baseIteratee$1(predicate);
-        collection = keys$2(collection);
+        collection = keys(collection);
         predicate = function(key) { return iteratee(iterable[key], key, iterable); };
       }
       var index = findIndexFunc(collection, predicate, fromIndex);
@@ -10698,6 +11666,33 @@
         var targetFeature = get_1(targetFeatures, '[0]', null);
 
         return targetFeature;
+      } // 以图片形式导出layers[当前只支持到处text/image/feature三种layer图层]
+
+    }, {
+      key: "exportLayersToImage",
+      value: function exportLayersToImage(bounds, layers) {
+        var exportLayers = layers || this.getLayers();
+        var exportLayerHelper = new ExportHelperLayer(bounds); // 循环添加feature/text/image
+
+        forEach_1(exportLayers, function (layer) {
+          if (layer.type === ELayerType.Feature) {
+            var features = layer.getAllFeatures();
+
+            var allFeatures = cloneDeep_1(features);
+
+            exportLayerHelper.addObjects(allFeatures);
+          } else if (layer.type === ELayerType.Text) {
+            var texts = layer.getAllTexts();
+
+            var allTexts = cloneDeep_1(texts);
+
+            exportLayerHelper.addObjects(allTexts);
+          } else if (layer.type === ELayerType.Image) ;
+        });
+
+        var image = exportLayerHelper.convertCanvasToImage();
+        exportLayerHelper = null;
+        return image;
       } // 屏幕坐标转换全局【实际】坐标，默认基于中心点基准point进行计算
 
     }, {
@@ -11629,814 +12624,6 @@
 
   var uniq_1 = uniq;
 
-  var copyObject$3 = _copyObject,
-      keys$1 = keys_1;
-
-  /**
-   * The base implementation of `_.assign` without support for multiple sources
-   * or `customizer` functions.
-   *
-   * @private
-   * @param {Object} object The destination object.
-   * @param {Object} source The source object.
-   * @returns {Object} Returns `object`.
-   */
-  function baseAssign$1(object, source) {
-    return object && copyObject$3(source, keys$1(source), object);
-  }
-
-  var _baseAssign = baseAssign$1;
-
-  /**
-   * This function is like
-   * [`Object.keys`](http://ecma-international.org/ecma-262/7.0/#sec-object.keys)
-   * except that it includes inherited enumerable properties.
-   *
-   * @private
-   * @param {Object} object The object to query.
-   * @returns {Array} Returns the array of property names.
-   */
-
-  function nativeKeysIn$1(object) {
-    var result = [];
-    if (object != null) {
-      for (var key in Object(object)) {
-        result.push(key);
-      }
-    }
-    return result;
-  }
-
-  var _nativeKeysIn = nativeKeysIn$1;
-
-  var isObject$2 = isObject_1,
-      isPrototype$1 = _isPrototype,
-      nativeKeysIn = _nativeKeysIn;
-
-  /** Used for built-in method references. */
-  var objectProto$1 = Object.prototype;
-
-  /** Used to check objects for own properties. */
-  var hasOwnProperty$1 = objectProto$1.hasOwnProperty;
-
-  /**
-   * The base implementation of `_.keysIn` which doesn't treat sparse arrays as dense.
-   *
-   * @private
-   * @param {Object} object The object to query.
-   * @returns {Array} Returns the array of property names.
-   */
-  function baseKeysIn$1(object) {
-    if (!isObject$2(object)) {
-      return nativeKeysIn(object);
-    }
-    var isProto = isPrototype$1(object),
-        result = [];
-
-    for (var key in object) {
-      if (!(key == 'constructor' && (isProto || !hasOwnProperty$1.call(object, key)))) {
-        result.push(key);
-      }
-    }
-    return result;
-  }
-
-  var _baseKeysIn = baseKeysIn$1;
-
-  var arrayLikeKeys = _arrayLikeKeys,
-      baseKeysIn = _baseKeysIn,
-      isArrayLike = isArrayLike_1;
-
-  /**
-   * Creates an array of the own and inherited enumerable property names of `object`.
-   *
-   * **Note:** Non-object values are coerced to objects.
-   *
-   * @static
-   * @memberOf _
-   * @since 3.0.0
-   * @category Object
-   * @param {Object} object The object to query.
-   * @returns {Array} Returns the array of property names.
-   * @example
-   *
-   * function Foo() {
-   *   this.a = 1;
-   *   this.b = 2;
-   * }
-   *
-   * Foo.prototype.c = 3;
-   *
-   * _.keysIn(new Foo);
-   * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
-   */
-  function keysIn$3(object) {
-    return isArrayLike(object) ? arrayLikeKeys(object, true) : baseKeysIn(object);
-  }
-
-  var keysIn_1 = keysIn$3;
-
-  var copyObject$2 = _copyObject,
-      keysIn$2 = keysIn_1;
-
-  /**
-   * The base implementation of `_.assignIn` without support for multiple sources
-   * or `customizer` functions.
-   *
-   * @private
-   * @param {Object} object The destination object.
-   * @param {Object} source The source object.
-   * @returns {Object} Returns `object`.
-   */
-  function baseAssignIn$1(object, source) {
-    return object && copyObject$2(source, keysIn$2(source), object);
-  }
-
-  var _baseAssignIn = baseAssignIn$1;
-
-  var _cloneBuffer = {exports: {}};
-
-  (function (module, exports) {
-  var root = _root;
-
-  /** Detect free variable `exports`. */
-  var freeExports = exports && !exports.nodeType && exports;
-
-  /** Detect free variable `module`. */
-  var freeModule = freeExports && 'object' == 'object' && module && !module.nodeType && module;
-
-  /** Detect the popular CommonJS extension `module.exports`. */
-  var moduleExports = freeModule && freeModule.exports === freeExports;
-
-  /** Built-in value references. */
-  var Buffer = moduleExports ? root.Buffer : undefined,
-      allocUnsafe = Buffer ? Buffer.allocUnsafe : undefined;
-
-  /**
-   * Creates a clone of  `buffer`.
-   *
-   * @private
-   * @param {Buffer} buffer The buffer to clone.
-   * @param {boolean} [isDeep] Specify a deep clone.
-   * @returns {Buffer} Returns the cloned buffer.
-   */
-  function cloneBuffer(buffer, isDeep) {
-    if (isDeep) {
-      return buffer.slice();
-    }
-    var length = buffer.length,
-        result = allocUnsafe ? allocUnsafe(length) : new buffer.constructor(length);
-
-    buffer.copy(result);
-    return result;
-  }
-
-  module.exports = cloneBuffer;
-  }(_cloneBuffer, _cloneBuffer.exports));
-
-  /**
-   * Copies the values of `source` to `array`.
-   *
-   * @private
-   * @param {Array} source The array to copy values from.
-   * @param {Array} [array=[]] The array to copy values to.
-   * @returns {Array} Returns `array`.
-   */
-
-  function copyArray$1(source, array) {
-    var index = -1,
-        length = source.length;
-
-    array || (array = Array(length));
-    while (++index < length) {
-      array[index] = source[index];
-    }
-    return array;
-  }
-
-  var _copyArray = copyArray$1;
-
-  var copyObject$1 = _copyObject,
-      getSymbols$1 = _getSymbols;
-
-  /**
-   * Copies own symbols of `source` to `object`.
-   *
-   * @private
-   * @param {Object} source The object to copy symbols from.
-   * @param {Object} [object={}] The object to copy symbols to.
-   * @returns {Object} Returns `object`.
-   */
-  function copySymbols$1(source, object) {
-    return copyObject$1(source, getSymbols$1(source), object);
-  }
-
-  var _copySymbols = copySymbols$1;
-
-  var overArg = _overArg;
-
-  /** Built-in value references. */
-  var getPrototype$2 = overArg(Object.getPrototypeOf, Object);
-
-  var _getPrototype = getPrototype$2;
-
-  var arrayPush = _arrayPush,
-      getPrototype$1 = _getPrototype,
-      getSymbols = _getSymbols,
-      stubArray = stubArray_1;
-
-  /* Built-in method references for those with the same name as other `lodash` methods. */
-  var nativeGetSymbols = Object.getOwnPropertySymbols;
-
-  /**
-   * Creates an array of the own and inherited enumerable symbols of `object`.
-   *
-   * @private
-   * @param {Object} object The object to query.
-   * @returns {Array} Returns the array of symbols.
-   */
-  var getSymbolsIn$2 = !nativeGetSymbols ? stubArray : function(object) {
-    var result = [];
-    while (object) {
-      arrayPush(result, getSymbols(object));
-      object = getPrototype$1(object);
-    }
-    return result;
-  };
-
-  var _getSymbolsIn = getSymbolsIn$2;
-
-  var copyObject = _copyObject,
-      getSymbolsIn$1 = _getSymbolsIn;
-
-  /**
-   * Copies own and inherited symbols of `source` to `object`.
-   *
-   * @private
-   * @param {Object} source The object to copy symbols from.
-   * @param {Object} [object={}] The object to copy symbols to.
-   * @returns {Object} Returns `object`.
-   */
-  function copySymbolsIn$1(source, object) {
-    return copyObject(source, getSymbolsIn$1(source), object);
-  }
-
-  var _copySymbolsIn = copySymbolsIn$1;
-
-  var baseGetAllKeys = _baseGetAllKeys,
-      getSymbolsIn = _getSymbolsIn,
-      keysIn$1 = keysIn_1;
-
-  /**
-   * Creates an array of own and inherited enumerable property names and
-   * symbols of `object`.
-   *
-   * @private
-   * @param {Object} object The object to query.
-   * @returns {Array} Returns the array of property names and symbols.
-   */
-  function getAllKeysIn$1(object) {
-    return baseGetAllKeys(object, keysIn$1, getSymbolsIn);
-  }
-
-  var _getAllKeysIn = getAllKeysIn$1;
-
-  /** Used for built-in method references. */
-
-  var objectProto = Object.prototype;
-
-  /** Used to check objects for own properties. */
-  var hasOwnProperty = objectProto.hasOwnProperty;
-
-  /**
-   * Initializes an array clone.
-   *
-   * @private
-   * @param {Array} array The array to clone.
-   * @returns {Array} Returns the initialized clone.
-   */
-  function initCloneArray$1(array) {
-    var length = array.length,
-        result = new array.constructor(length);
-
-    // Add properties assigned by `RegExp#exec`.
-    if (length && typeof array[0] == 'string' && hasOwnProperty.call(array, 'index')) {
-      result.index = array.index;
-      result.input = array.input;
-    }
-    return result;
-  }
-
-  var _initCloneArray = initCloneArray$1;
-
-  var Uint8Array = _Uint8Array;
-
-  /**
-   * Creates a clone of `arrayBuffer`.
-   *
-   * @private
-   * @param {ArrayBuffer} arrayBuffer The array buffer to clone.
-   * @returns {ArrayBuffer} Returns the cloned array buffer.
-   */
-  function cloneArrayBuffer$3(arrayBuffer) {
-    var result = new arrayBuffer.constructor(arrayBuffer.byteLength);
-    new Uint8Array(result).set(new Uint8Array(arrayBuffer));
-    return result;
-  }
-
-  var _cloneArrayBuffer = cloneArrayBuffer$3;
-
-  var cloneArrayBuffer$2 = _cloneArrayBuffer;
-
-  /**
-   * Creates a clone of `dataView`.
-   *
-   * @private
-   * @param {Object} dataView The data view to clone.
-   * @param {boolean} [isDeep] Specify a deep clone.
-   * @returns {Object} Returns the cloned data view.
-   */
-  function cloneDataView$1(dataView, isDeep) {
-    var buffer = isDeep ? cloneArrayBuffer$2(dataView.buffer) : dataView.buffer;
-    return new dataView.constructor(buffer, dataView.byteOffset, dataView.byteLength);
-  }
-
-  var _cloneDataView = cloneDataView$1;
-
-  /** Used to match `RegExp` flags from their coerced string values. */
-
-  var reFlags = /\w*$/;
-
-  /**
-   * Creates a clone of `regexp`.
-   *
-   * @private
-   * @param {Object} regexp The regexp to clone.
-   * @returns {Object} Returns the cloned regexp.
-   */
-  function cloneRegExp$1(regexp) {
-    var result = new regexp.constructor(regexp.source, reFlags.exec(regexp));
-    result.lastIndex = regexp.lastIndex;
-    return result;
-  }
-
-  var _cloneRegExp = cloneRegExp$1;
-
-  var Symbol$1 = _Symbol;
-
-  /** Used to convert symbols to primitives and strings. */
-  var symbolProto = Symbol$1 ? Symbol$1.prototype : undefined,
-      symbolValueOf = symbolProto ? symbolProto.valueOf : undefined;
-
-  /**
-   * Creates a clone of the `symbol` object.
-   *
-   * @private
-   * @param {Object} symbol The symbol object to clone.
-   * @returns {Object} Returns the cloned symbol object.
-   */
-  function cloneSymbol$1(symbol) {
-    return symbolValueOf ? Object(symbolValueOf.call(symbol)) : {};
-  }
-
-  var _cloneSymbol = cloneSymbol$1;
-
-  var cloneArrayBuffer$1 = _cloneArrayBuffer;
-
-  /**
-   * Creates a clone of `typedArray`.
-   *
-   * @private
-   * @param {Object} typedArray The typed array to clone.
-   * @param {boolean} [isDeep] Specify a deep clone.
-   * @returns {Object} Returns the cloned typed array.
-   */
-  function cloneTypedArray$1(typedArray, isDeep) {
-    var buffer = isDeep ? cloneArrayBuffer$1(typedArray.buffer) : typedArray.buffer;
-    return new typedArray.constructor(buffer, typedArray.byteOffset, typedArray.length);
-  }
-
-  var _cloneTypedArray = cloneTypedArray$1;
-
-  var cloneArrayBuffer = _cloneArrayBuffer,
-      cloneDataView = _cloneDataView,
-      cloneRegExp = _cloneRegExp,
-      cloneSymbol = _cloneSymbol,
-      cloneTypedArray = _cloneTypedArray;
-
-  /** `Object#toString` result references. */
-  var boolTag$1 = '[object Boolean]',
-      dateTag$1 = '[object Date]',
-      mapTag$2 = '[object Map]',
-      numberTag$1 = '[object Number]',
-      regexpTag$1 = '[object RegExp]',
-      setTag$2 = '[object Set]',
-      stringTag$1 = '[object String]',
-      symbolTag$1 = '[object Symbol]';
-
-  var arrayBufferTag$1 = '[object ArrayBuffer]',
-      dataViewTag$1 = '[object DataView]',
-      float32Tag$1 = '[object Float32Array]',
-      float64Tag$1 = '[object Float64Array]',
-      int8Tag$1 = '[object Int8Array]',
-      int16Tag$1 = '[object Int16Array]',
-      int32Tag$1 = '[object Int32Array]',
-      uint8Tag$1 = '[object Uint8Array]',
-      uint8ClampedTag$1 = '[object Uint8ClampedArray]',
-      uint16Tag$1 = '[object Uint16Array]',
-      uint32Tag$1 = '[object Uint32Array]';
-
-  /**
-   * Initializes an object clone based on its `toStringTag`.
-   *
-   * **Note:** This function only supports cloning values with tags of
-   * `Boolean`, `Date`, `Error`, `Map`, `Number`, `RegExp`, `Set`, or `String`.
-   *
-   * @private
-   * @param {Object} object The object to clone.
-   * @param {string} tag The `toStringTag` of the object to clone.
-   * @param {boolean} [isDeep] Specify a deep clone.
-   * @returns {Object} Returns the initialized clone.
-   */
-  function initCloneByTag$1(object, tag, isDeep) {
-    var Ctor = object.constructor;
-    switch (tag) {
-      case arrayBufferTag$1:
-        return cloneArrayBuffer(object);
-
-      case boolTag$1:
-      case dateTag$1:
-        return new Ctor(+object);
-
-      case dataViewTag$1:
-        return cloneDataView(object, isDeep);
-
-      case float32Tag$1: case float64Tag$1:
-      case int8Tag$1: case int16Tag$1: case int32Tag$1:
-      case uint8Tag$1: case uint8ClampedTag$1: case uint16Tag$1: case uint32Tag$1:
-        return cloneTypedArray(object, isDeep);
-
-      case mapTag$2:
-        return new Ctor;
-
-      case numberTag$1:
-      case stringTag$1:
-        return new Ctor(object);
-
-      case regexpTag$1:
-        return cloneRegExp(object);
-
-      case setTag$2:
-        return new Ctor;
-
-      case symbolTag$1:
-        return cloneSymbol(object);
-    }
-  }
-
-  var _initCloneByTag = initCloneByTag$1;
-
-  var isObject$1 = isObject_1;
-
-  /** Built-in value references. */
-  var objectCreate = Object.create;
-
-  /**
-   * The base implementation of `_.create` without support for assigning
-   * properties to the created object.
-   *
-   * @private
-   * @param {Object} proto The object to inherit from.
-   * @returns {Object} Returns the new object.
-   */
-  var baseCreate$1 = (function() {
-    function object() {}
-    return function(proto) {
-      if (!isObject$1(proto)) {
-        return {};
-      }
-      if (objectCreate) {
-        return objectCreate(proto);
-      }
-      object.prototype = proto;
-      var result = new object;
-      object.prototype = undefined;
-      return result;
-    };
-  }());
-
-  var _baseCreate = baseCreate$1;
-
-  var baseCreate = _baseCreate,
-      getPrototype = _getPrototype,
-      isPrototype = _isPrototype;
-
-  /**
-   * Initializes an object clone.
-   *
-   * @private
-   * @param {Object} object The object to clone.
-   * @returns {Object} Returns the initialized clone.
-   */
-  function initCloneObject$1(object) {
-    return (typeof object.constructor == 'function' && !isPrototype(object))
-      ? baseCreate(getPrototype(object))
-      : {};
-  }
-
-  var _initCloneObject = initCloneObject$1;
-
-  var getTag$2 = _getTag,
-      isObjectLike$1 = isObjectLike_1;
-
-  /** `Object#toString` result references. */
-  var mapTag$1 = '[object Map]';
-
-  /**
-   * The base implementation of `_.isMap` without Node.js optimizations.
-   *
-   * @private
-   * @param {*} value The value to check.
-   * @returns {boolean} Returns `true` if `value` is a map, else `false`.
-   */
-  function baseIsMap$1(value) {
-    return isObjectLike$1(value) && getTag$2(value) == mapTag$1;
-  }
-
-  var _baseIsMap = baseIsMap$1;
-
-  var baseIsMap = _baseIsMap,
-      baseUnary$1 = _baseUnary,
-      nodeUtil$1 = _nodeUtil.exports;
-
-  /* Node.js helper references. */
-  var nodeIsMap = nodeUtil$1 && nodeUtil$1.isMap;
-
-  /**
-   * Checks if `value` is classified as a `Map` object.
-   *
-   * @static
-   * @memberOf _
-   * @since 4.3.0
-   * @category Lang
-   * @param {*} value The value to check.
-   * @returns {boolean} Returns `true` if `value` is a map, else `false`.
-   * @example
-   *
-   * _.isMap(new Map);
-   * // => true
-   *
-   * _.isMap(new WeakMap);
-   * // => false
-   */
-  var isMap$1 = nodeIsMap ? baseUnary$1(nodeIsMap) : baseIsMap;
-
-  var isMap_1 = isMap$1;
-
-  var getTag$1 = _getTag,
-      isObjectLike = isObjectLike_1;
-
-  /** `Object#toString` result references. */
-  var setTag$1 = '[object Set]';
-
-  /**
-   * The base implementation of `_.isSet` without Node.js optimizations.
-   *
-   * @private
-   * @param {*} value The value to check.
-   * @returns {boolean} Returns `true` if `value` is a set, else `false`.
-   */
-  function baseIsSet$1(value) {
-    return isObjectLike(value) && getTag$1(value) == setTag$1;
-  }
-
-  var _baseIsSet = baseIsSet$1;
-
-  var baseIsSet = _baseIsSet,
-      baseUnary = _baseUnary,
-      nodeUtil = _nodeUtil.exports;
-
-  /* Node.js helper references. */
-  var nodeIsSet = nodeUtil && nodeUtil.isSet;
-
-  /**
-   * Checks if `value` is classified as a `Set` object.
-   *
-   * @static
-   * @memberOf _
-   * @since 4.3.0
-   * @category Lang
-   * @param {*} value The value to check.
-   * @returns {boolean} Returns `true` if `value` is a set, else `false`.
-   * @example
-   *
-   * _.isSet(new Set);
-   * // => true
-   *
-   * _.isSet(new WeakSet);
-   * // => false
-   */
-  var isSet$1 = nodeIsSet ? baseUnary(nodeIsSet) : baseIsSet;
-
-  var isSet_1 = isSet$1;
-
-  var Stack = _Stack,
-      arrayEach = _arrayEach,
-      assignValue = _assignValue,
-      baseAssign = _baseAssign,
-      baseAssignIn = _baseAssignIn,
-      cloneBuffer = _cloneBuffer.exports,
-      copyArray = _copyArray,
-      copySymbols = _copySymbols,
-      copySymbolsIn = _copySymbolsIn,
-      getAllKeys = _getAllKeys,
-      getAllKeysIn = _getAllKeysIn,
-      getTag = _getTag,
-      initCloneArray = _initCloneArray,
-      initCloneByTag = _initCloneByTag,
-      initCloneObject = _initCloneObject,
-      isArray = isArray_1,
-      isBuffer = isBuffer$3.exports,
-      isMap = isMap_1,
-      isObject = isObject_1,
-      isSet = isSet_1,
-      keys = keys_1,
-      keysIn = keysIn_1;
-
-  /** Used to compose bitmasks for cloning. */
-  var CLONE_DEEP_FLAG$1 = 1,
-      CLONE_FLAT_FLAG = 2,
-      CLONE_SYMBOLS_FLAG$1 = 4;
-
-  /** `Object#toString` result references. */
-  var argsTag = '[object Arguments]',
-      arrayTag = '[object Array]',
-      boolTag = '[object Boolean]',
-      dateTag = '[object Date]',
-      errorTag = '[object Error]',
-      funcTag = '[object Function]',
-      genTag = '[object GeneratorFunction]',
-      mapTag = '[object Map]',
-      numberTag = '[object Number]',
-      objectTag = '[object Object]',
-      regexpTag = '[object RegExp]',
-      setTag = '[object Set]',
-      stringTag = '[object String]',
-      symbolTag = '[object Symbol]',
-      weakMapTag = '[object WeakMap]';
-
-  var arrayBufferTag = '[object ArrayBuffer]',
-      dataViewTag = '[object DataView]',
-      float32Tag = '[object Float32Array]',
-      float64Tag = '[object Float64Array]',
-      int8Tag = '[object Int8Array]',
-      int16Tag = '[object Int16Array]',
-      int32Tag = '[object Int32Array]',
-      uint8Tag = '[object Uint8Array]',
-      uint8ClampedTag = '[object Uint8ClampedArray]',
-      uint16Tag = '[object Uint16Array]',
-      uint32Tag = '[object Uint32Array]';
-
-  /** Used to identify `toStringTag` values supported by `_.clone`. */
-  var cloneableTags = {};
-  cloneableTags[argsTag] = cloneableTags[arrayTag] =
-  cloneableTags[arrayBufferTag] = cloneableTags[dataViewTag] =
-  cloneableTags[boolTag] = cloneableTags[dateTag] =
-  cloneableTags[float32Tag] = cloneableTags[float64Tag] =
-  cloneableTags[int8Tag] = cloneableTags[int16Tag] =
-  cloneableTags[int32Tag] = cloneableTags[mapTag] =
-  cloneableTags[numberTag] = cloneableTags[objectTag] =
-  cloneableTags[regexpTag] = cloneableTags[setTag] =
-  cloneableTags[stringTag] = cloneableTags[symbolTag] =
-  cloneableTags[uint8Tag] = cloneableTags[uint8ClampedTag] =
-  cloneableTags[uint16Tag] = cloneableTags[uint32Tag] = true;
-  cloneableTags[errorTag] = cloneableTags[funcTag] =
-  cloneableTags[weakMapTag] = false;
-
-  /**
-   * The base implementation of `_.clone` and `_.cloneDeep` which tracks
-   * traversed objects.
-   *
-   * @private
-   * @param {*} value The value to clone.
-   * @param {boolean} bitmask The bitmask flags.
-   *  1 - Deep clone
-   *  2 - Flatten inherited properties
-   *  4 - Clone symbols
-   * @param {Function} [customizer] The function to customize cloning.
-   * @param {string} [key] The key of `value`.
-   * @param {Object} [object] The parent object of `value`.
-   * @param {Object} [stack] Tracks traversed objects and their clone counterparts.
-   * @returns {*} Returns the cloned value.
-   */
-  function baseClone$1(value, bitmask, customizer, key, object, stack) {
-    var result,
-        isDeep = bitmask & CLONE_DEEP_FLAG$1,
-        isFlat = bitmask & CLONE_FLAT_FLAG,
-        isFull = bitmask & CLONE_SYMBOLS_FLAG$1;
-
-    if (customizer) {
-      result = object ? customizer(value, key, object, stack) : customizer(value);
-    }
-    if (result !== undefined) {
-      return result;
-    }
-    if (!isObject(value)) {
-      return value;
-    }
-    var isArr = isArray(value);
-    if (isArr) {
-      result = initCloneArray(value);
-      if (!isDeep) {
-        return copyArray(value, result);
-      }
-    } else {
-      var tag = getTag(value),
-          isFunc = tag == funcTag || tag == genTag;
-
-      if (isBuffer(value)) {
-        return cloneBuffer(value, isDeep);
-      }
-      if (tag == objectTag || tag == argsTag || (isFunc && !object)) {
-        result = (isFlat || isFunc) ? {} : initCloneObject(value);
-        if (!isDeep) {
-          return isFlat
-            ? copySymbolsIn(value, baseAssignIn(result, value))
-            : copySymbols(value, baseAssign(result, value));
-        }
-      } else {
-        if (!cloneableTags[tag]) {
-          return object ? value : {};
-        }
-        result = initCloneByTag(value, tag, isDeep);
-      }
-    }
-    // Check for circular references and return its corresponding clone.
-    stack || (stack = new Stack);
-    var stacked = stack.get(value);
-    if (stacked) {
-      return stacked;
-    }
-    stack.set(value, result);
-
-    if (isSet(value)) {
-      value.forEach(function(subValue) {
-        result.add(baseClone$1(subValue, bitmask, customizer, subValue, value, stack));
-      });
-    } else if (isMap(value)) {
-      value.forEach(function(subValue, key) {
-        result.set(key, baseClone$1(subValue, bitmask, customizer, key, value, stack));
-      });
-    }
-
-    var keysFunc = isFull
-      ? (isFlat ? getAllKeysIn : getAllKeys)
-      : (isFlat ? keysIn : keys);
-
-    var props = isArr ? undefined : keysFunc(value);
-    arrayEach(props || value, function(subValue, key) {
-      if (props) {
-        key = subValue;
-        subValue = value[key];
-      }
-      // Recursively populate clone (susceptible to call stack limits).
-      assignValue(result, key, baseClone$1(subValue, bitmask, customizer, key, value, stack));
-    });
-    return result;
-  }
-
-  var _baseClone = baseClone$1;
-
-  var baseClone = _baseClone;
-
-  /** Used to compose bitmasks for cloning. */
-  var CLONE_DEEP_FLAG = 1,
-      CLONE_SYMBOLS_FLAG = 4;
-
-  /**
-   * This method is like `_.clone` except that it recursively clones `value`.
-   *
-   * @static
-   * @memberOf _
-   * @since 1.0.0
-   * @category Lang
-   * @param {*} value The value to recursively clone.
-   * @returns {*} Returns the deep cloned value.
-   * @see _.clone
-   * @example
-   *
-   * var objects = [{ 'a': 1 }, { 'b': 2 }];
-   *
-   * var deep = _.cloneDeep(objects);
-   * console.log(deep[0] === objects[0]);
-   * // => false
-   */
-  function cloneDeep(value) {
-    return baseClone(value, CLONE_DEEP_FLAG | CLONE_SYMBOLS_FLAG);
-  }
-
-  var cloneDeep_1 = cloneDeep;
-
   var MaskHelperLayer = /*#__PURE__*/function () {
     // canvas大小
     // public canvas: HTMLCanvasElement
@@ -12461,7 +12648,7 @@
               startY = _this$bounds.y;
           return {
             x: x - startX,
-            y: startY - y
+            y: y - startY
           };
         }
       });

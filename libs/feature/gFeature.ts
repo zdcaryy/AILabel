@@ -3,9 +3,11 @@ import _assign from 'lodash/assign';
 import {IObject, IPoint} from '../gInterface';
 import FeatureLayer from '../layer/gLayerFeature';
 import OverlayLayer from '../layer/gLayerOverlay';
+import ExportHelperLayer from '../layer/gLayerExportHelper';
 import {IFeatureStyle, IRectShape, IFeatureShape} from './gInterface';
 import {EFeatureType} from './gEnum';
 
+export type TFeatureLayerType = FeatureLayer | OverlayLayer | ExportHelperLayer;
 
 export default class Feature {
     // featureId
@@ -35,7 +37,7 @@ export default class Feature {
     public style: IFeatureStyle
 
     // feature-container
-    public layer: FeatureLayer | OverlayLayer
+    public layer: TFeatureLayerType
 
     // function: constructor
     constructor(id: string, type: EFeatureType, props: IObject = {}, style: IFeatureStyle = {}) {
@@ -47,7 +49,7 @@ export default class Feature {
     }
 
     // function: trigger when feature add to featureLayer
-    onAdd(layer: FeatureLayer | OverlayLayer): void {
+    onAdd(layer: TFeatureLayerType): void {
         this.layer = layer;
         this.refresh();
     }

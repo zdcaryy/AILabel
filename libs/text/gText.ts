@@ -5,8 +5,11 @@ import {ETextType} from './gEnum';
 import CanvasLayer from '../layer/gLayerCanvas';
 import TextLayer from '../layer/gLayerText';
 import OverlayLayer from '../layer/gLayerOverlay';
+import ExportHelperLayer from '../layer/gLayerExportHelper';
 import {ITextInfo, ITextStyle} from './gInterface';
 import Graphic from '../gGraphic';
+
+export type TTextLayerType = TextLayer | OverlayLayer | ExportHelperLayer;
 
 export default class Text {
     // textId
@@ -17,7 +20,7 @@ export default class Text {
     public props: IObject
 
     // text-container
-    public layer: TextLayer | OverlayLayer
+    public layer: TTextLayerType
 
     /**
      * props: feature样式
@@ -59,7 +62,7 @@ export default class Text {
     }
 
     // function: trigger when feature add to featureLayer
-    onAdd(layer: TextLayer | OverlayLayer): void {
+    onAdd(layer: TTextLayerType): void {
         this.layer = layer;
         this.refresh();
     }

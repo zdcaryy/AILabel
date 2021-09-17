@@ -30,7 +30,7 @@ export default class MaskHelperLayer  {
         transformGlobalToScreen(point: IPoint): IPoint {
             const {x, y} = point;
             const {x: startX, y: startY} = this.bounds;
-            return {x: x - startX, y: startY - y};
+            return {x: x - startX, y: y - startY};
         }
     }
 

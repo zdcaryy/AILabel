@@ -75,6 +75,7 @@
         <button class="btn btn-default" onclick="setMode('RECT');">矩形</button>
         <button class="btn btn-default" onclick="setMode('POLYGON');">多边形</button>
         <button class="btn btn-default" onclick="getFeatures();">获取标注数据</button>
+        <button class="btn btn-default" onclick="exportImage();">导出图片</button>
         &nbsp;&nbsp;
         <button class="btn btn-default" onclick="setMode('DRAWMASK');">涂抹</button>
         <button class="btn btn-default" onclick="setMode('CLEARMASK');">擦除</button>
@@ -242,6 +243,38 @@
             gFirstFeatureLayer.removeFeatureById(featureId);
         });
 
+        // 图片层添加
+        const gFirstImageLayer = new AILabel.Layer.Image(
+            'first-layer-image', // id
+            {
+                src: './bg.webp',
+                width: 500,
+                height: 354,
+                position: { // 左上角相对中心点偏移量
+                    x: 0,
+                    y: 0
+                },
+                grid: { // 3 * 3
+                    columns: [{color: '#9370DB'}, {color: '#FF6347'}],
+                    rows: [{color: '#9370DB'}, {color: '#FF6347'}]
+                }
+            }, // imageInfo
+            {name: '第一个图片图层'}, // props
+            {zIndex: 5} // style
+        );
+        // 图片层相关事件监听
+        gFirstImageLayer.events.on('loadStart', (a, b) => {
+            console.log('--loadStart--', a, b);
+        });
+        gFirstImageLayer.events.on('loadEnd', (a, b) => {
+            console.log('--loadEnd--', a, b);
+        });
+        gFirstImageLayer.events.on('loadError', (a, b) => {
+            console.log('--loadError--', a, b);
+        });
+        // 添加到gMap对象
+        gMap.addLayer(gFirstImageLayer);
+
         const gFirstFeatureLayer = new AILabel.Layer.Feature(
             'first-layer-feature', // id
             {name: '第一个矢量图层'}, // props
@@ -277,7 +310,7 @@
 
         const gFirstText = new AILabel.Text(
             'first-text', // id
-            {text: '中华人民共和国', position: {x: 0, y: 0}, offset: {x: 0, y: 0}}, // shape
+            {text: '中华人民共和国', position: {x: 300, y: 300}, offset: {x: 0, y: 0}}, // shape
             {name: '第一个文本对象'}, // props
             {fillStyle: '#F4A460', strokeStyle: '#D2691E', background: true, globalAlpha: 1, fontColor: '#0f0'} // style
         );
@@ -323,38 +356,6 @@
             {strokeStyle: '#0000FF', lineWidth: 1} // style
         );
         gFirstFeatureLayer.addFeature(gFirstFeaturePolygon);
-
-        // 图片层添加
-        const gFirstImageLayer = new AILabel.Layer.Image(
-            'first-layer-image', // id
-            {
-                src: 'https://img2.baidu.com/it/u=2053804264,1341330775&fm=26&fmt=auto&gp=01.jpg',
-                width: 500,
-                height: 354,
-                position: { // 左上角相对中心点偏移量
-                    x: 0,
-                    y: 0
-                },
-                grid: { // 3 * 3
-                    columns: [{color: '#9370DB'}, {color: '#FF6347'}],
-                    rows: [{color: '#9370DB'}, {color: '#FF6347'}]
-                }
-            }, // imageInfo
-            {name: '第一个图片图层'}, // props
-            {zIndex: 5} // style
-        );
-        // 图片层相关事件监听
-        gFirstImageLayer.events.on('loadStart', (a, b) => {
-            console.log('--loadStart--', a, b);
-        });
-        gFirstImageLayer.events.on('loadEnd', (a, b) => {
-            console.log('--loadEnd--', a, b);
-        });
-        gFirstImageLayer.events.on('loadError', (a, b) => {
-            console.log('--loadError--', a, b);
-        });
-        // 添加到gMap对象
-        gMap.addLayer(gFirstImageLayer);
 
         const gFirstMarker = new AILabel.Marker(
             'first-marker', // id
@@ -409,7 +410,7 @@
             gMap.zoomOut();
         }
         function getRle() {
-            const rleData = gFirstMaskLayer.getRleData({x: -250, y: 177, width: 500, height: 354});
+            const rleData = gFirstMaskLayer.getRleData({x: 0, y: 0, width: 500, height: 354});
             console.log('--rleData--', rleData);
         }
         function setMode(mode) {
@@ -466,6 +467,21 @@
                 default:
                     break;
             }
+        }
+
+        // 导出图片上护具
+        function exportImage() {
+            const base64 = gMap.exportLayersToImage({x: 0, y: 0, width: 500, height: 354});
+            console.log('--base64--', base64);
+            const mappedDom = document.getElementById('ailabel-base64');
+            if (mappedDom) {
+                mappedDom.remove();
+            }
+
+            const imageDom = new Image();
+            imageDom.id = 'ailabel-base64'
+            imageDom.src = base64;
+            document.body.appendChild(imageDom);
         }
 
         // 获取所有features

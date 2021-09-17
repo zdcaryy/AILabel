@@ -16,8 +16,11 @@ import Layer from './layer/gLayer';
 import Control from './control/gControl';
 import EventLayer from './layer/gLayerEvent';
 import FeatureLayer from './layer/gLayerFeature';
+import TextLayer from './layer/gLayerText';
+import ExportHelperLayer from './layer/gLayerExportHelper';
 import OverlayLayer from './layer/gLayerOverlay';
 import MarkerLayer from './layer/gLayerMarker';
+import ImageLayer from './layer/gLayerImage';
 import {IFeatureStyle, IRectShape} from './feature/gInterface';
 import Feature from './feature/gFeature';
 import {ELayerType } from './layer/gEnum';
@@ -458,6 +461,33 @@ export default class Map {
         return targetFeature;
     }
 
+    // 以图片形式导出layers[当前只支持到处text/image/feature三种layer图层]
+    exportLayersToImage(bounds: IRectShape, layers?: Layer[]) {
+        const exportLayers  = layers || this.getLayers();
+        let exportLayerHelper = new ExportHelperLayer(bounds);
+
+        // 循环添加feature/text/image
+        _forEach(exportLayers, (layer: Layer) => {
+            if (layer.type === ELayerType.Feature) {
+                const features = (layer as FeatureLayer).getAllFeatures();
+                const allFeatures = _cloneDeep(features);
+                exportLayerHelper.addObjects(allFeatures);
+            }
+            else if (layer.type === ELayerType.Text) {
+                const texts = (layer as TextLayer).getAllTexts();
+                const allTexts = _cloneDeep(texts);
+                exportLayerHelper.addObjects(allTexts);
+            }
+            else if (layer.type === ELayerType.Image) {
+                // 存在跨越问题
+                // exportLayerHelper.addImageLayer(layer as ImageLayer);
+            }
+        });
+
+        const image = exportLayerHelper.convertCanvasToImage();
+        exportLayerHelper = null;
+        return image;
+    }
 
 
     // 屏幕坐标转换全局【实际】坐标，默认基于中心点基准point进行计算
