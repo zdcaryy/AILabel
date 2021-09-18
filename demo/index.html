@@ -75,7 +75,8 @@
         <button class="btn btn-default" onclick="setMode('RECT');">矩形</button>
         <button class="btn btn-default" onclick="setMode('POLYGON');">多边形</button>
         <button class="btn btn-default" onclick="getFeatures();">获取标注数据</button>
-        <button class="btn btn-default" onclick="exportImage();">导出图片</button>
+        <button class="btn btn-default" onclick="exportImage('base64');">导出base64图片</button>
+        <button class="btn btn-default" onclick="exportImage('blob');">导出blob图片</button>
         &nbsp;&nbsp;
         <button class="btn btn-default" onclick="setMode('DRAWMASK');">涂抹</button>
         <button class="btn btn-default" onclick="setMode('CLEARMASK');">擦除</button>
@@ -470,18 +471,32 @@
         }
 
         // 导出图片上护具
-        function exportImage() {
-            const base64 = gMap.exportLayersToImage({x: 0, y: 0, width: 500, height: 354});
-            console.log('--base64--', base64);
-            const mappedDom = document.getElementById('ailabel-base64');
-            if (mappedDom) {
-                mappedDom.remove();
-            }
+        async function exportImage (type) {
+            const imagedata = await gMap.exportLayersToImage(
+                {x: 0, y: 0, width: 500, height: 354},
+                {type, format: 'image/png'}
+            );
 
             const imageDom = new Image();
-            imageDom.id = 'ailabel-base64'
-            imageDom.src = base64;
-            document.body.appendChild(imageDom);
+            if (type === 'base64') {
+                // 导出base64格式
+                imageDom.src = imagedata;
+            }
+            else {
+                // 导出blob格式
+                const url = URL.createObjectURL(imagedata);
+                imageDom.src = url;
+                imageDom.onload = () => {URL.revokeObjectURL(url);}
+            }
+
+            let aLink = document.createElement('a');
+            aLink.style.display = 'none';
+            aLink.href = imageDom.src;
+            aLink.download = 'export.png';
+            // 触发点击-然后移除
+            document.body.appendChild(aLink);
+            aLink.click();
+            document.body.removeChild(aLink);
         }
 
         // 获取所有features

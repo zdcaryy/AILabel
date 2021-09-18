@@ -9425,10 +9425,14 @@
     return EventLayer;
   }(Layer$1);
 
+  // 格式
+  var IMAGE_FORMAT = {
+    BASE64: 'base64',
+    BLOB: 'blob'
+  };
+
   var ExportHelperLayer = /*#__PURE__*/function () {
     // canvas大小
-    // public canvas: OffscreenCanvas
-    // public canvasContext: OffscreenCanvasRenderingContext2D
     // 当前maskLayer中所有的actions
     // 伪造map对象，给feature使用
     // function: constructor
@@ -9462,17 +9466,12 @@
 
       this.map.getScale = this.map.getScale.bind(this);
       this.map.transformGlobalToScreen = this.map.transformGlobalToScreen.bind(this);
-    } // override 创建offscreenCanvas层
+    } // override 创建Canvas层
 
 
     _createClass(ExportHelperLayer, [{
       key: "createRenderCanvas",
       value: function createRenderCanvas() {
-        // const {width, height} = this.bounds;
-        // this.canvas = new OffscreenCanvas(width, height);
-        // this.canvas.width = width * CanvasLayer.dpr;
-        // this.canvas.height = height * CanvasLayer.dpr;
-        // this.canvasContext = this.canvas.getContext('2d');
         var _this$bounds2 = this.bounds,
             width = _this$bounds2.width,
             height = _this$bounds2.height;
@@ -9482,7 +9481,17 @@
         this.canvas.style.width = width + 'px';
         this.canvas.style.height = height + 'px';
         this.canvas.style.border = '1px solid red';
-        this.canvasContext = this.canvas.getContext('2d'); // document.body.appendChild(this.canvas);
+        this.canvasContext = this.canvas.getContext('2d');
+        Graphic.drawRect(this.canvasContext, {
+          x: 0,
+          y: 0,
+          width: this.canvas.width,
+          height: this.canvas.height
+        }, {
+          fill: true,
+          fillStyle: '#fff',
+          stroke: false
+        });
       } // 添加object至当前HelperLayer中
 
     }, {
@@ -9524,30 +9533,104 @@
           width: screenWidth * dpr,
           height: screenHeight * dpr
         }, {});
-      } // // Converts canvas to an image
-      // convertCanvasToBitmap() {
-      //     const bitmap = this.canvas.transferToImageBitmap();
-      //     return bitmap;
-      // }
+      }
+      /**
+       * type: 输出类型，目前支持base64/blob两种格式
+       * format: 图片格式： ‘image/png ｜ image/jpeg’,
+       * quality：图片质量
+       */
 
     }, {
       key: "convertCanvasToImage",
-      value: function convertCanvasToImage() {
-        // 获取base64
-        var base64 = this.canvas.toDataURL('image/png'); // resize图片大小（因为dpr的存在，会导致大小变成dpr倍）
+      value: function convertCanvasToImage(type, format, quality) {
+        if (type === IMAGE_FORMAT.BASE64) {
+          return this.convertCanvasToBase64(format, quality);
+        } else if (type === IMAGE_FORMAT.BLOB) {
+          return this.convertCanvasToBlob(format, quality);
+        }
 
-        var _this$bounds3 = this.bounds,
-            width = _this$bounds3.width,
-            height = _this$bounds3.height;
-        return this.resizeImage(base64, {
-          width: width,
-          height: height
+        return new Promise(function (resolve, reject) {
+          reject(new Error('export params error：' + type));
+        });
+      } // 转blob
+
+    }, {
+      key: "convertCanvasToBlob",
+      value: function convertCanvasToBlob(format, quality) {
+        var _this2 = this;
+
+        return new Promise(function (resolve, reject) {
+          _this2.canvas.toBlob(function (blob) {
+            _this2.canvas = null;
+            var _this2$bounds = _this2.bounds,
+                width = _this2$bounds.width,
+                height = _this2$bounds.height;
+
+            _this2.resizeBlobImage(blob, {
+              width: width,
+              height: height
+            }, format, resolve, reject);
+          }, format, quality);
         });
       } // 重设图片大小
 
     }, {
-      key: "resizeImage",
-      value: function resizeImage(base64, size) {
+      key: "resizeBlobImage",
+      value: function resizeBlobImage(blob, size) {
+        var format = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'image/png';
+        var resolve = arguments.length > 3 ? arguments[3] : undefined;
+        var reject = arguments.length > 4 ? arguments[4] : undefined;
+        var image = new Image();
+        var url = URL.createObjectURL(blob);
+        image.src = url; // create an off-screen canvas
+
+        var width = size.width,
+            height = size.height;
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d'); // set its dimension to target size
+
+        canvas.width = width;
+        canvas.height = height;
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+
+        image.onload = function () {
+          // no longer need to read the blob so it's revoked
+          URL.revokeObjectURL(url); // drawImage
+
+          ctx.drawImage(image, 0, 0, width, height);
+          canvas.toBlob(function (blob) {
+            canvas = null;
+            resolve(blob);
+          }, format, 1);
+        };
+
+        image.onerror = function () {
+          reject(new Error('resize image error'));
+        };
+      } // 转base64
+
+    }, {
+      key: "convertCanvasToBase64",
+      value: function convertCanvasToBase64(format, quality) {
+        // 获取base64
+        var base64 = this.canvas.toDataURL(format); // 释放内存
+
+        this.canvas = null; // resize图片大小（因为dpr的存在，会导致大小变成dpr倍）
+
+        var _this$bounds3 = this.bounds,
+            width = _this$bounds3.width,
+            height = _this$bounds3.height;
+        return this.resizeBase64Image(base64, {
+          width: width,
+          height: height
+        }, format);
+      } // 重设图片大小
+
+    }, {
+      key: "resizeBase64Image",
+      value: function resizeBase64Image(base64, size) {
+        var format = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'image/png';
         var image = new Image();
         image.src = base64; // create an off-screen canvas
 
@@ -9559,11 +9642,18 @@
         canvas.width = width;
         canvas.height = height;
         canvas.style.width = width + 'px';
-        canvas.style.height = height + 'px'; // drawImage
+        canvas.style.height = height + 'px';
+        return new Promise(function (resolve, reject) {
+          image.onload = function () {
+            // drawImage
+            ctx.drawImage(image, 0, 0, width, height);
+            resolve(canvas.toDataURL(format));
+          };
 
-        ctx.drawImage(image, 0, 0, width, height);
-        var newBase64 = canvas.toDataURL('image/png');
-        return newBase64;
+          image.onerror = function () {
+            reject(new Error('resize image error'));
+          };
+        });
       } // @override
 
     }, {
@@ -9579,7 +9669,24 @@
       key: "clear",
       value: function clear() {
         this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      }
+      } // // 格式转换
+      // _fixImageType(format: string) {
+      //     format = format.toLowerCase().replace(/jpg/i, 'jpeg');
+      //     const r = format.match(/png|jpeg|bmp|gif/)[0];
+      //     return 'image/' + r;
+      // }
+      // // 测试图片下载
+      // _testImageDownload(downloadUrl: string, fileName: string = 'export.png'){
+      //     let aLink = document.createElement('a');
+      //     aLink.style.display = 'none';
+      //     aLink.href = downloadUrl;
+      //     aLink.download = fileName;
+      //     // 触发点击-然后移除
+      //     document.body.appendChild(aLink);
+      //     aLink.click();
+      //     document.body.removeChild(aLink);
+      // }
+
     }]);
 
     return ExportHelperLayer;
@@ -11670,8 +11777,17 @@
 
     }, {
       key: "exportLayersToImage",
-      value: function exportLayersToImage(bounds, layers) {
-        var exportLayers = layers || this.getLayers();
+      value: function exportLayersToImage(bounds) {
+        var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var _option$layers = option.layers,
+            layers = _option$layers === void 0 ? this.getLayers() : _option$layers,
+            _option$type = option.type,
+            type = _option$type === void 0 ? 'base64' : _option$type,
+            _option$format = option.format,
+            format = _option$format === void 0 ? 'image/png' : _option$format,
+            _option$quality = option.quality,
+            quality = _option$quality === void 0 ? 1 : _option$quality;
+        var exportLayers = layers;
         var exportLayerHelper = new ExportHelperLayer(bounds); // 循环添加feature/text/image
 
         forEach_1(exportLayers, function (layer) {
@@ -11684,13 +11800,23 @@
           } else if (layer.type === ELayerType.Text) {
             var texts = layer.getAllTexts();
 
-            var allTexts = cloneDeep_1(texts);
+            var allTexts = cloneDeep_1(texts); // ImageAction存在跨越问题
+
 
             exportLayerHelper.addObjects(allTexts);
-          } else if (layer.type === ELayerType.Image) ;
+          } else if (layer.type === ELayerType.Mask) {
+            var actions = layer.getAllActions();
+
+            var allActions = cloneDeep_1(actions);
+
+            exportLayerHelper.addObjects(allActions);
+          } else if (layer.type === ELayerType.Image) {
+            // 存在跨越问题
+            exportLayerHelper.addImageLayer(layer);
+          }
         });
 
-        var image = exportLayerHelper.convertCanvasToImage();
+        var image = exportLayerHelper.convertCanvasToImage(type, format, quality);
         exportLayerHelper = null;
         return image;
       } // 屏幕坐标转换全局【实际】坐标，默认基于中心点基准point进行计算
@@ -13712,7 +13838,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.0.22' // 和npm-version保持一致
+    version: '5.1.0' // 和npm-version保持一致
 
   };
 

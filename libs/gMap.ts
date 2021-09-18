@@ -11,7 +11,7 @@ import _cloneDeep from 'lodash/cloneDeep';
 import _filter from 'lodash/filter';
 
 import {EMapMode, ECursorType, EEventType, EUrlCursorType, EXAxisDirection, EYAxisDirection, EEventSlotType} from './gEnum';
-import {IMapOptions, ISize, IPoint, ICenterAndZoom, ITransPointOption, IObject, IAxisOption, IEventSlotType, IFunctionSlot} from './gInterface';
+import {IMapOptions, ISize, IPoint, ICenterAndZoom, ITransPointOption, IObject, IAxisOption, IEventSlotType, IFunctionSlot, IExportOption} from './gInterface';
 import Layer from './layer/gLayer';
 import Control from './control/gControl';
 import EventLayer from './layer/gLayerEvent';
@@ -20,11 +20,12 @@ import TextLayer from './layer/gLayerText';
 import ExportHelperLayer from './layer/gLayerExportHelper';
 import OverlayLayer from './layer/gLayerOverlay';
 import MarkerLayer from './layer/gLayerMarker';
+import MaskLayer from './layer/gLayerMask';
 import ImageLayer from './layer/gLayerImage';
 import {IFeatureStyle, IRectShape} from './feature/gInterface';
 import Feature from './feature/gFeature';
 import {ELayerType } from './layer/gEnum';
-import { EFeatureType } from './feature/gEnum';
+import {EFeatureType} from './feature/gEnum';
 
 export default class Map {
     // 用户侧传入的dom
@@ -462,8 +463,15 @@ export default class Map {
     }
 
     // 以图片形式导出layers[当前只支持到处text/image/feature三种layer图层]
-    exportLayersToImage(bounds: IRectShape, layers?: Layer[]) {
-        const exportLayers  = layers || this.getLayers();
+    exportLayersToImage(bounds: IRectShape, option: IExportOption = {}) {
+        const {
+            layers = this.getLayers(),
+            type = 'base64',
+            format = 'image/png',
+            quality = 1
+        } = option;
+
+        const exportLayers  = layers;
         let exportLayerHelper = new ExportHelperLayer(bounds);
 
         // 循环添加feature/text/image
@@ -476,15 +484,21 @@ export default class Map {
             else if (layer.type === ELayerType.Text) {
                 const texts = (layer as TextLayer).getAllTexts();
                 const allTexts = _cloneDeep(texts);
+                // ImageAction存在跨越问题
                 exportLayerHelper.addObjects(allTexts);
+            }
+            else if (layer.type === ELayerType.Mask) {
+                const actions = (layer as MaskLayer).getAllActions();
+                const allActions = _cloneDeep(actions);
+                exportLayerHelper.addObjects(allActions);
             }
             else if (layer.type === ELayerType.Image) {
                 // 存在跨越问题
-                // exportLayerHelper.addImageLayer(layer as ImageLayer);
+                exportLayerHelper.addImageLayer(layer as ImageLayer);
             }
         });
 
-        const image = exportLayerHelper.convertCanvasToImage();
+        const image = exportLayerHelper.convertCanvasToImage(type, format, quality);
         exportLayerHelper = null;
         return image;
     }

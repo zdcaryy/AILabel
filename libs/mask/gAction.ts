@@ -4,6 +4,7 @@ import {IObject} from '../gInterface';
 import OverlayLayer from '../layer/gLayerOverlay';
 import MaskLayer from '../layer/gLayerMask';
 import MaskHelperLayer from '../layer/gLayerMaskHelper';
+import ExportHelperLayer from '../layer/gLayerExportHelper';
 import {IDrawActionShape} from './gInterface';
 import {IFeatureStyle} from '../feature/gInterface';
 import {EMaskActionType} from './gEnum';
@@ -33,7 +34,7 @@ export default class Action {
     public style: IFeatureStyle
 
     // action-container
-    public layer: MaskLayer | MaskHelperLayer | OverlayLayer
+    public layer: MaskLayer | MaskHelperLayer | OverlayLayer | ExportHelperLayer
 
     // function: constructor
     constructor(id: string, type: EMaskActionType, props: IObject = {}, style: IFeatureStyle = {}) {

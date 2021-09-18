@@ -1,6 +1,7 @@
 /***/
 
 import {EMapMode, EXAxisDirection, EYAxisDirection, EEventSlotType} from "./gEnum";
+import Layer from "./layer/gLayer";
 import OverlayLayer from "./layer/gLayerOverlay";
 
 // 基本json对象定义
@@ -65,4 +66,13 @@ export interface IMapOptions {
     featureCaptureWhenMove?: boolean,
     xAxis?: IAxisOption
     yAxis?: IAxisOption
+};
+
+export type TExportImageType = 'base64' | 'blob'
+export type TExportImageFormat = 'image/png' | 'image/jpeg'
+export interface IExportOption {
+    layers?: Layer[],
+    type?: TExportImageFormat,
+    format?: TExportImageFormat,
+    quality?: number
 };

@@ -1,6 +1,7 @@
-# 5.0.23
-`2021-09-17`
+# 5.1.0
+`2021-09-18`
 1. Layer.Image新增events事件监听（loadStart/loadEnd/loadError）
+2. Map对象增加exportLayersToImage【图片不要跨域】
 
 # 5.0.22
 `2021-09-16`

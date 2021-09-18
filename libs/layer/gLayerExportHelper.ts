@@ -17,11 +17,15 @@ import Graphic from '../gGraphic';
 
 export type IObjectItem = Feature | Text;
 
+// 格式
+const IMAGE_FORMAT = {
+    BASE64: 'base64',
+    BLOB: 'blob'
+};
+
 export default class ExportHelperLayer  {
     public bounds: IRectShape // canvas大小
 
-    // public canvas: OffscreenCanvas
-    // public canvasContext: OffscreenCanvasRenderingContext2D
     public canvas: HTMLCanvasElement
     public canvasContext: CanvasRenderingContext2D
 
@@ -52,14 +56,8 @@ export default class ExportHelperLayer  {
         this.map.transformGlobalToScreen = this.map.transformGlobalToScreen.bind(this);
     }
 
-    // override 创建offscreenCanvas层
+    // override 创建Canvas层
     createRenderCanvas() {
-        // const {width, height} = this.bounds;
-        // this.canvas = new OffscreenCanvas(width, height);
-        // this.canvas.width = width * CanvasLayer.dpr;
-        // this.canvas.height = height * CanvasLayer.dpr;
-        // this.canvasContext = this.canvas.getContext('2d');
-
         const {width, height} = this.bounds;
         this.canvas = document.createElement('canvas');
         this.canvas.width = width * CanvasLayer.dpr;
@@ -68,7 +66,11 @@ export default class ExportHelperLayer  {
         this.canvas.style.height = height + 'px';
         this.canvas.style.border = '1px solid red';
         this.canvasContext = this.canvas.getContext('2d');
-        // document.body.appendChild(this.canvas);
+        Graphic.drawRect(
+            this.canvasContext,
+            {x: 0, y: 0, width: this.canvas.width, height: this.canvas.height},
+            {fill: true, fillStyle: '#fff', stroke: false}
+        );
     }
 
     // 添加object至当前HelperLayer中
@@ -106,22 +108,79 @@ export default class ExportHelperLayer  {
         );
     }
 
-    // // Converts canvas to an image
-    // convertCanvasToBitmap() {
-    //     const bitmap = this.canvas.transferToImageBitmap();
-    //     return bitmap;
-    // }
+    /**
+     * type: 输出类型，目前支持base64/blob两种格式
+     * format: 图片格式： ‘image/png ｜ image/jpeg’,
+     * quality：图片质量
+     */
+    convertCanvasToImage(type: string, format: string, quality: number) {
+        if (type === IMAGE_FORMAT.BASE64) {
+            return this.convertCanvasToBase64(format, quality);
+        }
+        else if (type === IMAGE_FORMAT.BLOB) {
+            return this.convertCanvasToBlob(format, quality);
+        }
 
-    convertCanvasToImage() {
+        return new Promise((resolve, reject) => {
+            reject(new Error('export params error：' + type));
+        });
+    }
+
+    // 转blob
+    convertCanvasToBlob(format: string, quality: number) {
+        return new Promise((resolve, reject) => {
+            this.canvas.toBlob(blob => {
+                this.canvas = null;
+                const {width, height} = this.bounds;
+                this.resizeBlobImage(blob, {width, height}, format, resolve, reject);
+            }, format, quality);
+        });
+    }
+    // 重设图片大小
+    resizeBlobImage(blob: Blob, size: ISize, format: string = 'image/png', resolve: Function, reject: Function) {
+        const image = new Image();
+        const url = URL.createObjectURL(blob);
+        image.src = url;
+
+        // create an off-screen canvas
+        const {width, height} = size;
+        let canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        // set its dimension to target size
+        canvas.width = width;
+        canvas.height = height;
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+
+        image.onload = () => {
+            // no longer need to read the blob so it's revoked
+            URL.revokeObjectURL(url);
+            // drawImage
+            ctx.drawImage(image, 0, 0, width, height);
+            canvas.toBlob(blob => {
+                canvas = null;
+                resolve(blob);
+            }, format, 1);
+        };
+        image.onerror = () => {
+            reject(new Error('resize image error'));
+        };
+    }
+
+
+    // 转base64
+    convertCanvasToBase64(format: string, quality: number) {
         // 获取base64
-        const base64 = this.canvas.toDataURL('image/png');
+        let base64 = this.canvas.toDataURL(format);
+        // 释放内存
+        this.canvas = null;
         // resize图片大小（因为dpr的存在，会导致大小变成dpr倍）
         const {width, height} = this.bounds;
-        return this.resizeImage(base64, {width, height});
+        return this.resizeBase64Image(base64, {width, height}, format);
     }
 
     // 重设图片大小
-    resizeImage(base64: string, size: ISize) {
+    resizeBase64Image(base64: string, size: ISize, format: string = 'image/png') {
         const image = new Image();
         image.src = base64;
 
@@ -135,11 +194,16 @@ export default class ExportHelperLayer  {
         canvas.style.width = width + 'px';
         canvas.style.height = height + 'px';
 
-        // drawImage
-        ctx.drawImage(image, 0, 0, width, height);
-        const newBase64 = canvas.toDataURL('image/png');
-
-        return newBase64;
+        return new Promise((resolve, reject) => {
+            image.onload = () => {
+                // drawImage
+                ctx.drawImage(image, 0, 0, width, height);
+                resolve(canvas.toDataURL(format));
+            };
+            image.onerror = () => {
+                reject(new Error('resize image error'));
+            };
+        });
     }
 
     // @override
@@ -152,4 +216,23 @@ export default class ExportHelperLayer  {
     clear() {
         this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
+
+    // // 格式转换
+    // _fixImageType(format: string) {
+    //     format = format.toLowerCase().replace(/jpg/i, 'jpeg');
+    //     const r = format.match(/png|jpeg|bmp|gif/)[0];
+    //     return 'image/' + r;
+    // }
+
+    // // 测试图片下载
+    // _testImageDownload(downloadUrl: string, fileName: string = 'export.png'){
+    //     let aLink = document.createElement('a');
+    //     aLink.style.display = 'none';
+    //     aLink.href = downloadUrl;
+    //     aLink.download = fileName;
+    //     // 触发点击-然后移除
+    //     document.body.appendChild(aLink);
+    //     aLink.click();
+    //     document.body.removeChild(aLink);
+    // }
 }
