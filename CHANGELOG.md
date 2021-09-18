@@ -2,6 +2,7 @@
 `2021-09-18`
 1. Layer.Image新增events事件监听（loadStart/loadEnd/loadError）
 2. Map对象增加exportLayersToImage【图片不要跨域】
+3. Map实例option增加featureCaptureWhenMove配置（‘双击选中’tip）
 
 # 5.0.22
 `2021-09-16`

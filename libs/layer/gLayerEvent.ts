@@ -1025,9 +1025,10 @@ export default class EventLayer extends Layer  {
     /*****************************************************/
     handleFeatureCapture(point: IPoint, option: IObject = {}) {
         const {extraTip = ''} = option;
+        const drawing = this.dragging || this.tmpPointsStore.length;
 
         // 首先判断用户是否开启捕捉
-        if (!this.map.featureCaptureWhenMove) {
+        if (!this.map.featureCaptureWhenMove || drawing) {
             return;
         }
 

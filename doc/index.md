@@ -47,6 +47,7 @@ const gMap = new AILabel.Map('map', {
 |refreshDelayWhenZooming|持续缩放是否延时刷新features（如滑轮缩放时），性能优化|否|true|boolean|
 |zoomWhenDrawing|绘制时可滑轮缩放|否|false|boolean|
 |panWhenDrawing|绘制时可到边界外自动平移|否|false|boolean|
+|featureCaptureWhenMove|绘制过程中是否开启‘双击选中’tip提示，耗费性能（会持续进行move捕捉判断）|否|false|boolean|
 
 **IPoint**
 
@@ -429,6 +430,37 @@ const screenPoint = gMap.transformGlobalToScreen({x, y});
 |参数|说明|是否必填|默认|类型|
 |---|---|---|---|---|
 |globalPoint|待转换实际坐标|是|--|IPoint|
+
+## exportLayersToImage
+AILabel.Map将layers导出为图片（支持导出text/image/feature/mask等图层，“图片不能跨域“）
+```javascript
+// define
+exportLayersToImage(bounds: IRectShape, option: IExportOption = {})
+// demo
+const base64 = await gMap.exportLayersToImage(
+        {x: 0, y: 0, width: 500, height: 354},
+        {type: 'base64', format: 'image/png'}
+    );
+const blob = await gMap.exportLayersToImage(
+        {x: 0, y: 0, width: 500, height: 354},
+        {type: 'blob', format: 'image/png'}
+    );
+```
+
+**params**
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|bounds|导出视野范围|是|--|IRectShape|
+|option|其他可选项配置|否|--|IExportOption|
+
+**IExportOption**
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|layers|导出图层list|否|当前Map上的layers|Layer[]|
+|type|导出数据形式（支持base64或blob)|否|base64|string|
+|format|图片格式（支持image/png或image/jpeg)|否|image/png|string|
 
 ## destroy
 AILabel.Map实例销毁【如果在切换实例时最好要将上一次实例进行destroy】

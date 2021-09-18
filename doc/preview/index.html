@@ -185,6 +185,13 @@ const gMap = new AILabel.Map(&#39;map&#39;, {
 <td>false</td>
 <td>boolean</td>
 </tr>
+<tr>
+<td>featureCaptureWhenMove</td>
+<td>绘制过程中是否开启‘双击选中’tip提示，耗费性能（会持续进行move捕捉判断）</td>
+<td>否</td>
+<td>false</td>
+<td>boolean</td>
+</tr>
 </tbody>
 </table>
 <p><strong>IPoint</strong></p>
@@ -837,6 +844,83 @@ const screenPoint = gMap.transformGlobalToScreen({x, y});
 <td>是</td>
 <td>--</td>
 <td>IPoint</td>
+</tr>
+</tbody>
+</table>
+<h2 id="exportlayerstoimage">exportLayersToImage</h2>
+<p>AILabel.Map将layers导出为图片（支持导出text/image/feature/mask等图层，“图片不能跨域“）</p>
+<pre><code class="lang-javascript">// define
+exportLayersToImage(bounds: IRectShape, option: IExportOption = {})
+// demo
+const base64 = await gMap.exportLayersToImage(
+        {x: 0, y: 0, width: 500, height: 354},
+        {type: &#39;base64&#39;, format: &#39;image/png&#39;}
+    );
+const blob = await gMap.exportLayersToImage(
+        {x: 0, y: 0, width: 500, height: 354},
+        {type: &#39;blob&#39;, format: &#39;image/png&#39;}
+    );
+</code></pre>
+<p><strong>params</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>是否必填</th>
+<th>默认</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bounds</td>
+<td>导出视野范围</td>
+<td>是</td>
+<td>--</td>
+<td>IRectShape</td>
+</tr>
+<tr>
+<td>option</td>
+<td>其他可选项配置</td>
+<td>否</td>
+<td>--</td>
+<td>IExportOption</td>
+</tr>
+</tbody>
+</table>
+<p><strong>IExportOption</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>是否必填</th>
+<th>默认</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>layers</td>
+<td>导出图层list</td>
+<td>否</td>
+<td>当前Map上的layers</td>
+<td>Layer[]</td>
+</tr>
+<tr>
+<td>type</td>
+<td>导出数据形式（支持base64或blob)</td>
+<td>否</td>
+<td>base64</td>
+<td>string</td>
+</tr>
+<tr>
+<td>format</td>
+<td>图片格式（支持image/png或image/jpeg)</td>
+<td>否</td>
+<td>image/png</td>
+<td>string</td>
 </tr>
 </tbody>
 </table>

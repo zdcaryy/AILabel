@@ -493,8 +493,9 @@ export default class Map {
                 exportLayerHelper.addObjects(allActions);
             }
             else if (layer.type === ELayerType.Image) {
+                const imageLayer = _cloneDeep(layer);
                 // 存在跨越问题
-                exportLayerHelper.addImageLayer(layer as ImageLayer);
+                exportLayerHelper.addImageLayer(imageLayer as ImageLayer);
             }
         });
 

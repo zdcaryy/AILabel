@@ -8972,9 +8972,10 @@
       value: function handleFeatureCapture(point) {
         var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
         var _option$extraTip = option.extraTip,
-            extraTip = _option$extraTip === void 0 ? '' : _option$extraTip; // 首先判断用户是否开启捕捉
+            extraTip = _option$extraTip === void 0 ? '' : _option$extraTip;
+        var drawing = this.dragging || this.tmpPointsStore.length; // 首先判断用户是否开启捕捉
 
-        if (!this.map.featureCaptureWhenMove) {
+        if (!this.map.featureCaptureWhenMove || drawing) {
           return;
         } // 进行捕捉判断
 
@@ -11811,8 +11812,10 @@
 
             exportLayerHelper.addObjects(allActions);
           } else if (layer.type === ELayerType.Image) {
-            // 存在跨越问题
-            exportLayerHelper.addImageLayer(layer);
+            var imageLayer = cloneDeep_1(layer); // 存在跨越问题
+
+
+            exportLayerHelper.addImageLayer(imageLayer);
           }
         });
 
