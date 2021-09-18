@@ -166,8 +166,7 @@ export default class ImageLayer extends CanvasLayer  {
                 },
                 {
                     strokeStyle: lineColor,
-                    lineWidth: lineWidth,
-                    globalAlpha: .8
+                    lineWidth: lineWidth
                 }
             );
         });
@@ -194,8 +193,7 @@ export default class ImageLayer extends CanvasLayer  {
                 },
                 {
                     strokeStyle: lineColor,
-                    lineWidth: lineWidth,
-                    globalAlpha: .8
+                    lineWidth: lineWidth
                 }
             );
         });

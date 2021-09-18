@@ -68,6 +68,7 @@ export default class Layer {
     onRemove(): void {
         const layerElement = document.getElementById(this.domId);
         layerElement && layerElement.remove();
+        this.map = null;
     }
 
     // 当容器变化时，需要调用触发

@@ -85,6 +85,9 @@ export default class Text {
 
     // 刷新当前数据
     refresh() {
+        if (!this.layer?.map) {
+            return;
+        }
         const textInfo = this.textInfo;
         const dpr = CanvasLayer.dpr;
 

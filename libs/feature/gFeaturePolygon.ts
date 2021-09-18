@@ -25,6 +25,10 @@ export default class PolygonFeature extends Feature {
     // 执行绘制当前
     // @override
     refresh() {
+        if (!this.layer?.map) {
+            return;
+        }
+
         // 执行坐标转换
         const {points, inner = []} = this.shape as IPolygonShape;
 

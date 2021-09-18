@@ -132,6 +132,10 @@ export default class CircleFeature extends Feature {
     // 执行绘制当前
     // @override
     refresh() {
+        if (!this.layer?.map) {
+            return;
+        }
+
         const isGlobalSubtype = this.getSubType() === EFeatureCircleSubtype.Global;
 
         const dpr = CanvasLayer.dpr;

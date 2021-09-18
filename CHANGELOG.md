@@ -1,3 +1,7 @@
+# 5.1.1
+`2021-09-18`
+1. imageLayer-globalAlpha修复
+
 # 5.1.0
 `2021-09-18`
 1. Layer.Image新增events事件监听（loadStart/loadEnd/loadError）

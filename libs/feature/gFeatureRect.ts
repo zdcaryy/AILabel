@@ -43,6 +43,10 @@ export default class RectFeature extends Feature {
     // 执行绘制当前
     // @override
     refresh() {
+        if (!this.layer?.map) {
+            return;
+        }
+
         const dpr = CanvasLayer.dpr;
         const scale = this.layer.map.getScale();
 

@@ -49,6 +49,9 @@ export default class ImageActionFeature extends Action {
 
     // 绘制image信息
     drawImage() {
+        if (!this.layer?.map) {
+            return;
+        }
         // 执行坐标转换
         const {x: screenX, y: screenY} = this.layer.map.transformGlobalToScreen(this.position);
 

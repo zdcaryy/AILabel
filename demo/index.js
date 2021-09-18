@@ -6780,6 +6780,7 @@
       value: function onRemove() {
         var layerElement = document.getElementById(this.domId);
         layerElement && layerElement.remove();
+        this.map = null;
       } // 当容器变化时，需要调用触发
       // 以来map:getSize大小进行当前layer的resize
 
@@ -9855,12 +9856,18 @@
     }, {
       key: "refresh",
       value: function refresh() {
+        var _this$layer2;
+
         // 执行坐标转换
         var _ref2 = this.shape,
             x = _ref2.x,
             y = _ref2.y,
             r = _ref2.r,
             sr = _ref2.sr;
+
+        if (!((_this$layer2 = this.layer) !== null && _this$layer2 !== void 0 && _this$layer2.map)) {
+          return;
+        }
 
         var _this$layer$map$trans = this.layer.map.transformGlobalToScreen({
           x: x,
@@ -9981,7 +9988,13 @@
     }, {
       key: "refresh",
       value: function refresh() {
-        // 执行坐标转换
+        var _this$layer2;
+
+        if (!((_this$layer2 = this.layer) !== null && _this$layer2 !== void 0 && _this$layer2.map)) {
+          return;
+        } // 执行坐标转换
+
+
         var _ref2 = this.shape,
             start = _ref2.start,
             end = _ref2.end,
@@ -10058,9 +10071,14 @@
     }, {
       key: "refresh",
       value: function refresh() {
-        var _this2 = this;
+        var _this$layer2,
+            _this2 = this;
 
-        // 执行坐标转换
+        if (!((_this$layer2 = this.layer) !== null && _this$layer2 !== void 0 && _this$layer2.map)) {
+          return;
+        } // 执行坐标转换
+
+
         var dpr = CanvasLayer.dpr;
         var scale = this.layer.map.getScale();
         Graphic.drawPolyline(this.layer.canvasContext, this.shape, this.style, {
@@ -10151,7 +10169,12 @@
     }, {
       key: "refresh",
       value: function refresh() {
-        var _this2 = this;
+        var _this$layer3,
+            _this2 = this;
+
+        if (!((_this$layer3 = this.layer) !== null && _this$layer3 !== void 0 && _this$layer3.map)) {
+          return;
+        }
 
         var dpr = CanvasLayer.dpr;
         var scale = this.layer.map.getScale();
@@ -10219,9 +10242,14 @@
     }, {
       key: "refresh",
       value: function refresh() {
-        var _this2 = this;
+        var _this$layer,
+            _this2 = this;
 
-        // 执行坐标转换
+        if (!((_this$layer = this.layer) !== null && _this$layer !== void 0 && _this$layer.map)) {
+          return;
+        } // 执行坐标转换
+
+
         var _ref2 = this.shape,
             points = _ref2.points;
             _ref2.inner;
@@ -10394,7 +10422,12 @@
     }, {
       key: "refresh",
       value: function refresh() {
-        var _this2 = this;
+        var _this$layer5,
+            _this2 = this;
+
+        if (!((_this$layer5 = this.layer) !== null && _this$layer5 !== void 0 && _this$layer5.map)) {
+          return;
+        }
 
         var isGlobalSubtype = this.getSubType() === EFeatureCircleSubtype.Global;
         var dpr = CanvasLayer.dpr;
@@ -10604,7 +10637,12 @@
     }, {
       key: "refresh",
       value: function refresh() {
-        var _this = this;
+        var _this$layer2,
+            _this = this;
+
+        if (!((_this$layer2 = this.layer) !== null && _this$layer2 !== void 0 && _this$layer2.map)) {
+          return;
+        }
 
         var textInfo = this.textInfo;
         var dpr = CanvasLayer.dpr;
@@ -12357,8 +12395,7 @@
             }
           }, {
             strokeStyle: lineColor,
-            lineWidth: lineWidth,
-            globalAlpha: .8
+            lineWidth: lineWidth
           });
         }); // 绘制行
 
@@ -12399,8 +12436,7 @@
             }
           }, {
             strokeStyle: lineColor,
-            lineWidth: lineWidth,
-            globalAlpha: .8
+            lineWidth: lineWidth
           });
         });
       } // 用户事件添加
@@ -13272,7 +13308,13 @@
     }, {
       key: "drawImage",
       value: function drawImage() {
-        // 执行坐标转换
+        var _this$layer;
+
+        if (!((_this$layer = this.layer) !== null && _this$layer !== void 0 && _this$layer.map)) {
+          return;
+        } // 执行坐标转换
+
+
         var _this$layer$map$trans = this.layer.map.transformGlobalToScreen(this.position),
             screenX = _this$layer$map$trans.x,
             screenY = _this$layer$map$trans.y;
@@ -13841,7 +13883,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.1.0' // 和npm-version保持一致
+    version: '5.1.1' // 和npm-version保持一致
 
   };
 
