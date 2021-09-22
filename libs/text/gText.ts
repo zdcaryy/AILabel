@@ -1,4 +1,5 @@
 import _assign from 'lodash/assign';
+import _isString from 'lodash/isString';
 
 import {IObject, IPoint} from '../gInterface';
 import {ETextType} from './gEnum';
@@ -73,9 +74,21 @@ export default class Text {
 
     }
 
+    // 更新text
+    updateText(text: string) {
+        if (_isString(text) && text) {
+            const textInfo = this.textInfo;
+            this.textInfo = {
+                ...textInfo,
+                text
+            };
+            this.layer?.refresh();
+        }
+    }
+
     // 更新text位置
     updatePosition(position: IPoint) {
-        const textInfo = this.textInfo
+        const textInfo = this.textInfo;
         this.textInfo = {
             ...textInfo,
             position

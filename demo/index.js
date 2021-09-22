@@ -10620,27 +10620,41 @@
 
     }, {
       key: "onRemove",
-      value: function onRemove() {} // 更新text位置
+      value: function onRemove() {} // 更新text
+
+    }, {
+      key: "updateText",
+      value: function updateText(text) {
+        if (isString_1(text) && text) {
+          var _this$layer;
+
+          var textInfo = this.textInfo;
+          this.textInfo = _objectSpread2(_objectSpread2({}, textInfo), {}, {
+            text: text
+          });
+          (_this$layer = this.layer) === null || _this$layer === void 0 ? void 0 : _this$layer.refresh();
+        }
+      } // 更新text位置
 
     }, {
       key: "updatePosition",
       value: function updatePosition(position) {
-        var _this$layer;
+        var _this$layer2;
 
         var textInfo = this.textInfo;
         this.textInfo = _objectSpread2(_objectSpread2({}, textInfo), {}, {
           position: position
         });
-        (_this$layer = this.layer) === null || _this$layer === void 0 ? void 0 : _this$layer.refresh();
+        (_this$layer2 = this.layer) === null || _this$layer2 === void 0 ? void 0 : _this$layer2.refresh();
       } // 刷新当前数据
 
     }, {
       key: "refresh",
       value: function refresh() {
-        var _this$layer2,
+        var _this$layer3,
             _this = this;
 
-        if (!((_this$layer2 = this.layer) !== null && _this$layer2 !== void 0 && _this$layer2.map)) {
+        if (!((_this$layer3 = this.layer) !== null && _this$layer3 !== void 0 && _this$layer3.map)) {
           return;
         }
 
@@ -13883,7 +13897,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.1.1' // 和npm-version保持一致
+    version: '5.1.2' // 和npm-version保持一致
 
   };
 

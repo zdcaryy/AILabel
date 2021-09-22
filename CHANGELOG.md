@@ -1,3 +1,7 @@
+# 5.1.2
+`2021-09-22`
+1. AILabel.Text增加updateText方法
+
 # 5.1.1
 `2021-09-18`
 1. imageLayer-globalAlpha修复

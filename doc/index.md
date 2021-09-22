@@ -1714,6 +1714,22 @@ gFirstText.updatePosition({x: 0, y: 0});
 |---|---|---|---|---|
 |position|位置信息|是|--|IPoint|
 
+## updateText
+更新text的文本
+```javascript
+// define
+updateText(text: string)
+// demo
+const gFirstText = new AILabel.Text(...);
+gFirstText.updateText('中华人民共和国');
+```
+
+**Params**
+
+|参数|说明|是否必填|默认|类型|
+|---|---|---|---|---|
+|text|待更新文本|是|--|string|
+
 # AILabel.Util
 通用工具方法
 ## MathUtil.getMiddlePoint
