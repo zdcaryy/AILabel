@@ -49,6 +49,7 @@ const gMap = new AILabel.Map('map', {
 |panWhenDrawing|绘制时可到边界外自动平移|否|false|boolean|
 |featureCaptureWhenMove|绘制过程中是否开启‘双击选中’tip提示，耗费性能（会持续进行move捕捉判断）|否|false|boolean|
 |withHotKeys|快捷键开关|否|true|boolean|
+|zoomWheelRatio|鼠标滑轮缩放大小,取值区间[0, 10)，zoomWheelRatio越小，代表缩放速度越快，反之越慢|否|5|number|
 
 **IPoint**
 
@@ -91,6 +92,12 @@ gMap.setMode(mode: EMapMode);
 |DRAWMASK|绘制涂抹|string|
 |CLEARMASK|擦除涂抹|string|
 |IMAGEMASK|绘制涂抹（Image形式）|string|
+
+## setZoomWheelRatio
+AILabel.Map实例设置滑轮缩放比例, 取值区间[0, 10)
+```javascript
+gMap.setZoomWheelRatio(0);
+```
 
 ## setDrawingStyle
 AILabel.Map设置绘制过程中的样式

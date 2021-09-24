@@ -1,3 +1,8 @@
+# 5.1.4
+`2021-09-24`
+1. OverlayLayer/EventLayer对外开放
+2. Map: MapOption增加zoomWheelRatio设置鼠标滑轮缩放速率
+
 # 5.1.3
 `2021-09-24`
 1. OverlayLayer绘制文本样式修改为实例属性配置，用户可gMap.tipLayer.defaultTextStyle={新样式}进行设置

@@ -199,6 +199,13 @@ const gMap = new AILabel.Map(&#39;map&#39;, {
 <td>true</td>
 <td>boolean</td>
 </tr>
+<tr>
+<td>zoomWheelRatio</td>
+<td>鼠标滑轮缩放大小,取值区间[0, 10)，zoomWheelRatio越小，代表缩放速度越快，反之越慢</td>
+<td>否</td>
+<td>5</td>
+<td>number</td>
+</tr>
 </tbody>
 </table>
 <p><strong>IPoint</strong></p>
@@ -349,6 +356,10 @@ const gMap = new AILabel.Map(&#39;map&#39;, {
 </tr>
 </tbody>
 </table>
+<h2 id="setzoomwheelratio">setZoomWheelRatio</h2>
+<p>AILabel.Map实例设置滑轮缩放比例, 取值区间[0, 10)</p>
+<pre><code class="lang-javascript">gMap.setZoomWheelRatio(0);
+</code></pre>
 <h2 id="setdrawingstyle">setDrawingStyle</h2>
 <p>AILabel.Map设置绘制过程中的样式</p>
 <pre><code class="lang-javascript">gMap.setDrawingStyle(drawingStyle: IFeatureStyle);

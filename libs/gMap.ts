@@ -60,6 +60,7 @@ export default class Map {
     static defaultMapOptions: IMapOptions = {
         center: {x: 0, y: 0}, // 中心点坐标
         zoom: 1000, // 缩放值
+        zoomWheelRatio: 5, // 鼠标滑轮缩放大小,取值区间[0, 10)，zoomWheelRatio越小，代表缩放速度越快，反之越慢
         mode: EMapMode.Pan, // 默认当前map模式
         size: null, // 可自定义容器宽/高，默认取dom: clientWidth/clientHeight
         refreshDelayWhenZooming: true, // 当持续缩放时，是否延时feature刷新，默认delay，性能更优
@@ -90,6 +91,8 @@ export default class Map {
     public featureCaptureWhenMove: boolean
     // 快捷键是否开启
     public withHotKeys: boolean
+    // 鼠标滑轮缩放大小,取值区间[0, 10)，zoomWheelRatio越小，代表缩放速度越快，反之越慢
+    public zoomWheelRatio: number
 
     public zoom: number // 当前缩放值
     public center: IPoint // 左上角代表的实际坐标值
@@ -152,6 +155,7 @@ export default class Map {
         this.panWhenDrawing = this.mapOptions.panWhenDrawing; // 更新是否绘制过程中允许平移
         this.featureCaptureWhenMove = this.mapOptions.featureCaptureWhenMove; // mousemove过程中是否开启捕捉, 默认不开启
         this.withHotKeys = this.mapOptions.withHotKeys; // 快捷键开关设置
+        this.zoomWheelRatio = this.mapOptions.zoomWheelRatio; // 滑轮缩放速率
         this.xAxis = this.mapOptions.xAxis; // x轴设置
         this.yAxis = this.mapOptions.yAxis; // y轴设置
         this.size = this.mapOptions.size || { // 容器大小设置
@@ -335,6 +339,11 @@ export default class Map {
         this.zoom = this.zoom * 2;
         this.refresh();
         this.triggerBoundsChanged();
+    }
+
+    // 设置滑轮缩放比例, 取值区间[0, 10)
+    setZoomWheelRatio(ratio: number) {
+        this.zoomWheelRatio = ratio;
     }
 
     // 添加控件

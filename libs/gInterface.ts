@@ -58,6 +58,7 @@ export interface IAxisOption {
 export interface IMapOptions {
     center?: IPoint,
     zoom?: number,
+    zoomWheelRatio?: number,
     size?: ISize,
     mode?: EMapMode,
     refreshDelayWhenZooming?: boolean,

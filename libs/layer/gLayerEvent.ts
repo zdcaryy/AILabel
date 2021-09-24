@@ -588,14 +588,16 @@ export default class EventLayer extends Layer  {
     /*****************************************************/
     // mouse在map:pan模式下进行滑轮缩放[不断重绘图层方式，性能会受影响]
     public handleMapZoom(e: WheelEvent) {
+        const zoomNumber = 90 + this.map.zoomWheelRatio;
+
         const {offsetX, offsetY} = e;
         const screen = {x: offsetX, y: offsetY};
         const global = this.map.transformScreenToGlobal(screen);
         const basePoint = {screen, global};
         // 计算缩放中心点
         const newZoom = e.deltaY < 0
-            ? this.map.zoom * 95 / 100 // zoomIn
-            : this.map.zoom * 105.263 / 100; // 为了返回上一次的zoom
+            ? this.map.zoom * zoomNumber / 100 // zoomIn
+            : this.map.zoom * 100 / zoomNumber; // 为了返回上一次的zoom
         const screenCenter = this.map.getScreenCenter();
         const newCenter = this.map.transformScreenToGlobal(screenCenter, {basePoint, zoom: newZoom});
         this.map.centerAndZoom({center: newCenter, zoom: newZoom}, {refreshDelay: true});

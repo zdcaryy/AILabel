@@ -8353,6 +8353,7 @@
     }, {
       key: "handleMapZoom",
       value: function handleMapZoom(e) {
+        var zoomNumber = 90 + this.map.zoomWheelRatio;
         var offsetX = e.offsetX,
             offsetY = e.offsetY;
         var screen = {
@@ -8365,8 +8366,8 @@
           global: global
         }; // 计算缩放中心点
 
-        var newZoom = e.deltaY < 0 ? this.map.zoom * 95 / 100 // zoomIn
-        : this.map.zoom * 105.263 / 100; // 为了返回上一次的zoom
+        var newZoom = e.deltaY < 0 ? this.map.zoom * zoomNumber / 100 // zoomIn
+        : this.map.zoom * 100 / zoomNumber; // 为了返回上一次的zoom
 
         var screenCenter = this.map.getScreenCenter();
         var newCenter = this.map.transformScreenToGlobal(screenCenter, {
@@ -11432,6 +11433,8 @@
 
       this.withHotKeys = this.mapOptions.withHotKeys; // 快捷键开关设置
 
+      this.zoomWheelRatio = this.mapOptions.zoomWheelRatio; // 滑轮缩放速率
+
       this.xAxis = this.mapOptions.xAxis; // x轴设置
 
       this.yAxis = this.mapOptions.yAxis; // y轴设置
@@ -11675,6 +11678,12 @@
         this.zoom = this.zoom * 2;
         this.refresh();
         this.triggerBoundsChanged();
+      } // 设置滑轮缩放比例, 取值区间[0, 10)
+
+    }, {
+      key: "setZoomWheelRatio",
+      value: function setZoomWheelRatio(ratio) {
+        this.zoomWheelRatio = ratio;
       } // 添加控件
 
     }, {
@@ -12250,6 +12259,8 @@
     // 中心点坐标
     zoom: 1000,
     // 缩放值
+    zoomWheelRatio: 5,
+    // 鼠标滑轮缩放大小,取值区间[0, 10)，zoomWheelRatio越小，代表缩放速度越快，反之越慢
     mode: EMapMode.Pan,
     // 默认当前map模式
     size: null,
@@ -13292,7 +13303,9 @@
     Text: TextLayer,
     Mask: MaskLayer,
     Image: ImageLayer,
-    Feature: FeatureLayer
+    Feature: FeatureLayer,
+    OverlayLayer: OverlayLayer,
+    EventLayer: EventLayer
   };
 
   var Feature = {
@@ -13933,7 +13946,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.1.3' // 和npm-version保持一致
+    version: '5.1.4' // 和npm-version保持一致
 
   };
 
