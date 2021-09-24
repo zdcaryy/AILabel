@@ -48,6 +48,7 @@ const gMap = new AILabel.Map('map', {
 |zoomWhenDrawing|绘制时可滑轮缩放|否|false|boolean|
 |panWhenDrawing|绘制时可到边界外自动平移|否|false|boolean|
 |featureCaptureWhenMove|绘制过程中是否开启‘双击选中’tip提示，耗费性能（会持续进行move捕捉判断）|否|false|boolean|
+|withHotKeys|快捷键开关|否|true|boolean|
 
 **IPoint**
 
@@ -128,21 +129,17 @@ AILabel.Map设置绘制过程中提示文字关闭
 gMap.disableDrawingTip();
 ```
 
-## getSize
-获取传入容器的大小
+## enableHotKeys
+AILabel.Map设置快捷键开启
 ```javascript
-// define
-getSize(): ISize
-// demo
-const containerSize = gMap.getSize();
+gMap.enableHotKeys();
 ```
 
-**ISize**
-
-|参数|说明|类型|
-|---|---|---|---|---|
-|width|宽|number|
-|height|高|number|
+## disableHotKeys
+AILabel.Map设置快捷键关闭
+```javascript
+gMap.disableHotKeys();
+```
 
 ## enableZoomWhenDrawing
 开启绘制时可鼠标滑轮缩放
@@ -179,6 +176,22 @@ disablePanWhenDrawing()
 // demo
 gMap.disablePanWhenDrawing();
 ```
+
+## getSize
+获取传入容器的大小
+```javascript
+// define
+getSize(): ISize
+// demo
+const containerSize = gMap.getSize();
+```
+
+**ISize**
+
+|参数|说明|类型|
+|---|---|---|---|---|
+|width|宽|number|
+|height|高|number|
 
 ## getScale
 获取当前缩放比例 (containerWidth / zoom)

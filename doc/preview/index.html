@@ -192,6 +192,13 @@ const gMap = new AILabel.Map(&#39;map&#39;, {
 <td>false</td>
 <td>boolean</td>
 </tr>
+<tr>
+<td>withHotKeys</td>
+<td>快捷键开关</td>
+<td>否</td>
+<td>true</td>
+<td>boolean</td>
+</tr>
 </tbody>
 </table>
 <p><strong>IPoint</strong></p>
@@ -415,6 +422,42 @@ const gMap = new AILabel.Map(&#39;map&#39;, {
 <p>AILabel.Map设置绘制过程中提示文字关闭</p>
 <pre><code class="lang-javascript">gMap.disableDrawingTip();
 </code></pre>
+<h2 id="enablehotkeys">enableHotKeys</h2>
+<p>AILabel.Map设置快捷键开启</p>
+<pre><code class="lang-javascript">gMap.enableHotKeys();
+</code></pre>
+<h2 id="disablehotkeys">disableHotKeys</h2>
+<p>AILabel.Map设置快捷键关闭</p>
+<pre><code class="lang-javascript">gMap.disableHotKeys();
+</code></pre>
+<h2 id="enablezoomwhendrawing">enableZoomWhenDrawing</h2>
+<p>开启绘制时可鼠标滑轮缩放</p>
+<pre><code class="lang-javascript">// define
+enableZoomWhenDrawing()
+// demo
+gMap.enableZoomWhenDrawing();
+</code></pre>
+<h2 id="disablezoomwhendrawing">disableZoomWhenDrawing</h2>
+<p>禁用绘制时可鼠标滑轮缩放</p>
+<pre><code class="lang-javascript">// define
+disableZoomWhenDrawing()
+// demo
+gMap.disableZoomWhenDrawing();
+</code></pre>
+<h2 id="enablepanwhendrawing">enablePanWhenDrawing</h2>
+<p>开启绘制时鼠标达到边界外自动平移</p>
+<pre><code class="lang-javascript">// define
+enablePanWhenDrawing()
+// demo
+gMap.enablePanWhenDrawing();
+</code></pre>
+<h2 id="disablepanwhendrawing">disablePanWhenDrawing</h2>
+<p>禁用绘制时鼠标达到边界外自动平移</p>
+<pre><code class="lang-javascript">// define
+disablePanWhenDrawing()
+// demo
+gMap.disablePanWhenDrawing();
+</code></pre>
 <h2 id="getsize">getSize</h2>
 <p>获取传入容器的大小</p>
 <pre><code class="lang-javascript">// define
@@ -444,34 +487,6 @@ const containerSize = gMap.getSize();
 </tr>
 </tbody>
 </table>
-<h2 id="enablezoomwhendrawing">enableZoomWhenDrawing</h2>
-<p>开启绘制时可鼠标滑轮缩放</p>
-<pre><code class="lang-javascript">// define
-enableZoomWhenDrawing()
-// demo
-gMap.enableZoomWhenDrawing();
-</code></pre>
-<h2 id="disablezoomwhendrawing">disableZoomWhenDrawing</h2>
-<p>禁用绘制时可鼠标滑轮缩放</p>
-<pre><code class="lang-javascript">// define
-disableZoomWhenDrawing()
-// demo
-gMap.disableZoomWhenDrawing();
-</code></pre>
-<h2 id="enablepanwhendrawing">enablePanWhenDrawing</h2>
-<p>开启绘制时鼠标达到边界外自动平移</p>
-<pre><code class="lang-javascript">// define
-enablePanWhenDrawing()
-// demo
-gMap.enablePanWhenDrawing();
-</code></pre>
-<h2 id="disablepanwhendrawing">disablePanWhenDrawing</h2>
-<p>禁用绘制时鼠标达到边界外自动平移</p>
-<pre><code class="lang-javascript">// define
-disablePanWhenDrawing()
-// demo
-gMap.disablePanWhenDrawing();
-</code></pre>
 <h2 id="getscale">getScale</h2>
 <p>获取当前缩放比例 (containerWidth / zoom)</p>
 <pre><code class="lang-javascript">// define
