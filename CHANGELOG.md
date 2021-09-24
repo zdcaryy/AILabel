@@ -1,3 +1,8 @@
+# 5.1.3
+`2021-09-24`
+1. OverlayLayer绘制文本样式修改为实例属性配置，用户可gMap.tipLayer.defaultTextStyle={新样式}进行设置
+2. Map: MapOption增加withHotKeys快捷键开关功能
+
 # 5.1.2
 `2021-09-22`
 1. AILabel.Text增加updateText方法

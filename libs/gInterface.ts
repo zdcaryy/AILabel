@@ -63,6 +63,7 @@ export interface IMapOptions {
     refreshDelayWhenZooming?: boolean,
     zoomWhenDrawing?: boolean,
     panWhenDrawing?: boolean,
+    withHotKeys?: boolean,
     featureCaptureWhenMove?: boolean,
     xAxis?: IAxisOption
     yAxis?: IAxisOption

@@ -7941,10 +7941,13 @@
           }, 300);
         } else {
           this.tmpPointsStore.push(this.startPoint);
-          this.setTip({
-            text: 'ctrl+z撤销',
-            position: this.startPoint.global
-          });
+
+          if (this.map.withHotKeys) {
+            this.setTip({
+              text: 'ctrl+z撤销',
+              position: this.startPoint.global
+            });
+          }
         }
       }
     }, {
@@ -8121,10 +8124,13 @@
           }, 300);
         } else {
           this.tmpPointsStore.push(this.startPoint);
-          this.setTip({
-            text: 'ctrl+z撤销',
-            position: this.startPoint.global
-          });
+
+          if (this.map.withHotKeys) {
+            this.setTip({
+              text: 'ctrl+z撤销',
+              position: this.startPoint.global
+            });
+          }
         }
       }
     }, {
@@ -10727,6 +10733,7 @@
 
     // 当前featureLayer中所有的features
     // 默认active的样式
+    // 默认text文本的样式
     // function: constructor
     function OverlayLayer(id) {
       var _this;
@@ -10744,6 +10751,16 @@
         strokeStyle: '#FF0000',
         fillStyle: '#FF0000',
         lineWidth: 1
+      });
+
+      _defineProperty$1(_assertThisInitialized(_this), "defaultTextStyle", {
+        fillStyle: '#FFFFFF',
+        strokeStyle: '#D2691E',
+        background: true,
+        globalAlpha: 1,
+        fontColor: '#333',
+        font: 'normal 10px Arial',
+        textBaseline: 'top'
       });
 
       return _this;
@@ -10909,15 +10926,7 @@
           }
         }), // shape
         {}, // props
-        {
-          fillStyle: '#FFFFFF',
-          strokeStyle: '#D2691E',
-          background: true,
-          globalAlpha: 1,
-          fontColor: '#333',
-          font: 'normal 10px Arial',
-          textBaseline: 'top'
-        } // style
+        this.defaultTextStyle // style
         );
         this.addFeatureActionText(text, {
           clear: clear
@@ -11421,6 +11430,8 @@
 
       this.featureCaptureWhenMove = this.mapOptions.featureCaptureWhenMove; // mousemove过程中是否开启捕捉, 默认不开启
 
+      this.withHotKeys = this.mapOptions.withHotKeys; // 快捷键开关设置
+
       this.xAxis = this.mapOptions.xAxis; // x轴设置
 
       this.yAxis = this.mapOptions.yAxis; // y轴设置
@@ -11447,7 +11458,7 @@
 
       this.eventsObServer = new events.EventEmitter(); // 注册快捷键（注意多实例时可能存在冲突问题，后面的实例会覆盖前面的）
 
-      this.registerHotkey();
+      this.withHotKeys && this.registerHotkey();
     } // 设置dom容器的style样式
 
 
@@ -11607,6 +11618,23 @@
       key: "disableFeatureCaptureWhenMove",
       value: function disableFeatureCaptureWhenMove() {
         this.featureCaptureWhenMove = false;
+      } // 开启快捷键
+
+    }, {
+      key: "enableHotKeys",
+      value: function enableHotKeys() {
+        if (!this.withHotKeys) {
+          this.withHotKeys = true;
+          this.registerHotkey();
+        }
+      }
+    }, {
+      key: "disableHotKeys",
+      value: function disableHotKeys() {
+        if (this.withHotKeys) {
+          this.withHotKeys = false;
+          this.unbindHotkey();
+        }
       } // 定位且zoom到指定zoom值
 
     }, {
@@ -12125,6 +12153,12 @@
         hotkeys('ctrl+z', function (event, handler) {
           _this3.removeDrawingPoints();
         });
+      } // 解绑快捷键
+
+    }, {
+      key: "unbindHotkey",
+      value: function unbindHotkey() {
+        hotkeys.unbind('ctrl+z');
       } // setCursor
 
     }, {
@@ -12226,6 +12260,8 @@
     // 绘制过程中是否允许缩放，默认不会缩放
     featureCaptureWhenMove: false,
     // mousemove过程中是否开启捕捉, 默认不开启
+    withHotKeys: true,
+    // 是否开启快捷键
     panWhenDrawing: false,
     // 绘制过程中是否允许自动平移，默认不会自动平移
     xAxis: {
@@ -13897,7 +13933,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.1.2' // 和npm-version保持一致
+    version: '5.1.3' // 和npm-version保持一致
 
   };
 

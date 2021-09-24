@@ -333,7 +333,10 @@ export default class EventLayer extends Layer  {
         }
         else {
             this.tmpPointsStore.push(this.startPoint);
-            this.setTip({text: 'ctrl+z撤销', position: this.startPoint.global});
+
+            if (this.map.withHotKeys) {
+                this.setTip({text: 'ctrl+z撤销', position: this.startPoint.global});
+            }
         }
     }
     handlePolylineMove(e: MouseEvent) {
@@ -443,7 +446,10 @@ export default class EventLayer extends Layer  {
         }
         else {
             this.tmpPointsStore.push(this.startPoint);
-            this.setTip({text: 'ctrl+z撤销', position: this.startPoint.global});
+
+            if (this.map.withHotKeys) {
+                this.setTip({text: 'ctrl+z撤销', position: this.startPoint.global});
+            }
         }
     }
     handlePolygonMove(e: MouseEvent) {

@@ -65,6 +65,7 @@ export default class Map {
         refreshDelayWhenZooming: true, // 当持续缩放时，是否延时feature刷新，默认delay，性能更优
         zoomWhenDrawing: false, // 绘制过程中是否允许缩放，默认不会缩放
         featureCaptureWhenMove: false, // mousemove过程中是否开启捕捉, 默认不开启
+        withHotKeys: true, // 是否开启快捷键
         panWhenDrawing: false, // 绘制过程中是否允许自动平移，默认不会自动平移
         xAxis: {direction: EXAxisDirection.Right}, // x坐标轴方向设置
         yAxis: {direction: EYAxisDirection.Bottom} // y坐标轴方向设置
@@ -87,6 +88,8 @@ export default class Map {
     public panWhenDrawing: boolean
     // mousemove过程中是否开启捕捉, 默认不开启
     public featureCaptureWhenMove: boolean
+    // 快捷键是否开启
+    public withHotKeys: boolean
 
     public zoom: number // 当前缩放值
     public center: IPoint // 左上角代表的实际坐标值
@@ -148,6 +151,7 @@ export default class Map {
         this.zoomWhenDrawing = this.mapOptions.zoomWhenDrawing; // 更新是否绘制过程中允许缩放
         this.panWhenDrawing = this.mapOptions.panWhenDrawing; // 更新是否绘制过程中允许平移
         this.featureCaptureWhenMove = this.mapOptions.featureCaptureWhenMove; // mousemove过程中是否开启捕捉, 默认不开启
+        this.withHotKeys = this.mapOptions.withHotKeys; // 快捷键开关设置
         this.xAxis = this.mapOptions.xAxis; // x轴设置
         this.yAxis = this.mapOptions.yAxis; // y轴设置
         this.size = this.mapOptions.size || { // 容器大小设置
@@ -172,7 +176,7 @@ export default class Map {
         // 事件监听实例添加
         this.eventsObServer = new events.EventEmitter();
         // 注册快捷键（注意多实例时可能存在冲突问题，后面的实例会覆盖前面的）
-        this.registerHotkey();
+        this.withHotKeys && this.registerHotkey();
     }
 
     // 设置dom容器的style样式
@@ -285,6 +289,19 @@ export default class Map {
     }
     disableFeatureCaptureWhenMove() {
         this.featureCaptureWhenMove = false;
+    }
+    // 开启快捷键
+    enableHotKeys() {
+        if (!this.withHotKeys) {
+            this.withHotKeys = true;
+            this.registerHotkey();
+        }
+    }
+    disableHotKeys() {
+        if (this.withHotKeys) {
+            this.withHotKeys = false;
+            this.unbindHotkey();
+        }
     }
 
     // 定位且zoom到指定zoom值
@@ -706,6 +723,10 @@ export default class Map {
         hotkeys('ctrl+z', (event, handler) => {
             this.removeDrawingPoints();
         });
+    }
+    // 解绑快捷键
+    unbindHotkey() {
+        hotkeys.unbind('ctrl+z');
     }
 
     // setCursor

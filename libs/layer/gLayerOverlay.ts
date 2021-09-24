@@ -34,6 +34,17 @@ export default class OverlayLayer extends CanvasLayer  {
         lineWidth: 1
     }
 
+    // 默认text文本的样式
+    public defaultTextStyle: IFeatureStyle = {
+        fillStyle: '#FFFFFF',
+        strokeStyle: '#D2691E',
+        background: true,
+        globalAlpha: 1,
+        fontColor: '#333',
+        font: 'normal 10px Arial',
+        textBaseline: 'top'
+    }
+
     // function: constructor
     constructor(id: string, props: IObject = {}, style: ILayerStyle = {}) {
         super(id, ELayerType.Overlay, props, style);
@@ -137,7 +148,6 @@ export default class OverlayLayer extends CanvasLayer  {
         this.addFeatureActionText(feature, {clear});
     }
 
-
     // 添加涂抹action
     addDrawAction(shape: IDrawActionShape) {
         const action = new DrawAction(
@@ -158,15 +168,7 @@ export default class OverlayLayer extends CanvasLayer  {
             `${+new Date()}`, // id
             {...textInfo, offset: {x: 5, y: -5}}, // shape
             {}, // props
-            {
-                fillStyle: '#FFFFFF',
-                strokeStyle: '#D2691E',
-                background: true,
-                globalAlpha: 1,
-                fontColor: '#333',
-                font: 'normal 10px Arial',
-                textBaseline: 'top'
-            } // style
+            this.defaultTextStyle // style
         );
         this.addFeatureActionText(text, {clear});
     }
