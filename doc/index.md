@@ -632,6 +632,7 @@ const gFirstImageLayer = new AILabel.Layer.Image(
        src: 'https://img2.baidu.com/it/u=2053804264,1341330775&fm=26&fmt=auto&gp=0.jpg',
        width: 500, // 图片宽度
        height: 354, // 图片高度
+       crossOrigin: false, // 图片是否跨域
        position: { // 图片左上角对应的坐标位置
            x: -250,
            y: 177
@@ -663,6 +664,7 @@ gMap.addLayer(gFirstImageLayer);
 |src|图片地址|是|--|string|
 |width|图片宽度|是|--|number|
 |height|图片高度|是|--|number|
+|crossOrigin|图片是否跨域，主要用于图片导出时使用, 要根据实际情况设置，当图片导出时，需要图片的responseHeader-CORS设置允许跨域|否|false|boolean|
 |position|图片位置|否|{x:0,y:0}|IPoint|
 |grid|图片网格|否|{columns: [], rows: []}|IGridInfo|
 
@@ -1547,6 +1549,7 @@ const gFirstMaskImageAction = new AILabel.Mask.Image(
        src: './mask_min.png',
        width: 500,
        height: 354,
+       crossOrigin: false,
        position: { // 图片左上角坐标
            x: -250,
            y: 177
