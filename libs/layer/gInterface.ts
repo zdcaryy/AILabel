@@ -32,6 +32,7 @@ export interface IGridInfo {
 // 图片层图片信息
 export interface IImageInfo extends IObject, IImage {
     position?: IPoint, // 图片起始位置
+    crossOrigin?: boolean, // 图片是否跨域
     grid?: IGridInfo
 };
 

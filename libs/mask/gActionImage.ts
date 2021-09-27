@@ -21,6 +21,7 @@ export default class ImageActionFeature extends Action {
         src: '',
         width: 0,
         height: 0,
+        crossOrigin: false,
         position: {x: 0, y: 0} // 默认起始位置
     }
     public imageInfo: IImageInfo
@@ -42,6 +43,14 @@ export default class ImageActionFeature extends Action {
     updateImage() {
         if (this.imageInfo.src) {
             this.image = new Image();
+
+            if (this.imageInfo.crossOrigin) {
+                this.image.setAttribute('crossOrigin', 'anonymous');
+            }
+            else {
+                this.image.removeAttribute('crossOrigin');
+            }
+
             this.image.src = this.imageInfo.src;
             this.image.onload = () => (this.layer && this.refresh());
         }

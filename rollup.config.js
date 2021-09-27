@@ -14,6 +14,7 @@ const plugins = [
     commonjs(), // so Rollup can convert `ms` to an ES module
     babel({
         exclude: 'node_modules/**',
+        runtimeHelpers: true,
         extensions
     }),
     // uglify()

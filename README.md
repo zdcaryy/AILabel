@@ -93,6 +93,9 @@ gMap.events.on('drawDone', (type: EMapMode, data) => {
 ```
 
 ## TODO
+- P0: 增加配置项支持绘制过程中右键拖拽
+- P0: 箭头直线类型支持
+
 - P0: Control.Scale 开发
 - P0: Control.EagleMap 开发
 - P0: ROI 开发

@@ -106,6 +106,40 @@ export default class MaskLayer extends CanvasLayer  {
         return {category, rle};
     }
 
+    // 获取指定范围的imageDta
+    getImageData(bounds: IRectShape) {
+        const {x, y, width, height} = bounds;
+        const screenXY = this.map.transformGlobalToScreen({x, y});
+        const scale = this.map.getScale();
+
+        const newX = screenXY.x * CanvasLayer.dpr;
+        const newY = screenXY.y * CanvasLayer.dpr;
+        const newWidth = width / scale * CanvasLayer.dpr;
+        const newHeight = height / scale * CanvasLayer.dpr;
+        const imageData = this.canvasContext.getImageData(newX, newY, newWidth, newHeight);
+        return imageData;
+    }
+
+    // 返回指定范围的image对象
+    getImageWithBounds(bounds: IRectShape) {
+        const {width, height} = bounds;
+        const imageData = this.getImageData(bounds);
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width * CanvasLayer.dpr;
+        canvas.height = height * CanvasLayer.dpr;
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        const canvasContext = canvas.getContext('2d');
+        // 绘制截图区域
+        canvasContext.putImageData(imageData, 0, 0);
+        // 产出base64图片
+        const imageBase64 = canvas.toDataURL('image/png', 1.0);
+
+        // 返回image对象
+        return imageBase64;
+    }
+
     // 根据分类获取分类分类rle数据, 截取某个范围的数据
     getRleData(bounds: IRectShape) {
         const groups = this.groupByCategory();

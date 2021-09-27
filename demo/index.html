@@ -105,7 +105,7 @@
             refreshDelayWhenZooming: true, // 缩放时是否允许刷新延时，性能更优
             zoomWhenDrawing: true,
             panWhenDrawing: true,
-            zoomWheelRatio: 0, // 控制滑轮缩放缩率[0, 10), 值越小，则缩放越快，反之越慢
+            zoomWheelRatio: 5, // 控制滑轮缩放缩率[0, 10), 值越小，则缩放越快，反之越慢
             withHotKeys: false // 关闭快捷键
         });
 
@@ -253,6 +253,7 @@
                 src: './bg.webp',
                 width: 500,
                 height: 354,
+                crossOrigin: false, // 如果跨域图片，需要设置为true
                 position: { // 左上角相对中心点偏移量
                     x: 0,
                     y: 0

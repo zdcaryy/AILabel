@@ -9,6 +9,7 @@ import _get from 'lodash/get';
 import _isNumber from 'lodash/isNumber';
 import _cloneDeep from 'lodash/cloneDeep';
 import _filter from 'lodash/filter';
+import _map from 'lodash/map';
 
 import {EMapMode, ECursorType, EEventType, EUrlCursorType, EXAxisDirection, EYAxisDirection, EEventSlotType} from './gEnum';
 import {IMapOptions, ISize, IPoint, ICenterAndZoom, ITransPointOption, IObject, IAxisOption, IEventSlotType, IFunctionSlot, IExportOption} from './gInterface';
@@ -500,34 +501,71 @@ export default class Map {
         const exportLayers  = layers;
         let exportLayerHelper = new ExportHelperLayer(bounds);
 
+        const promises = [];
         // 循环添加feature/text/image
-        _forEach(exportLayers, (layer: Layer) => {
+        _forEach(exportLayers, async (layer: Layer) => {
             if (layer.type === ELayerType.Feature) {
                 const features = (layer as FeatureLayer).getAllFeatures();
                 const allFeatures = _cloneDeep(features);
                 exportLayerHelper.addObjects(allFeatures);
+
+                // 通知结束
+                promises.push(new Promise(resolve => {
+                    resolve(true);
+                }));
             }
             else if (layer.type === ELayerType.Text) {
                 const texts = (layer as TextLayer).getAllTexts();
                 const allTexts = _cloneDeep(texts);
                 // ImageAction存在跨越问题
                 exportLayerHelper.addObjects(allTexts);
+
+                // 通知结束
+                promises.push(new Promise(resolve => {
+                    resolve(true);
+                }));
             }
             else if (layer.type === ELayerType.Mask) {
-                const actions = (layer as MaskLayer).getAllActions();
-                const allActions = _cloneDeep(actions);
-                exportLayerHelper.addObjects(allActions);
+                const imageBase64 = (layer as MaskLayer).getImageWithBounds(bounds);
+                // 通知结束
+                promises.push(new Promise((resolve, reject) => {
+                    const image = new Image();
+                    image.onload = () => {
+                        exportLayerHelper.putImage(image as HTMLImageElement);
+                        resolve(true);
+                    };
+                    image.onerror = () => {
+                        reject();
+                    };
+                    image.src = imageBase64;
+                }));
+                // exportLayerHelper.putImage(image as HTMLImageElement);
             }
             else if (layer.type === ELayerType.Image) {
                 const imageLayer = _cloneDeep(layer);
                 // 存在跨越问题
                 exportLayerHelper.addImageLayer(imageLayer as ImageLayer);
+                // 通知结束
+                promises.push(new Promise(resolve => {
+                    resolve(true);
+                }));
             }
         });
 
-        const image = exportLayerHelper.convertCanvasToImage(type, format, quality);
-        exportLayerHelper = null;
-        return image;
+        // 返回promise对象
+        return new Promise((resolve, reject) => {
+            Promise.all(promises).then(() => {
+                const imagePromise = exportLayerHelper.convertCanvasToImage(type, format, quality);
+                imagePromise.then(image => {
+                    exportLayerHelper = null;
+                    resolve(image);
+                }).catch((error) => {
+                    console.log(error);
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+        });
     }
 
 

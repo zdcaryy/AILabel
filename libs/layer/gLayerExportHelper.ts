@@ -64,7 +64,6 @@ export default class ExportHelperLayer  {
         this.canvas.height = height * CanvasLayer.dpr;
         this.canvas.style.width = width + 'px';
         this.canvas.style.height = height + 'px';
-        this.canvas.style.border = '1px solid red';
         this.canvasContext = this.canvas.getContext('2d');
         Graphic.drawRect(
             this.canvasContext,
@@ -82,6 +81,11 @@ export default class ExportHelperLayer  {
     // 添加objects至当前HelperLayer中
     addObjects(objects: Array<IObjectItem>) {
         _forEach(objects, (object: IObjectItem) => this.addObject(object));
+    }
+
+    // 添加imag至当前canvas
+    putImage(image: HTMLImageElement) {
+        this.canvasContext.drawImage(image, 0, 0);
     }
 
     // 添加图片

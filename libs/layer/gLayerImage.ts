@@ -23,6 +23,7 @@ export default class ImageLayer extends CanvasLayer  {
         width: 0,
         height: 0,
         position: {x: 0, y: 0}, // 默认起始位置
+        crossOrigin: false,
         grid: {
             columns: [],
             rows: []
@@ -71,6 +72,14 @@ export default class ImageLayer extends CanvasLayer  {
                 this
             );
             this.image = new Image();
+
+            if (this.imageInfo.crossOrigin) {
+                this.image.setAttribute('crossOrigin', 'anonymous');
+            }
+            else {
+                this.image.removeAttribute('crossOrigin');
+            }
+
             this.image.src = this.imageInfo.src;
             this.image.onload = () => {
                 this.imageSuccess = true;
