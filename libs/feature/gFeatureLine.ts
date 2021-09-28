@@ -26,6 +26,16 @@ export default class LineFeature extends Feature {
         return Util.MathUtil.pointInPolyline(point, [start, end], {tolerance});
     }
 
+    // 绘制线段箭头
+    drawArrow() {
+        const {width} = this.shape as ILineShape;
+        const styleLineWidth = this.style.lineWidth || 1;
+        const bufferWidth = 0;
+        const scale = this.layer?.map?.getScale();
+
+        // const  (width ? (width / scale) : styleLineWidth) / 2 + bufferWidth;
+    }
+
     // 执行绘制当前
     // @override
     refresh() {
@@ -52,5 +62,7 @@ export default class LineFeature extends Feature {
             this.style,
             {}
         );
+
+
     }
 }

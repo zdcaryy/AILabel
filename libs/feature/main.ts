@@ -4,6 +4,7 @@ import Line from './gFeatureLine';
 import Polyline from './gFeaturePolyline';
 import Rect from './gFeatureRect';
 import Polygon from './gFeaturePolygon';
+import Arrow from './gFeatureArrow';
 
 const Feature = {
     Point,
@@ -11,7 +12,8 @@ const Feature = {
     Line,
     Polyline,
     Rect,
-    Polygon
+    Polygon,
+    Arrow
 };
 
 export default Feature;

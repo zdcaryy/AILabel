@@ -6,7 +6,8 @@ export enum EFeatureType {
     Polyline = "POLYLINE",
     Polygon = "POLYGON",
     Rect = "RECT",
-    Circle = "CIRCLE"
+    Circle = "CIRCLE",
+    Arrow = "ARROW"
 };
 
 // 圆子类型

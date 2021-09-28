@@ -14,6 +14,10 @@ export interface IRectShape extends ISize {
     fill?: boolean
 };
 
+export interface IArrowShape {
+
+};
+
 export interface ILineShape {
     start: IPoint,
     end: IPoint,
@@ -49,4 +53,4 @@ export interface ICircleShape {
 };
 
 // feature-type
-export type IFeatureShape = IPointShape | IRectShape | ILineShape | IPolylineShape | IPolygonShape | ICircleShape;
+export type IFeatureShape = IPointShape | IRectShape | ILineShape | IPolylineShape | IPolygonShape | ICircleShape | IArrowShape;
