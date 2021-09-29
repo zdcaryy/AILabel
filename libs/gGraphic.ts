@@ -243,4 +243,29 @@ export default class Graphic {
             !withBackground && ctx.strokeText(text, x, y);
         }
     }
+
+    static drawArrow(ctx: CanvasContext2D, shape: IObject, radians: number , style: ITextStyle, option?: IObject) {
+        const {format} = option || {};
+        const formatShape = _isFunction(format) ? format(shape) : shape;
+        const {position, points = []} = formatShape;
+        Graphic.setStyle(ctx, style);
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate(position.x, position.y);
+        ctx.rotate(radians);
+
+        _forEach(points, (point: IPoint, index: number) => {
+            if (index === 0) {
+                ctx.moveTo(point.x, point.y);
+            }
+            else {
+                ctx.lineTo(point.x, point.y);
+            }
+        });
+        ctx.closePath();
+        ctx.restore();
+        ctx.fill();
+        ctx.stroke();
+    }
 }

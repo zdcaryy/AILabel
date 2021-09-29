@@ -113,7 +113,8 @@ canvas样式：比如lineWidth/strokeStyle/fillStyle等
 |---|---|---|---|---|
 |lineWidth|线宽|否|1|number|
 |strokeStyle|边框颜色|否|'#FF0000'|boolean|
-|fillStyle等|填充色|否|'#FF0000'|boolean|
+|fillStyle|填充色|否|'#FF0000'|boolean|
+|自定义：arrow|是否绘制箭头（只针对线段）|否|false|boolean|
 |自定义：stroke|是否闭合|否|true|boolean|
 |自定义：fill|是否填充|否|false|boolean|
 |其他配置|--|否|--|--|

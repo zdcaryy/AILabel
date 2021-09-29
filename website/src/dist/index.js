@@ -7929,6 +7929,35 @@
           !withBackground && ctx.strokeText(text, x, y);
         }
       }
+    }, {
+      key: "drawArrow",
+      value: function drawArrow(ctx, shape, radians, style, option) {
+        var _ref5 = option || {},
+            format = _ref5.format;
+
+        var formatShape = isFunction_1(format) ? format(shape) : shape;
+        var position = formatShape.position,
+            _formatShape$points = formatShape.points,
+            points = _formatShape$points === void 0 ? [] : _formatShape$points;
+        Graphic.setStyle(ctx, style);
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate(position.x, position.y);
+        ctx.rotate(radians);
+
+        forEach_1(points, function (point, index) {
+          if (index === 0) {
+            ctx.moveTo(point.x, point.y);
+          } else {
+            ctx.lineTo(point.x, point.y);
+          }
+        });
+
+        ctx.closePath();
+        ctx.restore();
+        ctx.fill();
+        ctx.stroke();
+      }
     }]);
 
     return Graphic;
@@ -10776,17 +10805,18 @@
         return Util.MathUtil.pointInPolyline(point, [start, end], {
           tolerance: tolerance
         });
-      } // 绘制线段箭头
+      } // 获取线宽
 
     }, {
-      key: "drawArrow",
-      value: function drawArrow() {
+      key: "getLineWidth",
+      value: function getLineWidth() {
         var _this$layer2, _this$layer2$map;
 
-        var _ref2 = this.shape;
-            _ref2.width;
-        this.style.lineWidth || 1;
-        (_this$layer2 = this.layer) === null || _this$layer2 === void 0 ? void 0 : (_this$layer2$map = _this$layer2.map) === null || _this$layer2$map === void 0 ? void 0 : _this$layer2$map.getScale(); // const  (width ? (width / scale) : styleLineWidth) / 2 + bufferWidth;
+        var _ref2 = this.shape,
+            width = _ref2.width;
+        var styleLineWidth = this.style.lineWidth || 1;
+        var scale = (_this$layer2 = this.layer) === null || _this$layer2 === void 0 ? void 0 : (_this$layer2$map = _this$layer2.map) === null || _this$layer2$map === void 0 ? void 0 : _this$layer2$map.getScale();
+        return width ? width * scale : styleLineWidth;
       } // 执行绘制当前
       // @override
 
@@ -10816,6 +10846,40 @@
         var dpr = CanvasLayer.dpr;
         var scale = this.layer.map.getScale();
         var screenWidth = (width || 0) * scale;
+        var lineWidth = this.getLineWidth(); // // draw the starting arrowhead
+        // var startRadians=Math.atan((y2-y1)/(x2-x1));
+        // startRadians+=((x2>x1)?-90:90)*Math.PI/180;
+        // draw the ending arrowhead
+
+        var endRadians = Math.atan((endY - startY) / (endX - startX));
+        endRadians += (endX > startX ? 90 : -90) * Math.PI / 180;
+        var xDistance = lineWidth * 1.2 * dpr;
+        var bufferDltY = lineWidth * 1.4 * dpr; // 判断是否绘制箭头
+
+        if (this.style.arrow) {
+          Graphic.drawArrow(this.layer.canvasContext, {
+            position: {
+              x: endX * dpr,
+              y: endY * dpr
+            },
+            points: [{
+              x: 0 * dpr,
+              y: 0 - bufferDltY
+            }, {
+              x: xDistance,
+              y: xDistance * 2 - bufferDltY
+            }, {
+              x: -xDistance,
+              y: xDistance * 2 - bufferDltY
+            }]
+          }, endRadians, _objectSpread$5(_objectSpread$5({}, this.style), {}, {
+            lineWidth: 2
+          }, this.style.strokeStyle ? {
+            fillStyle: this.style.strokeStyle
+          } : {}));
+        } // 绘制线段
+
+
         Graphic.drawLine(this.layer.canvasContext, _objectSpread$5({
           start: {
             x: startX * dpr,
@@ -14971,7 +15035,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.1.5' // 和npm-version保持一致
+    version: '5.1.6' // 和npm-version保持一致
 
   };
 

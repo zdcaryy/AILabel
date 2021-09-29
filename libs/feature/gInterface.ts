@@ -3,7 +3,8 @@ import {IObject, IPoint, ISize} from "../gInterface";
 // feature样式定义
 export interface IFeatureStyle extends IObject {
     stroke?: boolean,
-    fill?: boolean
+    fill?: boolean,
+    arrow?: boolean // 是否携带箭头，目前只针对线段
 };
 
 // feature样式定义
