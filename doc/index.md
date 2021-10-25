@@ -620,6 +620,14 @@ gMap.slots.on('drawActiveMiddlePoint', (point, overLayerInstance) => {
 |drawActivePoint|绘制高亮节点触发|string|DrawActivePoint|
 |drawActiveMiddlePoint|绘制高亮节点中间待添加节点触发|string|DrawActiveMiddlePoint|
 
+## 快捷键
+目前AILabel中内置已有快捷键
+
+|参数|说明|
+|---|---|
+|ctrl+z|绘制多段线或者多边形过程中撤销节点|
+|up/down/left/right|选中feature时，可通过上/下/左/右快捷键对选中feature进行位置微调|
+
 # AILabel.Layer.Image
 图片图层
 ## 实例化

@@ -1,3 +1,7 @@
+# 5.1.7
+`2021-10-25`
+1. 对选中feature可通过快捷键up/down/left/right进行feature位置微调
+
 # 5.1.6
 `2021-09-29`
 1. 绘制线段支持箭头，IFeatureStyle增加arrow?:boolean配置（目前只针对线段）

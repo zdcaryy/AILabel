@@ -11,7 +11,7 @@ import _cloneDeep from 'lodash/cloneDeep';
 import _filter from 'lodash/filter';
 import _map from 'lodash/map';
 
-import {EMapMode, ECursorType, EEventType, EUrlCursorType, EXAxisDirection, EYAxisDirection, EEventSlotType} from './gEnum';
+import {EMapMode, ECursorType, EEventType, EUrlCursorType, EXAxisDirection, EYAxisDirection, EEventSlotType, EDirection} from './gEnum';
 import {IMapOptions, ISize, IPoint, ICenterAndZoom, ITransPointOption, IObject, IAxisOption, IEventSlotType, IFunctionSlot, IExportOption} from './gInterface';
 import Layer from './layer/gLayer';
 import Control from './control/gControl';
@@ -770,10 +770,20 @@ export default class Map {
         hotkeys('ctrl+z', (event, handler) => {
             this.removeDrawingPoints();
         });
+
+        hotkeys('up,down,left,right', (event, handler) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            // 更新activeFeature的位置
+            const activeFeature = this.getActiveFeature();
+            activeFeature && activeFeature.onMove(handler.key as EDirection);
+        })
     }
     // 解绑快捷键
     unbindHotkey() {
         hotkeys.unbind('ctrl+z');
+        hotkeys.unbind('up,down,left,right');
     }
 
     // setCursor

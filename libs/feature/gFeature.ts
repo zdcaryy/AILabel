@@ -6,6 +6,7 @@ import OverlayLayer from '../layer/gLayerOverlay';
 import ExportHelperLayer from '../layer/gLayerExportHelper';
 import {IFeatureStyle, IRectShape, IFeatureShape} from './gInterface';
 import {EFeatureType} from './gEnum';
+import {EDirection} from '../gEnum';
 
 export type TFeatureLayerType = FeatureLayer | OverlayLayer | ExportHelperLayer;
 
@@ -22,6 +23,9 @@ export default class Feature {
 
     // 最小外接矩形
     public bounds: IRectShape
+
+    // 平移feature的步长，默认1个屏幕项目
+    static moveStep: number = 1
 
     /**
      * props: feature样式
@@ -85,6 +89,9 @@ export default class Feature {
             this.layer.map.setActiveFeature(this);
         }
     }
+
+    // 移动feature, 各子类自行实现对应方法
+    onMove(direction: EDirection) {}
 
     // 改变样式
     setStyle(style: IFeatureStyle, option?: IObject) {
