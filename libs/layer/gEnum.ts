@@ -7,7 +7,8 @@ export enum ELayerType {
     Mask = "MASK",
     Text = "TEXT",
     Marker = "MARKER",
-    Overlay = "OVERLAY"
+    Overlay = "OVERLAY",
+    Support = "SUPPORT"
 };
 
 // 图片层事件类型

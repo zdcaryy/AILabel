@@ -20,6 +20,7 @@ import FeatureLayer from './layer/gLayerFeature';
 import TextLayer from './layer/gLayerText';
 import ExportHelperLayer from './layer/gLayerExportHelper';
 import OverlayLayer from './layer/gLayerOverlay';
+import SupportLayer from './layer/gLayerSupport';
 import MarkerLayer from './layer/gLayerMarker';
 import MaskLayer from './layer/gLayerMask';
 import ImageLayer from './layer/gLayerImage';
@@ -109,6 +110,8 @@ export default class Map {
     public overlayLayer: OverlayLayer
     // 当前map上的tipLayer: 文字提示等
     public tipLayer: OverlayLayer
+    // 当前map上的supportLayer: 绘制过程中十字丝
+    public supportLayer: SupportLayer
     // 当前map上的cursorLayer: 比如涂抹时绘制圆圈大小鼠标样式
     public cursorLayer: OverlayLayer
     // 当前map上的markerLayer: 注记层，内部使用
@@ -172,6 +175,8 @@ export default class Map {
         this.addOverlayLayer();
         // 添加tipLayer至当前map，最终会被添加至platform层
         this.addTipLayer();
+        // 添加supportLayer至当前map，最终会被添加至platform层
+        this.addSupportLayer();
         // 添加cursorLayer至当前map，最终会被添加至platform层
         this.addCursorLayer();
         // 添加eventLayer至当前map，最终会被添加至platform层
@@ -449,6 +454,7 @@ export default class Map {
         this.markerLayer.resizeAndRefresh();
         this.overlayLayer.resizeAndRefresh();
         this.tipLayer.resizeAndRefresh();
+        this.supportLayer.resizeAndRefresh();
         this.eventLayer.resizeAndRefresh();
 
     }
@@ -743,7 +749,16 @@ export default class Map {
         this.platformDom.appendChild(this.tipLayer.dom);
         this.tipLayer.onAdd(this);
     }
+    // 添加supportLayer至当前map
+    addSupportLayer() {
+        // 实例化supportLayer
+        this.supportLayer = new SupportLayer(`support-${_uniqueId()}`, {}, {zIndex: 1});
 
+        // 首先将layer-dom-append到容器中
+        this.platformDom.appendChild(this.supportLayer.dom);
+        this.supportLayer.onAdd(this);
+    }
+å
     // 添加cursorLayer至当前map
     addCursorLayer() {
         // 实例化cursorLayer

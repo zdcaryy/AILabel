@@ -6,11 +6,12 @@ import {ETextType} from './gEnum';
 import CanvasLayer from '../layer/gLayerCanvas';
 import TextLayer from '../layer/gLayerText';
 import OverlayLayer from '../layer/gLayerOverlay';
+import SupportLayer from '../layer/gLayerSupport';
 import ExportHelperLayer from '../layer/gLayerExportHelper';
 import {ITextInfo, ITextStyle} from './gInterface';
 import Graphic from '../gGraphic';
 
-export type TTextLayerType = TextLayer | OverlayLayer | ExportHelperLayer;
+export type TTextLayerType = TextLayer | OverlayLayer | SupportLayer | ExportHelperLayer;
 
 export default class Text {
     // textId

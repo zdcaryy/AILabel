@@ -1,6 +1,6 @@
 {
   "name": "ailabel",
-  "version": "1.0.0",
+  "version": "5.1.8",
   "description": "",
   "browser": "dist/index.js",
   "browser_demo": "demo/index.js",

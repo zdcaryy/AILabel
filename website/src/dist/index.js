@@ -7574,14 +7574,14 @@
     opacity: 1.0
   });
 
-  function _createSuper$j(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$j(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+  function _createSuper$k(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$k(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-  function _isNativeReflectConstruct$j() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+  function _isNativeReflectConstruct$k() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
   var CanvasLayer = /*#__PURE__*/function (_Layer) {
     _inherits(CanvasLayer, _Layer);
 
-    var _super = _createSuper$j(CanvasLayer);
+    var _super = _createSuper$k(CanvasLayer);
 
     // function: constructor
     function CanvasLayer(id, layerType) {
@@ -7659,9 +7659,9 @@
 
   _defineProperty$1(CanvasLayer, "dpr", window.devicePixelRatio);
 
-  function ownKeys$9(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+  function ownKeys$a(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-  function _objectSpread$9(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$9(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$9(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+  function _objectSpread$a(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$a(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$a(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
   var Graphic = /*#__PURE__*/function () {
     function Graphic() {
@@ -7915,7 +7915,7 @@
             width: width,
             height: height
           };
-          Graphic.drawRect(ctx, rectShape, _objectSpread$9(_objectSpread$9({}, style || {}), {}, {
+          Graphic.drawRect(ctx, rectShape, _objectSpread$a(_objectSpread$a({}, style || {}), {}, {
             fill: true
           }));
         } // 执行文本绘制
@@ -8000,18 +8000,18 @@
     }
   });
 
-  function ownKeys$8(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+  function ownKeys$9(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-  function _objectSpread$8(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$8(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$8(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+  function _objectSpread$9(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$9(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$9(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-  function _createSuper$i(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$i(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+  function _createSuper$j(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$j(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-  function _isNativeReflectConstruct$i() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+  function _isNativeReflectConstruct$j() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
   var ClearActionFeature = /*#__PURE__*/function (_Action) {
     _inherits(ClearActionFeature, _Action);
 
-    var _super = _createSuper$i(ClearActionFeature);
+    var _super = _createSuper$j(ClearActionFeature);
 
     // function: constructor
     function ClearActionFeature(id, shape) {
@@ -8038,7 +8038,7 @@
         var dpr = CanvasLayer.dpr;
         var scale = this.layer.map.getScale(); // 设置倒圆角
 
-        var formateStyle = _objectSpread$8(_objectSpread$8({}, this.style || {}), {}, {
+        var formateStyle = _objectSpread$9(_objectSpread$9({}, this.style || {}), {}, {
           lineCap: 'round',
           lineJoin: 'round'
         });
@@ -8048,7 +8048,7 @@
           format: function format(shape) {
             var points = shape.points,
                 width = shape.width;
-            return _objectSpread$8({
+            return _objectSpread$9({
               points: map_1(points, function (point) {
                 var _this2$layer$map$tran = _this2.layer.map.transformGlobalToScreen(point),
                     screenX = _this2$layer$map$tran.x,
@@ -8082,6 +8082,7 @@
     ELayerType["Text"] = "TEXT";
     ELayerType["Marker"] = "MARKER";
     ELayerType["Overlay"] = "OVERLAY";
+    ELayerType["Support"] = "SUPPORT";
   })(ELayerType || (ELayerType = {}));
 
   var ELayerImageEventType;
@@ -8306,18 +8307,18 @@
     EMarkerEventType["RightClick"] = "rightClick";
   })(EMarkerEventType || (EMarkerEventType = {}));
 
-  function ownKeys$7(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+  function ownKeys$8(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-  function _objectSpread$7(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$7(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$7(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+  function _objectSpread$8(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$8(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$8(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-  function _createSuper$h(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$h(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+  function _createSuper$i(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$i(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-  function _isNativeReflectConstruct$h() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+  function _isNativeReflectConstruct$i() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
   var EventLayer = /*#__PURE__*/function (_Layer) {
     _inherits(EventLayer, _Layer);
 
-    var _super = _createSuper$h(EventLayer);
+    var _super = _createSuper$i(EventLayer);
 
     // 实时记录鼠标的位置
     // mouseDown坐标{screen:IPoint: 相对容器左上角坐标, globalPoint}
@@ -9464,7 +9465,7 @@
               var _ref13 = shape,
                   x = _ref13.x,
                   y = _ref13.y;
-              this.toUpdateShape = _objectSpread$7(_objectSpread$7({}, shape), {}, {
+              this.toUpdateShape = _objectSpread$8(_objectSpread$8({}, shape), {}, {
                 x: x + globalDltX,
                 y: y - globalDltY
               }); // 临时层执行绘制
@@ -9472,7 +9473,7 @@
               this.map.overlayLayer.addActiveFeature(activeFeature);
               this.map.overlayLayer.addPointFeature(this.toUpdateShape, {
                 clear: false,
-                style: _objectSpread$7(_objectSpread$7({}, style), {}, {
+                style: _objectSpread$8(_objectSpread$8({}, style), {}, {
                   fillStyle: (_this$map = this.map) === null || _this$map === void 0 ? void 0 : _this$map.editingColor
                 })
               });
@@ -9490,7 +9491,7 @@
                   sr = _ref14.sr;
 
               if (this.hoverFeature) {
-                this.toUpdateShape = _objectSpread$7(_objectSpread$7({}, shape), {}, {
+                this.toUpdateShape = _objectSpread$8(_objectSpread$8({}, shape), {}, {
                   cx: cx + globalDltX,
                   cy: cy - globalDltY
                 });
@@ -9506,7 +9507,7 @@
                   return;
                 }
 
-                this.toUpdateShape = _objectSpread$7(_objectSpread$7({}, shape), isGlobalType ? {
+                this.toUpdateShape = _objectSpread$8(_objectSpread$8({}, shape), isGlobalType ? {
                   r: newRadius
                 } : {
                   sr: newRadius
@@ -9516,7 +9517,7 @@
               this.map.overlayLayer.addActiveFeature(activeFeature);
               this.map.overlayLayer.addCircleFeature(this.toUpdateShape, {
                 clear: false,
-                style: _objectSpread$7(_objectSpread$7({}, style), {}, {
+                style: _objectSpread$8(_objectSpread$8({}, style), {}, {
                   lineWidth: 1,
                   strokeStyle: (_this$map2 = this.map) === null || _this$map2 === void 0 ? void 0 : _this$map2.editingColor
                 })
@@ -9568,12 +9569,12 @@
                 } // 保存
 
 
-              this.toUpdateShape = _objectSpread$7(_objectSpread$7({}, shape), newRectShape); // 临时层执行绘制
+              this.toUpdateShape = _objectSpread$8(_objectSpread$8({}, shape), newRectShape); // 临时层执行绘制
 
               this.map.overlayLayer.addActiveFeature(activeFeature);
               this.map.overlayLayer.addRectFeature(this.toUpdateShape, {
                 clear: false,
-                style: _objectSpread$7(_objectSpread$7({}, style), {}, {
+                style: _objectSpread$8(_objectSpread$8({}, style), {}, {
                   lineWidth: 1,
                   strokeStyle: (_this$map3 = this.map) === null || _this$map3 === void 0 ? void 0 : _this$map3.editingColor
                 })
@@ -9656,12 +9657,12 @@
                     start = _newPoints2[0],
                     end = _newPoints2[1];
 
-                this.toUpdateShape = _objectSpread$7(_objectSpread$7({}, shape), {}, {
+                this.toUpdateShape = _objectSpread$8(_objectSpread$8({}, shape), {}, {
                   start: start,
                   end: end
                 });
               } else {
-                this.toUpdateShape = _objectSpread$7(_objectSpread$7({}, shape), {}, {
+                this.toUpdateShape = _objectSpread$8(_objectSpread$8({}, shape), {}, {
                   points: newPoints
                 });
               } // 临时层执行绘制
@@ -9671,21 +9672,21 @@
 
               isLine && this.map.overlayLayer.addLineFeature(this.toUpdateShape, {
                 clear: false,
-                style: _objectSpread$7(_objectSpread$7({}, style), {}, {
+                style: _objectSpread$8(_objectSpread$8({}, style), {}, {
                   strokeStyle: (_this$map4 = this.map) === null || _this$map4 === void 0 ? void 0 : _this$map4.editingColor
                 })
               }); // 多段线绘制
 
               isPolyline && this.map.overlayLayer.addPolylineFeature(this.toUpdateShape, {
                 clear: false,
-                style: _objectSpread$7(_objectSpread$7({}, style), {}, {
+                style: _objectSpread$8(_objectSpread$8({}, style), {}, {
                   strokeStyle: (_this$map5 = this.map) === null || _this$map5 === void 0 ? void 0 : _this$map5.editingColor
                 })
               }); // 多边形绘制
 
               isPolygon && this.map.overlayLayer.addPolygonFeature(this.toUpdateShape, {
                 clear: false,
-                style: _objectSpread$7(_objectSpread$7({}, style), {}, {
+                style: _objectSpread$8(_objectSpread$8({}, style), {}, {
                   lineWidth: 1,
                   strokeStyle: (_this$map6 = this.map) === null || _this$map6 === void 0 ? void 0 : _this$map6.editingColor
                 })
@@ -9763,7 +9764,7 @@
                     }); // 修正后的shape数据返回
 
 
-                    var toUpdateShape = _objectSpread$7(_objectSpread$7({}, shape), {}, {
+                    var toUpdateShape = _objectSpread$8(_objectSpread$8({}, shape), {}, {
                       points: newPoints
                     });
 
@@ -10630,14 +10631,14 @@
 
   });
 
-  function _createSuper$g(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$g(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+  function _createSuper$h(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$h(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-  function _isNativeReflectConstruct$g() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+  function _isNativeReflectConstruct$h() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
   var PointFeature = /*#__PURE__*/function (_Feature) {
     _inherits(PointFeature, _Feature);
 
-    var _super = _createSuper$g(PointFeature);
+    var _super = _createSuper$h(PointFeature);
 
     // PointFeature附件选项，附加字段
     // function: constructor
@@ -10776,18 +10777,18 @@
 
   });
 
-  function ownKeys$6(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+  function ownKeys$7(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-  function _objectSpread$6(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$6(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$6(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+  function _objectSpread$7(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$7(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$7(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-  function _createSuper$f(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$f(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+  function _createSuper$g(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$g(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-  function _isNativeReflectConstruct$f() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+  function _isNativeReflectConstruct$g() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
   var LineFeature = /*#__PURE__*/function (_Feature) {
     _inherits(LineFeature, _Feature);
 
-    var _super = _createSuper$f(LineFeature);
+    var _super = _createSuper$g(LineFeature);
 
     // function: constructor
     function LineFeature(id, shape) {
@@ -10887,7 +10888,7 @@
               x: -xDistance,
               y: xDistance * 2 - bufferDltY
             }]
-          }, endRadians, _objectSpread$6(_objectSpread$6({}, this.style), {}, {
+          }, endRadians, _objectSpread$7(_objectSpread$7({}, this.style), {}, {
             lineWidth: 2
           }, this.style.strokeStyle ? {
             fillStyle: this.style.strokeStyle
@@ -10895,7 +10896,7 @@
         } // 绘制线段
 
 
-        Graphic.drawLine(this.layer.canvasContext, _objectSpread$6({
+        Graphic.drawLine(this.layer.canvasContext, _objectSpread$7({
           start: {
             x: startX * dpr,
             y: startY * dpr
@@ -10913,18 +10914,18 @@
     return LineFeature;
   }(Feature$1);
 
-  function ownKeys$5(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+  function ownKeys$6(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-  function _objectSpread$5(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$5(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$5(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+  function _objectSpread$6(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$6(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$6(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-  function _createSuper$e(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$e(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+  function _createSuper$f(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$f(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-  function _isNativeReflectConstruct$e() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+  function _isNativeReflectConstruct$f() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
   var PolylineFeature = /*#__PURE__*/function (_Feature) {
     _inherits(PolylineFeature, _Feature);
 
-    var _super = _createSuper$e(PolylineFeature);
+    var _super = _createSuper$f(PolylineFeature);
 
     // function: constructor
     function PolylineFeature(id, shape) {
@@ -10977,7 +10978,7 @@
           format: function format(shape) {
             var points = shape.points,
                 width = shape.width;
-            return _objectSpread$5({
+            return _objectSpread$6({
               points: map_1(points, function (point) {
                 var _this2$layer$map$tran = _this2.layer.map.transformGlobalToScreen(point),
                     screenX = _this2$layer$map$tran.x,
@@ -10999,18 +11000,18 @@
     return PolylineFeature;
   }(Feature$1);
 
-  function ownKeys$4(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+  function ownKeys$5(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-  function _objectSpread$4(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$4(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$4(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+  function _objectSpread$5(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$5(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$5(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-  function _createSuper$d(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$d(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+  function _createSuper$e(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$e(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-  function _isNativeReflectConstruct$d() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+  function _isNativeReflectConstruct$e() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
   var RectFeature = /*#__PURE__*/function (_Feature) {
     _inherits(RectFeature, _Feature);
 
-    var _super = _createSuper$d(RectFeature);
+    var _super = _createSuper$e(RectFeature);
 
     // function: constructor
     function RectFeature(id, shape) {
@@ -11117,7 +11118,7 @@
         } // 回调函数告知业务层
 
 
-        var toUpdateShape = _objectSpread$4(_objectSpread$4({}, this.shape), newPosition);
+        var toUpdateShape = _objectSpread$5(_objectSpread$5({}, this.shape), newPosition);
 
         (_this$layer6 = this.layer) === null || _this$layer6 === void 0 ? void 0 : (_this$layer6$map = _this$layer6.map) === null || _this$layer6$map === void 0 ? void 0 : (_this$layer6$map$even = _this$layer6$map.eventsObServer) === null || _this$layer6$map$even === void 0 ? void 0 : _this$layer6$map$even.emit(EEventType.FeatureUpdated, this, toUpdateShape);
       } // 执行绘制当前
@@ -11165,14 +11166,14 @@
     return RectFeature;
   }(Feature$1);
 
-  function _createSuper$c(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$c(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+  function _createSuper$d(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$d(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-  function _isNativeReflectConstruct$c() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+  function _isNativeReflectConstruct$d() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
   var PolygonFeature = /*#__PURE__*/function (_Feature) {
     _inherits(PolygonFeature, _Feature);
 
-    var _super = _createSuper$c(PolygonFeature);
+    var _super = _createSuper$d(PolygonFeature);
 
     // function: constructor
     function PolygonFeature(id, shape) {
@@ -11233,14 +11234,14 @@
     return PolygonFeature;
   }(Feature$1);
 
-  function _createSuper$b(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$b(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+  function _createSuper$c(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$c(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-  function _isNativeReflectConstruct$b() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+  function _isNativeReflectConstruct$c() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
   var CircleFeature = /*#__PURE__*/function (_Feature) {
     _inherits(CircleFeature, _Feature);
 
-    var _super = _createSuper$b(CircleFeature);
+    var _super = _createSuper$c(CircleFeature);
 
     // PointFeature附件选项，附加字段
     // function: constructor
@@ -11471,18 +11472,18 @@
 
   });
 
-  function ownKeys$3(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+  function ownKeys$4(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-  function _objectSpread$3(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$3(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$3(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+  function _objectSpread$4(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$4(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$4(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-  function _createSuper$a(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$a(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+  function _createSuper$b(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$b(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-  function _isNativeReflectConstruct$a() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+  function _isNativeReflectConstruct$b() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
   var DrawActionFeature = /*#__PURE__*/function (_Action) {
     _inherits(DrawActionFeature, _Action);
 
-    var _super = _createSuper$a(DrawActionFeature);
+    var _super = _createSuper$b(DrawActionFeature);
 
     // 当前涂抹action分类
     // function: constructor
@@ -11514,7 +11515,7 @@
         var dpr = CanvasLayer.dpr;
         var scale = this.layer.map.getScale(); // 设置倒圆角
 
-        var formateStyle = _objectSpread$3(_objectSpread$3({}, this.style || {}), {}, {
+        var formateStyle = _objectSpread$4(_objectSpread$4({}, this.style || {}), {}, {
           lineCap: 'round',
           lineJoin: 'round'
         });
@@ -11523,7 +11524,7 @@
           format: function format(shape) {
             var points = shape.points,
                 width = shape.width;
-            return _objectSpread$3({
+            return _objectSpread$4({
               points: map_1(points, function (point) {
                 var _this2$layer$map$tran = _this2.layer.map.transformGlobalToScreen(point),
                     screenX = _this2$layer$map$tran.x,
@@ -11551,9 +11552,9 @@
     ETextType["Text"] = "TEXT";
   })(ETextType || (ETextType = {}));
 
-  function ownKeys$2(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+  function ownKeys$3(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-  function _objectSpread$2(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$2(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$2(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+  function _objectSpread$3(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$3(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$3(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
   var Text = /*#__PURE__*/function () {
     // textId
@@ -11606,7 +11607,7 @@
           var _this$layer;
 
           var textInfo = this.textInfo;
-          this.textInfo = _objectSpread$2(_objectSpread$2({}, textInfo), {}, {
+          this.textInfo = _objectSpread$3(_objectSpread$3({}, textInfo), {}, {
             text: text
           });
           (_this$layer = this.layer) === null || _this$layer === void 0 ? void 0 : _this$layer.refresh();
@@ -11619,7 +11620,7 @@
         var _this$layer2;
 
         var textInfo = this.textInfo;
-        this.textInfo = _objectSpread$2(_objectSpread$2({}, textInfo), {}, {
+        this.textInfo = _objectSpread$3(_objectSpread$3({}, textInfo), {}, {
           position: position
         });
         (_this$layer2 = this.layer) === null || _this$layer2 === void 0 ? void 0 : _this$layer2.refresh();
@@ -11648,7 +11649,7 @@
 
             var offsetX = offset.x,
                 offsetY = offset.y;
-            return _objectSpread$2(_objectSpread$2({}, info), {}, {
+            return _objectSpread$3(_objectSpread$3({}, info), {}, {
               position: {
                 x: screenX * dpr,
                 y: screenY * dpr
@@ -11697,18 +11698,18 @@
 
   });
 
-  function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+  function ownKeys$2(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-  function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$1(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$1(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+  function _objectSpread$2(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$2(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$2(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-  function _createSuper$9(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$9(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+  function _createSuper$a(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$a(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-  function _isNativeReflectConstruct$9() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+  function _isNativeReflectConstruct$a() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
   var OverlayLayer = /*#__PURE__*/function (_CanvasLayer) {
     _inherits(OverlayLayer, _CanvasLayer);
 
-    var _super = _createSuper$9(OverlayLayer);
+    var _super = _createSuper$a(OverlayLayer);
 
     // 当前featureLayer中所有的features
     // 默认active的样式
@@ -11898,7 +11899,7 @@
             clear = _ref4$clear === void 0 ? true : _ref4$clear;
 
         var text = new Text("".concat(+new Date()), // id
-        _objectSpread$1(_objectSpread$1({}, textInfo), {}, {
+        _objectSpread$2(_objectSpread$2({}, textInfo), {}, {
           offset: {
             x: 5,
             y: -5
@@ -12110,6 +12111,103 @@
     }]);
 
     return OverlayLayer;
+  }(CanvasLayer);
+
+  function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+  function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$1(Object(source), true).forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$1(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+  function _createSuper$9(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$9(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+  function _isNativeReflectConstruct$9() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+  var SupportLayer = /*#__PURE__*/function (_CanvasLayer) {
+    _inherits(SupportLayer, _CanvasLayer);
+
+    var _super = _createSuper$9(SupportLayer);
+
+    // 当前supportLayer中所有的supports
+    // 默认text文本的样式
+    // function: constructor
+    function SupportLayer(id) {
+      var _this;
+
+      var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var style = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+      _classCallCheck(this, SupportLayer);
+
+      _this = _super.call(this, id, ELayerType.Support, props, style);
+
+      _defineProperty$1(_assertThisInitialized(_this), "supports", []);
+
+      _defineProperty$1(_assertThisInitialized(_this), "defaultTextStyle", {
+        fillStyle: '#FFFFFF',
+        strokeStyle: '#D2691E',
+        background: true,
+        globalAlpha: 1,
+        fontColor: '#333',
+        font: 'normal 10px Arial',
+        textBaseline: 'top'
+      });
+
+      return _this;
+    } // 添加feature至当前FeatureLayer中
+
+
+    _createClass(SupportLayer, [{
+      key: "addSupports",
+      value: function addSupports(feature, option) {
+        var _ref = option || {},
+            _ref$clear = _ref.clear,
+            clear = _ref$clear === void 0 ? false : _ref$clear;
+
+        clear && this.removeAllFeatureActionText();
+        feature.onAdd(this);
+        this.supports.push(feature);
+      } // 添加文本
+
+    }, {
+      key: "addText",
+      value: function addText(textInfo, option) {
+        var _ref2 = option || {},
+            _ref2$clear = _ref2.clear,
+            clear = _ref2$clear === void 0 ? true : _ref2$clear;
+
+        var text = new Text("".concat(+new Date()), // id
+        _objectSpread$1(_objectSpread$1({}, textInfo), {}, {
+          offset: {
+            x: 5,
+            y: -5
+          }
+        }), // shape
+        {}, // props
+        this.defaultTextStyle // style
+        );
+        this.addSupports(text, {
+          clear: clear
+        });
+      } // 清空所有子对象
+
+    }, {
+      key: "removeAllFeatureActionText",
+      value: function removeAllFeatureActionText() {
+        this.supports = [];
+        this.clear();
+      } // @override
+
+    }, {
+      key: "refresh",
+      value: function refresh() {
+        _get(_getPrototypeOf(SupportLayer.prototype), "refresh", this).call(this);
+
+        forEach_1(this.supports, function (support) {
+          return support.refresh();
+        });
+      }
+    }]);
+
+    return SupportLayer;
   }(CanvasLayer);
 
   var baseIteratee$1 = _baseIteratee,
@@ -12433,7 +12531,9 @@
 
       this.addOverlayLayer(); // 添加tipLayer至当前map，最终会被添加至platform层
 
-      this.addTipLayer(); // 添加cursorLayer至当前map，最终会被添加至platform层
+      this.addTipLayer(); // 添加supportLayer至当前map，最终会被添加至platform层
+
+      this.addSupportLayer(); // 添加cursorLayer至当前map，最终会被添加至platform层
 
       this.addCursorLayer(); // 添加eventLayer至当前map，最终会被添加至platform层
 
@@ -12799,6 +12899,7 @@
         this.markerLayer.resizeAndRefresh();
         this.overlayLayer.resizeAndRefresh();
         this.tipLayer.resizeAndRefresh();
+        this.supportLayer.resizeAndRefresh();
         this.eventLayer.resizeAndRefresh();
       } // 设置当前active的feature
 
@@ -13157,11 +13258,23 @@
 
         this.platformDom.appendChild(this.tipLayer.dom);
         this.tipLayer.onAdd(this);
-      } // 添加cursorLayer至当前map
+      } // 添加supportLayer至当前map
 
     }, {
+      key: "addSupportLayer",
+      value: function addSupportLayer() {
+        // 实例化supportLayer
+        this.supportLayer = new SupportLayer("support-".concat(uniqueId_1()), {}, {
+          zIndex: 1
+        }); // 首先将layer-dom-append到容器中
+
+        this.platformDom.appendChild(this.supportLayer.dom);
+        this.supportLayer.onAdd(this);
+      }
+    }, {
       key: "addCursorLayer",
-      value: function addCursorLayer() {
+      value: // 添加cursorLayer至当前map
+      function addCursorLayer() {
         // 实例化cursorLayer
         this.cursorLayer = new OverlayLayer("cursor-".concat(uniqueId_1()), {}, {
           zIndex: 3

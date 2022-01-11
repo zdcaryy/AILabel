@@ -3,12 +3,13 @@ import _assign from 'lodash/assign';
 import {IObject, IPoint} from '../gInterface';
 import FeatureLayer from '../layer/gLayerFeature';
 import OverlayLayer from '../layer/gLayerOverlay';
+import SupportLayer from '../layer/gLayerSupport';
 import ExportHelperLayer from '../layer/gLayerExportHelper';
 import {IFeatureStyle, IRectShape, IFeatureShape} from './gInterface';
 import {EFeatureType} from './gEnum';
 import {EDirection} from '../gEnum';
 
-export type TFeatureLayerType = FeatureLayer | OverlayLayer | ExportHelperLayer;
+export type TFeatureLayerType = FeatureLayer | OverlayLayer | SupportLayer | ExportHelperLayer;
 
 export default class Feature {
     // featureId
