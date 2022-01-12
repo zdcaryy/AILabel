@@ -137,6 +137,18 @@ AILabel.Map设置绘制过程中提示文字关闭
 gMap.disableDrawingTip();
 ```
 
+## enableDrawingCrosshair
+AILabel.Map设置绘制过程中十字丝开启
+```javascript
+gMap.enableDrawingCrosshair();
+```
+
+## disableDrawingCrosshair
+AILabel.Map设置绘制过程中十字丝关闭
+```javascript
+gMap.disableDrawingCrosshair();
+```
+
 ## enableHotKeys
 AILabel.Map设置快捷键开启
 ```javascript

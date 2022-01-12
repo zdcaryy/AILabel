@@ -3,6 +3,7 @@ import Feature from './gLayerFeature';
 import Mask from './gLayerMask';
 import Text from './gLayerText';
 import OverlayLayer from './gLayerOverlay';
+import SupportLayer from './gLayerSupport';
 import EventLayer from './gLayerEvent';
 
 const Layer = {
@@ -11,6 +12,7 @@ const Layer = {
     Image,
     Feature,
     OverlayLayer,
+    SupportLayer,
     EventLayer
 };
 

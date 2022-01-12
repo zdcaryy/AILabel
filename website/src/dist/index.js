@@ -8428,7 +8428,7 @@
 
         this.dragging = true; // 鼠标按下态
 
-        this.map.setCursor(ECursorType.Grabbing);
+        this.setEventCursor(ECursorType.Grabbing);
 
         document.onmousemove = function (e) {
           return _this2.handleMapPanMove(e);
@@ -8454,7 +8454,7 @@
       value: function handleMapPanEnd(e) {
         this.dragging = false; // 鼠标抬起
 
-        this.map.setCursor(ECursorType.Grab);
+        this.setEventCursor(ECursorType.Grab);
         document.onmousemove = null;
         document.onmouseup = null; // 计算偏移量
 
@@ -9254,7 +9254,7 @@
             {
               if (activeFeature.captureWithPoint(currentGlobalPoint)) {
                 this.hoverFeature = activeFeature;
-                this.map.setCursor(ECursorType.Pointer);
+                this.setEventCursor(ECursorType.Pointer);
                 this.map.eventLayer.breakFeatureCapture = true;
                 this.setTip({
                   text: '按下移动图形/右键删除',
@@ -9282,7 +9282,7 @@
                   _this11.hoverFeatureIndex = index;
                   var cursor = index === 1 || index === 3 ? ECursorType.NESW_Resize : ECursorType.NWSE_Resize;
 
-                  _this11.map.setCursor(cursor);
+                  _this11.setEventCursor(cursor);
 
                   _this11.map.eventLayer.breakFeatureCapture = true;
 
@@ -9298,7 +9298,7 @@
 
               if (!isNumber_1(this.hoverFeatureIndex) && activeFeature.captureWithPoint(currentGlobalPoint)) {
                 this.hoverFeature = activeFeature;
-                this.map.setCursor(ECursorType.Move);
+                this.setEventCursor(ECursorType.Move);
                 this.map.eventLayer.breakFeatureCapture = true;
                 this.setTip({
                   text: '按下移动图形',
@@ -9336,7 +9336,7 @@
                 if (distance <= 5) {
                   _this11.hoverFeatureIndex = index;
 
-                  _this11.map.setCursor(ECursorType.Pointer);
+                  _this11.setEventCursor(ECursorType.Pointer);
 
                   var minPointsCount = isLine || isPolyline ? 2 : 3;
                   var deleteTip = pointsLength > minPointsCount ? '/右键删除' : '';
@@ -9371,7 +9371,7 @@
                 if (distance2 <= 5) {
                   _this11.hoverFeatureIndex = index + 0.5;
 
-                  _this11.map.setCursor(ECursorType.Pointer);
+                  _this11.setEventCursor(ECursorType.Pointer);
 
                   _this11.map.eventLayer.breakFeatureCapture = true;
 
@@ -9387,7 +9387,7 @@
 
               if (!isNumber_1(this.hoverFeatureIndex) && activeFeature.captureWithPoint(currentGlobalPoint)) {
                 this.hoverFeature = activeFeature;
-                this.map.setCursor(ECursorType.Move);
+                this.setEventCursor(ECursorType.Move);
                 this.map.eventLayer.breakFeatureCapture = true;
                 this.setTip({
                   text: '按下移动图形',
@@ -9937,46 +9937,52 @@
           // 禁用任何逻辑判断
           return;
         } else if (mapMode === EMapMode.Pan && !dragging) {
-          this.map.setCursor(ECursorType.Grab);
+          this.setEventCursor(ECursorType.Grab);
         } else if (mapMode === EMapMode.MARKER && !dragging) {
-          this.map.setCursor(ECursorType.Crosshair);
+          this.setEventCursor(ECursorType.Crosshair, {}, global);
         } else if (mapMode === EMapMode.Point && !dragging) {
-          this.map.setCursor(ECursorType.Crosshair);
+          this.setEventCursor(ECursorType.Crosshair, {}, global);
           this.setTip({
             text: '点击绘制点',
             position: global
           });
           this.handleFeatureCapture(global);
-        } else if (mapMode === EMapMode.Circle && !dragging) {
-          this.map.setCursor(ECursorType.Crosshair);
-          this.setTip({
-            text: '按下确定圆心',
-            position: global
-          });
-          this.handleFeatureCapture(global);
+        } else if (mapMode === EMapMode.Circle) {
+          this.setEventCursor(ECursorType.Crosshair, {}, global);
+
+          if (!dragging) {
+            this.setTip({
+              text: '按下确定圆心',
+              position: global
+            });
+            this.handleFeatureCapture(global);
+          }
         } else if (mapMode === EMapMode.Line && !dragging) {
-          this.map.setCursor(ECursorType.Crosshair);
+          this.setEventCursor(ECursorType.Crosshair, {}, global);
           this.handleLineMove(e);
           this.handleFeatureCapture(global);
         } else if (mapMode === EMapMode.Polyline && !dragging) {
-          this.map.setCursor(ECursorType.Crosshair);
+          this.setEventCursor(ECursorType.Crosshair, {}, global);
           this.handlePolylineMove(e);
           this.handleFeatureCapture(global);
-        } else if (mapMode === EMapMode.Rect && !dragging) {
-          this.map.setCursor(ECursorType.Crosshair);
-          this.setTip({
-            text: '按下确定起点',
-            position: global
-          });
-          this.handleFeatureCapture(global);
+        } else if (mapMode === EMapMode.Rect) {
+          this.setEventCursor(ECursorType.Crosshair, {}, global);
+
+          if (!dragging) {
+            this.setTip({
+              text: '按下确定起点',
+              position: global
+            });
+            this.handleFeatureCapture(global);
+          }
         } else if (mapMode === EMapMode.Polygon && !dragging) {
-          this.map.setCursor(ECursorType.Crosshair);
+          this.setEventCursor(ECursorType.Crosshair, {}, global);
           this.handlePolygonMove(e);
           this.handleFeatureCapture(global);
         } else if (mapMode === EMapMode.DrawMask) {
           var lineWidth = get_1(this.map.drawingStyle, 'lineWidth', 1);
 
-          this.map.setCursor(EUrlCursorType.DrawMask, {
+          this.setEventCursor(EUrlCursorType.DrawMask, {
             type: EFeatureType.Circle,
             shape: {
               sr: lineWidth / 2,
@@ -9987,7 +9993,7 @@
         } else if (mapMode === EMapMode.ClearMask) {
           var _lineWidth = get_1(this.map.drawingStyle, 'lineWidth', 1);
 
-          this.map.setCursor(EUrlCursorType.ClearMask, {
+          this.setEventCursor(EUrlCursorType.ClearMask, {
             type: EFeatureType.Circle,
             shape: {
               sr: _lineWidth / 2,
@@ -10167,7 +10173,9 @@
       value: function onMouseOut(e) {
         e.preventDefault(); // 清空文字提示层
 
-        this.map.tipLayer.removeAllFeatureActionText(); // 清空鼠标矢量
+        this.map.tipLayer.removeAllFeatureActionText(); // 清空十字丝辅助层
+
+        this.map.supportLayer.removeAllSupports(); // 清空鼠标矢量
 
         this.map.cursorLayer.removeAllFeatureActionText(); // 如果在绘制过程中，此时需要判断是否需要自动平移视野
         // 如果平移到marker上，做忽略处理
@@ -10218,6 +10226,32 @@
           this.map.tipLayer.addText(textInfo, option);
         } else {
           this.map.tipLayer.removeAllFeatureActionText();
+        }
+      } // 设置十字丝[绘制过程中十字丝]
+
+    }, {
+      key: "setCrosshair",
+      value: function setCrosshair(pointInfo) {
+        var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+        if (this.map.drawingTip) {
+          this.map.supportLayer.addCrosshair(pointInfo, option);
+        } else {
+          this.map.supportLayer.removeAllSupports();
+        }
+      } // 设置鼠标样式
+
+    }, {
+      key: "setEventCursor",
+      value: function setEventCursor(cursorType) {
+        var mapCursorOption = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var globalPoint = arguments.length > 2 ? arguments[2] : undefined;
+        this.map.setCursor(cursorType, mapCursorOption); // 十字丝逻辑处理
+
+        if (globalPoint && this.map.drawingCrosshair) {
+          this.setCrosshair(globalPoint);
+        } else {
+          this.map.supportLayer.removeAllSupports();
         }
       } // 重置drawing过程中产生的临时数据&清空临时绘制层
 
@@ -12128,6 +12162,7 @@
 
     // 当前supportLayer中所有的supports
     // 默认text文本的样式
+    // 默认feature的样式
     // function: constructor
     function SupportLayer(id) {
       var _this;
@@ -12141,16 +12176,6 @@
 
       _defineProperty$1(_assertThisInitialized(_this), "supports", []);
 
-      _defineProperty$1(_assertThisInitialized(_this), "defaultTextStyle", {
-        fillStyle: '#FFFFFF',
-        strokeStyle: '#D2691E',
-        background: true,
-        globalAlpha: 1,
-        fontColor: '#333',
-        font: 'normal 10px Arial',
-        textBaseline: 'top'
-      });
-
       return _this;
     } // 添加feature至当前FeatureLayer中
 
@@ -12162,7 +12187,7 @@
             _ref$clear = _ref.clear,
             clear = _ref$clear === void 0 ? false : _ref$clear;
 
-        clear && this.removeAllFeatureActionText();
+        clear && this.removeAllSupports();
         feature.onAdd(this);
         this.supports.push(feature);
       } // 添加文本
@@ -12171,6 +12196,7 @@
       key: "addText",
       value: function addText(textInfo, option) {
         var _ref2 = option || {},
+            style = _ref2.style,
             _ref2$clear = _ref2.clear,
             clear = _ref2$clear === void 0 ? true : _ref2$clear;
 
@@ -12182,16 +12208,75 @@
           }
         }), // shape
         {}, // props
-        this.defaultTextStyle // style
-        );
+        style || SupportLayer.defaultTextStyle);
         this.addSupports(text, {
           clear: clear
+        });
+      } // 添加line
+
+    }, {
+      key: "addLineFeature",
+      value: function addLineFeature(shape) {
+        var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var style = option.style,
+            _option$clear = option.clear,
+            clear = _option$clear === void 0 ? true : _option$clear;
+        var feature = new LineFeature("".concat(+new Date()), // id
+        shape, // shape
+        {}, // props
+        style || SupportLayer.defaultFeatureStyle);
+        this.addSupports(feature, {
+          clear: clear
+        });
+      } // 绘制全屏十字丝
+
+    }, {
+      key: "addCrosshair",
+      value: function addCrosshair(pointInfo) {
+        var mouseGlobalX = pointInfo.x,
+            mouseGlobalY = pointInfo.y;
+
+        var _this$map$getBounds = this.map.getBounds(),
+            x = _this$map$getBounds.x,
+            y = _this$map$getBounds.y,
+            width = _this$map$getBounds.width,
+            height = _this$map$getBounds.height; // 水平线
+
+
+        var horizontalLineStartPoint = {
+          x: x,
+          y: mouseGlobalY
+        };
+        var horizontalLineEndPoint = {
+          x: x + width,
+          y: mouseGlobalY
+        }; // 垂直线
+
+        var verticalLineStartPoint = {
+          x: mouseGlobalX,
+          y: y
+        };
+        var verticalLineEndPoint = {
+          x: mouseGlobalX,
+          y: y - height
+        };
+        this.addLineFeature({
+          start: horizontalLineStartPoint,
+          end: horizontalLineEndPoint
+        }, {
+          clear: true
+        });
+        this.addLineFeature({
+          start: verticalLineStartPoint,
+          end: verticalLineEndPoint
+        }, {
+          clear: false
         });
       } // 清空所有子对象
 
     }, {
-      key: "removeAllFeatureActionText",
-      value: function removeAllFeatureActionText() {
+      key: "removeAllSupports",
+      value: function removeAllSupports() {
         this.supports = [];
         this.clear();
       } // @override
@@ -12209,6 +12294,26 @@
 
     return SupportLayer;
   }(CanvasLayer);
+
+  _defineProperty$1(SupportLayer, "defaultTextStyle", {
+    fillStyle: '#FFFFFF',
+    strokeStyle: '#D2691E',
+    background: true,
+    globalAlpha: 1,
+    fontColor: '#333',
+    font: 'normal 10px Arial',
+    textBaseline: 'top'
+  });
+
+  _defineProperty$1(SupportLayer, "defaultFeatureStyle", {
+    fillStyle: '#FFFFFF',
+    strokeStyle: '#D2691E',
+    background: true,
+    globalAlpha: .3,
+    fontColor: '#333',
+    font: 'normal 10px Arial',
+    textBaseline: 'top'
+  });
 
   var baseIteratee$1 = _baseIteratee,
       isArrayLike = isArrayLike_1,
@@ -12455,6 +12560,7 @@
     // 当前map中包含的layers
     // 绘制状态下相关样式设置
     // 绘制状态下鼠标旁提示文案开关[默认开启]
+    // 绘制状态下鼠标十字丝是否展示[默认开启]
     // 编辑时临时feature的颜色
     // slots[暂时采用事件覆盖形式]
     // 当前选中的激活feature对象
@@ -12471,6 +12577,8 @@
       _defineProperty$1(this, "drawingStyle", {});
 
       _defineProperty$1(this, "drawingTip", true);
+
+      _defineProperty$1(this, "drawingCrosshair", true);
 
       _defineProperty$1(this, "editingColor", '#FF0000');
 
@@ -12594,6 +12702,18 @@
       key: "disableDrawingTip",
       value: function disableDrawingTip() {
         this.drawingTip = false;
+      } // 开启绘制过程中的十字丝
+
+    }, {
+      key: "enableDrawingCrosshair",
+      value: function enableDrawingCrosshair() {
+        this.drawingCrosshair = true;
+      } // 关闭绘制过程中的十字丝
+
+    }, {
+      key: "disableDrawingCrosshair",
+      value: function disableDrawingCrosshair() {
+        this.drawingCrosshair = false;
       } // 获取dom宽高（width/height）
 
     }, {
@@ -14521,6 +14641,7 @@
     Image: ImageLayer,
     Feature: FeatureLayer,
     OverlayLayer: OverlayLayer,
+    SupportLayer: SupportLayer,
     EventLayer: EventLayer
   };
 
@@ -15234,7 +15355,7 @@
     Text: Text,
     Marker: Marker,
     Util: Util,
-    version: '5.1.7' // 和npm-version保持一致
+    version: '5.1.8' // 和npm-version保持一致
 
   };
 

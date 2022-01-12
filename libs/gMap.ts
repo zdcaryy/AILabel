@@ -124,6 +124,8 @@ export default class Map {
     public drawingStyle: IFeatureStyle = {}
     // 绘制状态下鼠标旁提示文案开关[默认开启]
     public drawingTip: boolean = true
+    // 绘制状态下鼠标十字丝是否展示[默认开启]
+    public drawingCrosshair: boolean = true
     // 编辑时临时feature的颜色
     public editingColor: string = '#FF0000'
 
@@ -229,6 +231,15 @@ export default class Map {
     // 关闭绘制过程中的tip提示文案
     disableDrawingTip() {
         this.drawingTip = false;
+    }
+
+    // 开启绘制过程中的十字丝
+    enableDrawingCrosshair() {
+        this.drawingCrosshair = true;
+    }
+    // 关闭绘制过程中的十字丝
+    disableDrawingCrosshair() {
+        this.drawingCrosshair = false;
     }
 
     // 获取dom宽高（width/height）

@@ -135,7 +135,7 @@ export default class EventLayer extends Layer  {
     // map平移开始
     public handleMapPanStart(e: MouseEvent) {
         this.dragging = true; // 鼠标按下态
-        this.map.setCursor(ECursorType.Grabbing);
+        this.setEventCursor(ECursorType.Grabbing);
         document.onmousemove = e => this.handleMapPanMove(e);
         document.onmouseup =  e => this.handleMapPanEnd(e);
     }
@@ -147,7 +147,7 @@ export default class EventLayer extends Layer  {
     // map平移结束
     public handleMapPanEnd(e: MouseEvent) {
         this.dragging = false; // 鼠标抬起
-        this.map.setCursor(ECursorType.Grab);
+        this.setEventCursor(ECursorType.Grab);
         document.onmousemove = null;
         document.onmouseup = null;
         // 计算偏移量
@@ -655,7 +655,7 @@ export default class EventLayer extends Layer  {
             case EFeatureType.Point: {
                 if (activeFeature.captureWithPoint(currentGlobalPoint)) {
                     this.hoverFeature = activeFeature;
-                    this.map.setCursor(ECursorType.Pointer);
+                    this.setEventCursor(ECursorType.Pointer);
 
                     this.map.eventLayer.breakFeatureCapture = true;
                     this.setTip({text: '按下移动图形/右键删除', position: currentGlobalPoint});
@@ -676,7 +676,7 @@ export default class EventLayer extends Layer  {
                     if (distance <= 5) {
                         this.hoverFeatureIndex = index;
                         const cursor = (index === 1 || index === 3) ? ECursorType.NESW_Resize : ECursorType.NWSE_Resize;
-                        this.map.setCursor(cursor);
+                        this.setEventCursor(cursor);
 
                         this.map.eventLayer.breakFeatureCapture = true;
                         this.setTip({text: '按下拖动', position: currentGlobalPoint});
@@ -686,7 +686,7 @@ export default class EventLayer extends Layer  {
                 // 如果没有捕捉到点，此时需要判断是否捕捉到图形
                 if (!_isNumber(this.hoverFeatureIndex) && activeFeature.captureWithPoint(currentGlobalPoint)) {
                     this.hoverFeature = activeFeature;
-                    this.map.setCursor(ECursorType.Move);
+                    this.setEventCursor(ECursorType.Move);
 
                     this.map.eventLayer.breakFeatureCapture = true;
                     this.setTip({text: '按下移动图形', position: currentGlobalPoint});
@@ -713,7 +713,7 @@ export default class EventLayer extends Layer  {
                     const distance = Util.MathUtil.distance(sPoint, currentPoint);
                     if (distance <= 5) {
                         this.hoverFeatureIndex = index;
-                        this.map.setCursor(ECursorType.Pointer);
+                        this.setEventCursor(ECursorType.Pointer);
                         const minPointsCount = (isLine || isPolyline) ? 2 : 3;
                         const deleteTip = pointsLength > minPointsCount ? '/右键删除' : '';
 
@@ -737,7 +737,7 @@ export default class EventLayer extends Layer  {
                     const distance2 = Util.MathUtil.distance(sMiddlePoint, currentPoint);
                     if (distance2 <= 5) {
                         this.hoverFeatureIndex = index + 0.5;
-                        this.map.setCursor(ECursorType.Pointer);
+                        this.setEventCursor(ECursorType.Pointer);
 
                         this.map.eventLayer.breakFeatureCapture = true;
                         this.setTip({text: '按下拖动添加新节点', position: currentGlobalPoint});
@@ -747,7 +747,7 @@ export default class EventLayer extends Layer  {
                 // 如果没有捕捉到点，此时需要判断是否捕捉到图形
                 if (!_isNumber(this.hoverFeatureIndex) && activeFeature.captureWithPoint(currentGlobalPoint)) {
                     this.hoverFeature = activeFeature;
-                    this.map.setCursor(ECursorType.Move);
+                    this.setEventCursor(ECursorType.Move);
 
                     this.map.eventLayer.breakFeatureCapture = true;
                     this.setTip({text: '按下移动图形', position: currentGlobalPoint});
@@ -1179,44 +1179,53 @@ export default class EventLayer extends Layer  {
             return;
         }
         else if (mapMode === EMapMode.Pan && !dragging) {
-            this.map.setCursor(ECursorType.Grab);
+            this.setEventCursor(ECursorType.Grab);
         }
         else if (mapMode === EMapMode.MARKER && !dragging) {
-            this.map.setCursor(ECursorType.Crosshair);
+            this.setEventCursor(ECursorType.Crosshair, {}, global);
         }
         else if (mapMode === EMapMode.Point && !dragging) {
-            this.map.setCursor(ECursorType.Crosshair);
+            this.setEventCursor(ECursorType.Crosshair, {}, global);
+
             this.setTip({text: '点击绘制点', position: global});
             this.handleFeatureCapture(global);
         }
-        else if (mapMode === EMapMode.Circle && !dragging) {
-            this.map.setCursor(ECursorType.Crosshair);
-            this.setTip({text: '按下确定圆心', position: global});
-            this.handleFeatureCapture(global);
+        else if (mapMode === EMapMode.Circle) {
+            this.setEventCursor(ECursorType.Crosshair, {}, global);
+
+            if (!dragging) {
+                this.setTip({text: '按下确定圆心', position: global});
+                this.handleFeatureCapture(global);
+            }
         }
         else if (mapMode === EMapMode.Line && !dragging) {
-            this.map.setCursor(ECursorType.Crosshair);
+            this.setEventCursor(ECursorType.Crosshair, {}, global);
             this.handleLineMove(e);
             this.handleFeatureCapture(global);
         }
         else if (mapMode === EMapMode.Polyline && !dragging) {
-            this.map.setCursor(ECursorType.Crosshair);
+            this.setEventCursor(ECursorType.Crosshair, {}, global);
+
             this.handlePolylineMove(e);
             this.handleFeatureCapture(global);
         }
-        else if (mapMode === EMapMode.Rect && !dragging) {
-            this.map.setCursor(ECursorType.Crosshair);
-            this.setTip({text: '按下确定起点', position: global});
-            this.handleFeatureCapture(global);
+        else if (mapMode === EMapMode.Rect) {
+            this.setEventCursor(ECursorType.Crosshair, {}, global);
+
+            if (!dragging) {
+                this.setTip({text: '按下确定起点', position: global});
+                this.handleFeatureCapture(global);
+            }
         }
         else if (mapMode === EMapMode.Polygon && !dragging) {
-            this.map.setCursor(ECursorType.Crosshair);
+            this.setEventCursor(ECursorType.Crosshair, {}, global);
+
             this.handlePolygonMove(e);
             this.handleFeatureCapture(global);
         }
         else if (mapMode === EMapMode.DrawMask) {
             const lineWidth = _get(this.map.drawingStyle, 'lineWidth', 1);
-            this.map.setCursor(
+            this.setEventCursor(
                 EUrlCursorType.DrawMask,
                 {
                     type: EFeatureType.Circle,
@@ -1226,7 +1235,7 @@ export default class EventLayer extends Layer  {
         }
         else if (mapMode === EMapMode.ClearMask) {
             const lineWidth = _get(this.map.drawingStyle, 'lineWidth', 1);
-            this.map.setCursor(
+            this.setEventCursor(
                 EUrlCursorType.ClearMask,
                 {
                     type: EFeatureType.Circle,
@@ -1400,6 +1409,8 @@ export default class EventLayer extends Layer  {
         e.preventDefault();
         // 清空文字提示层
         this.map.tipLayer.removeAllFeatureActionText();
+        // 清空十字丝辅助层
+        this.map.supportLayer.removeAllSupports();
         // 清空鼠标矢量
         this.map.cursorLayer.removeAllFeatureActionText();
         // 如果在绘制过程中，此时需要判断是否需要自动平移视野
@@ -1455,6 +1466,29 @@ export default class EventLayer extends Layer  {
         }
         else {
             this.map.tipLayer.removeAllFeatureActionText();
+        }
+    }
+
+    // 设置十字丝[绘制过程中十字丝]
+    setCrosshair(pointInfo: IPoint, option: IObject = {}) {
+        if (this.map.drawingTip) {
+            this.map.supportLayer.addCrosshair(pointInfo, option);
+        }
+        else {
+            this.map.supportLayer.removeAllSupports();
+        }
+    }
+
+    // 设置鼠标样式
+    setEventCursor(cursorType: ECursorType | EUrlCursorType, mapCursorOption: IObject = {}, globalPoint?: IPoint) {
+        this.map.setCursor(cursorType, mapCursorOption);
+
+        // 十字丝逻辑处理
+        if (globalPoint && this.map.drawingCrosshair) {
+            this.setCrosshair(globalPoint);
+        }
+        else {
+            this.map.supportLayer.removeAllSupports();
         }
     }
 

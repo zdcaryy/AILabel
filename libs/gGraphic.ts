@@ -13,7 +13,7 @@ import CanvasLayer from './layer/gLayerCanvas';
 import {ITextInfo, ITextStyle} from './text/gInterface';
 import { ECanvasTextBaseLine } from './gEnum';
 
-export type CanvasContext2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+export type CanvasContext2D = CanvasRenderingContext2D;
 
 export default class Graphic {
 
