@@ -527,6 +527,7 @@ gMap.events.on('boundsChanged', () => {console.log('bounds has changed')});
 |drawDone|绘制结束时触发|string|DrawDone|
 |featureUpdated|feature编辑完成触发|string|FeatureUpdated|
 |featureDeleted|目前只针对点双击选中右键触发|string|FeatureDeleted|
+|draging|拖动feature(dbclick之后)|string|Draging|
 |click|单击事件|string|MouseCallback|
 |dblClick|双击事件|string|MouseCallback|
 |mouseDown|鼠标按下|string|MouseCallback|
@@ -581,6 +582,14 @@ gMap.events.on('featureUpdated', callback);
 callback: (feature:PointFeature) => void
 // demo
 gMap.events.on('featureDeleted', callback);
+```
+
+**Draging**
+```javascript
+// define
+callback: (shape) => void
+// demo
+gMap.events.on('draging', callback);
 ```
 
 **MouseCallback**

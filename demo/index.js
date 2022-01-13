@@ -6667,6 +6667,7 @@
     EEventType["DrawDone"] = "drawDone";
     EEventType["FeatureUpdated"] = "featureUpdated";
     EEventType["FeatureDeleted"] = "featureDeleted";
+    EEventType["Draging"] = "draging";
     EEventType["Click"] = "click";
     EEventType["DblClick"] = "dblClick";
     EEventType["MouseDown"] = "mouseDown";
@@ -9694,6 +9695,8 @@
               break;
             }
         }
+
+        this.map.eventsObServer.emit(EEventType.Draging, this.toUpdateShape);
       }
     }, {
       key: "handleActiveFeatureEnd",
@@ -9856,7 +9859,13 @@
     }, {
       key: "onMouseDown",
       value: function onMouseDown(e) {
-        // 相关坐标值处理
+        var btnIndex = Util.EventUtil.getButtonIndex(e); // 鼠标左键按下
+
+        if (btnIndex !== 0) {
+          return;
+        } // 相关坐标值处理
+
+
         var screenX = e.screenX,
             screenY = e.screenY; // 设置保存起始坐标
 

@@ -46,6 +46,7 @@ export enum EEventType {
     DrawDone = "drawDone", // feature绘制完成
     FeatureUpdated = "featureUpdated", // feature更新完成
     FeatureDeleted = "featureDeleted", // feature删除完成【目前只针对点的右键删除回调】
+    Draging = "draging", // 拖动feature【dbclick之后】
 
     // 鼠标事件
     Click = "click",

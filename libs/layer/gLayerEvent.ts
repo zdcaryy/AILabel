@@ -949,6 +949,7 @@ export default class EventLayer extends Layer  {
                 break;
             }
         }
+        this.map.eventsObServer.emit(EEventType.Draging, this.toUpdateShape)
     }
     handleActiveFeatureEnd(e: MouseEvent) {
         this.dragging = false; // 鼠标抬起
@@ -1089,6 +1090,11 @@ export default class EventLayer extends Layer  {
     /*****************************************************/
     // onMouseDown: 事件绑定
     public onMouseDown(e: MouseEvent) {
+        const btnIndex = Util.EventUtil.getButtonIndex(e);
+        // 鼠标左键按下
+        if (btnIndex !== 0) {
+            return
+        }
         // 相关坐标值处理
         const {screenX, screenY} = e;
         // 设置保存起始坐标

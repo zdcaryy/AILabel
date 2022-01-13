@@ -769,7 +769,7 @@ export default class Map {
         this.platformDom.appendChild(this.supportLayer.dom);
         this.supportLayer.onAdd(this);
     }
-å
+
     // 添加cursorLayer至当前map
     addCursorLayer() {
         // 实例化cursorLayer

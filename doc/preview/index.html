@@ -1052,6 +1052,12 @@ gMap.events.on(&#39;boundsChanged&#39;, () =&gt; {console.log(&#39;bounds has ch
 <td>FeatureDeleted</td>
 </tr>
 <tr>
+<td>draging</td>
+<td>拖动feature(dbclick之后)</td>
+<td>string</td>
+<td>Draging</td>
+</tr>
+<tr>
 <td>click</td>
 <td>单击事件</td>
 <td>string</td>
@@ -1130,6 +1136,12 @@ gMap.events.on(&#39;featureUpdated&#39;, callback);
 callback: (feature:PointFeature) =&gt; void
 // demo
 gMap.events.on(&#39;featureDeleted&#39;, callback);
+</code></pre>
+<p><strong>Draging</strong></p>
+<pre><code class="lang-javascript">// define
+callback: (shape) =&gt; void
+// demo
+gMap.events.on(&#39;draging&#39;, callback);
 </code></pre>
 <p><strong>MouseCallback</strong></p>
 <pre><code class="lang-javascript">// define
