@@ -124,8 +124,8 @@
         gMap.events.on('click', point => {
             // console.log('--click--', point);
         });
-        gMap.events.on('draging', shape => {
-            console.log('--draging--', shape);
+        gMap.events.on('draging', (activeFeature, toUpdateShape) => {
+            console.log('--draging--', activeFeature, toUpdateShape);
         });
 
         gMap.events.on('drawDone', (type, data, data1) => {

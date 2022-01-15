@@ -9696,7 +9696,7 @@
             }
         }
 
-        this.map.eventsObServer.emit(EEventType.Draging, this.toUpdateShape);
+        this.map.eventsObServer.emit(EEventType.Draging, this.map.activeFeature, this.toUpdateShape);
       }
     }, {
       key: "handleActiveFeatureEnd",
@@ -13399,11 +13399,11 @@
 
         this.platformDom.appendChild(this.supportLayer.dom);
         this.supportLayer.onAdd(this);
-      }
+      } // 添加cursorLayer至当前map
+
     }, {
       key: "addCursorLayer",
-      value: // 添加cursorLayer至当前map
-      function addCursorLayer() {
+      value: function addCursorLayer() {
         // 实例化cursorLayer
         this.cursorLayer = new OverlayLayer("cursor-".concat(uniqueId_1()), {}, {
           zIndex: 3

@@ -813,7 +813,7 @@
     // as the regeneratorRuntime namespace. Otherwise create a new empty
     // object. Either way, the resulting object will be used to initialize
     // the regeneratorRuntime variable at the top of this file.
-    module.exports 
+    module.exports
   ));
 
   try {
@@ -1320,10 +1320,10 @@
   /*!
    * hotkeys-js v3.8.7
    * A simple micro-library for defining and dispatching keyboard shortcuts. It has no dependencies.
-   * 
+   *
    * Copyright (c) 2021 kenny wong <wowohoo@qq.com>
    * http://jaywcjlove.github.io/hotkeys
-   * 
+   *
    * Licensed under the MIT license.
    */
 
@@ -9696,7 +9696,7 @@
             }
         }
 
-        this.map.eventsObServer.emit(EEventType.Draging, this.toUpdateShape);
+        this.map.eventsObServer.emit(EEventType.Draging, this.map.activeFeature, this.toUpdateShape);
       }
     }, {
       key: "handleActiveFeatureEnd",

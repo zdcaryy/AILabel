@@ -949,7 +949,7 @@ export default class EventLayer extends Layer  {
                 break;
             }
         }
-        this.map.eventsObServer.emit(EEventType.Draging, this.toUpdateShape)
+        this.map.eventsObServer.emit(EEventType.Draging, this.map.activeFeature, this.toUpdateShape)
     }
     handleActiveFeatureEnd(e: MouseEvent) {
         this.dragging = false; // 鼠标抬起
