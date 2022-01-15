@@ -587,7 +587,7 @@ gMap.events.on('featureDeleted', callback);
 **Draging**
 ```javascript
 // define
-callback: (shape) => void
+callback: (feature: Feature, shape) => void
 // demo
 gMap.events.on('draging', callback);
 ```
