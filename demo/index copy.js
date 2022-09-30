@@ -84,7 +84,20 @@
     return obj;
   }
 
-  var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+  function getAugmentedNamespace(n) {
+  	if (n.__esModule) return n;
+  	var a = Object.defineProperty({}, '__esModule', {value: true});
+  	Object.keys(n).forEach(function (k) {
+  		var d = Object.getOwnPropertyDescriptor(n, k);
+  		Object.defineProperty(a, k, d.get ? d : {
+  			enumerable: true,
+  			get: function () {
+  				return n[k];
+  			}
+  		});
+  	});
+  	return a;
+  }
 
   var regeneratorRuntime$1 = {exports: {}};
 
@@ -1073,13 +1086,22 @@
     window.hotkeys = hotkeys;
   }
 
+  var global$1 = (typeof global !== "undefined" ? global :
+              typeof self !== "undefined" ? self :
+              typeof window !== "undefined" ? window : {});
+
   /** Detect free variable `global` from Node.js. */
+  var freeGlobal$1 = typeof global$1 == 'object' && global$1 && global$1.Object === Object && global$1;
 
-  var freeGlobal$1 = typeof commonjsGlobal == 'object' && commonjsGlobal && commonjsGlobal.Object === Object && commonjsGlobal;
+  module.exports = freeGlobal$1;
 
-  var _freeGlobal = freeGlobal$1;
+  var _freeGlobal = /*#__PURE__*/Object.freeze({
+    __proto__: null
+  });
 
-  var freeGlobal = _freeGlobal;
+  var require$$0 = /*@__PURE__*/getAugmentedNamespace(_freeGlobal);
+
+  var freeGlobal = require$$0;
 
   /** Detect free variable `self`. */
   var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
@@ -2224,7 +2246,7 @@
   var _nodeUtil = {exports: {}};
 
   (function (module, exports) {
-  var freeGlobal = _freeGlobal;
+  var freeGlobal = require$$0;
 
   /** Detect free variable `exports`. */
   var freeExports = exports && !exports.nodeType && exports;

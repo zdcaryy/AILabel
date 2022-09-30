@@ -1,7 +1,8 @@
 import babel from 'rollup-plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import nodeResolve from '@rollup/plugin-node-resolve';
-import {uglify} from 'rollup-plugin-uglify';
+// import globals from 'rollup-plugin-node-globals'
+import { uglify } from 'rollup-plugin-uglify';
 
 import pkg from './package.json';
 
@@ -10,7 +11,8 @@ const extensions = ['.js', '.ts'];
 
 // 相关配置plugins
 const plugins = [
-    nodeResolve({extensions}),
+    nodeResolve({ extensions }),
+    // globals(),
     commonjs(), // so Rollup can convert `ms` to an ES module
     babel({
         exclude: 'node_modules/**',
@@ -28,7 +30,7 @@ export default [
         output: [{
             name: 'AILabel',
             file: pkg.browser,
-            format: 'umd'
+            format: 'es'
         }, {
             name: 'AILabel',
             file: pkg.browser_website,
